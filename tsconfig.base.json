@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@convinz/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@convinz/shared/config": ["libs/shared/config/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

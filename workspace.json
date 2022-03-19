@@ -2,8 +2,8 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
-    "api-interfaces": "libs/api-interfaces",
     "convinz": "apps/convinz",
-    "convinz-e2e": "apps/convinz-e2e"
+    "convinz-e2e": "apps/convinz-e2e",
+    "shared-config": "libs/shared/config"
   }
 }

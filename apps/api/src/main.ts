@@ -1,16 +1,24 @@
 import * as express from 'express';
-import { Message } from '@convinz/api-interfaces';
+import * as cors from 'cors';
+import * as http from 'http';
+import * as socketio from 'socket.io';
 
 const app = express();
-
-const greeting: Message = { message: 'Welcome to api!' };
+const server = http.createServer(app);
+const io = new socketio.Server(server);
 
 app.get('/api', (req, res) => {
-  res.send(greeting);
+  res.json({ hi: 'hi' });
+});
+
+io.on('connect', (socket) => {
+  socket.on('message', (data) => {
+    io.emit('message', data);
+  });
 });
 
 const port = process.env.port || 3333;
-const server = app.listen(port, () => {
+
+server.listen(port, () => {
   console.log('Listening at http://localhost:' + port + '/api');
 });
-server.on('error', console.error);

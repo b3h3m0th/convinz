@@ -5,15 +5,20 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
+    "dev": "concurrently \"nx serve convinz\" \"nx serve api\"",
     "test": "nx test"
   },
   "private": true,
   "dependencies": {
+    "concurrently": "^7.0.0",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
     "express": "4.17.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "regenerator-runtime": "0.13.7",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
@@ -29,6 +34,7 @@
     "@nrwl/workspace": "13.9.3",
     "@testing-library/react": "12.1.4",
     "@testing-library/react-hooks": "7.0.2",
+    "@types/cors": "^2.8.12",
     "@types/express": "4.17.13",
     "@types/jest": "27.0.2",
     "@types/node": "16.11.7",
