@@ -1,1 +1,1 @@
-export type GameCode = `#${string}` | null;
+export type GameCode = `${string}` | null;

@@ -29,17 +29,15 @@ export interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
   observer((props: HomeProps) => {
-    const [gameCode, setGameCode] = useState<string>('');
-
-    console.log(gameCode);
-
     const onJoinGame = () => {
-      console.log('join', gameCode);
+      console.log('join', gameStore.gameCode);
     };
 
     const onCreateGame = () => {
       socket.emit('create');
     };
+
+    console.log(gameStore.gameCode);
 
     return (
       <div className="home">
@@ -48,9 +46,13 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           <input
             type="text"
             className="home__content__game-code-input"
-            value={gameCode}
+            value={`#${
+              (gameStore.gameCode as string)
+                ? (gameStore.gameCode as string)
+                : ''
+            }`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              gameStore.setGameCode(e.currentTarget.value as GameCode)
+              gameStore.setGameCode(e.currentTarget.value.substring(1))
             }
           />
           <button onClick={() => onJoinGame()}>Join Game</button>
