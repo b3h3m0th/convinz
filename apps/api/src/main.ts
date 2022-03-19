@@ -30,6 +30,11 @@ app.get('/api', (req, res) => {
 io.on('connection', (socket) => {
   console.log(socket.id);
 
+  socket.on('create', (code) => {
+    console.log(code);
+    socket.join(code);
+  });
+
   socket.on('join', (code) => {
     console.log(code);
   });
