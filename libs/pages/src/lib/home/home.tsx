@@ -5,8 +5,9 @@ import {
 import type { GameCode } from '@convinz/shared/types';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 import { io, Socket } from 'socket.io-client';
+// import { useHistory } from 'react-router-dom';
 import './home.scss';
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
