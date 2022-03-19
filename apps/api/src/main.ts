@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
   socket.on('create', () => {
     const gameCode = createGameCode();
     socket.join(gameCode);
-    socket.emit('created', gameCode);
+    io.sockets.in(gameCode).emit('created', gameCode);
   });
 
   socket.on('join', (code) => {

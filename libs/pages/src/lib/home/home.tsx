@@ -55,7 +55,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             }`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               gameStore.setGameCode(
-                e.currentTarget.value.substring(1) as GameCode
+                e.currentTarget.value.substring(1).toUpperCase() as GameCode
               )
             }
           />
