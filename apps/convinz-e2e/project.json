@@ -1,0 +1,28 @@
+{
+  "root": "apps/convinz-e2e",
+  "sourceRoot": "apps/convinz-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/convinz-e2e/cypress.json",
+        "devServerTarget": "convinz:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "convinz:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/convinz-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["convinz"]
+}

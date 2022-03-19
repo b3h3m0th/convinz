@@ -1,0 +1,71 @@
+{
+  "root": "apps/convinz",
+  "sourceRoot": "apps/convinz/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/convinz",
+        "index": "apps/convinz/src/index.html",
+        "baseHref": "/",
+        "main": "apps/convinz/src/main.tsx",
+        "polyfills": "apps/convinz/src/polyfills.ts",
+        "tsConfig": "apps/convinz/tsconfig.app.json",
+        "assets": ["apps/convinz/src/favicon.ico", "apps/convinz/src/assets"],
+        "styles": ["apps/convinz/src/styles.scss"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/convinz/src/environments/environment.ts",
+              "with": "apps/convinz/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "options": {
+        "buildTarget": "convinz:build",
+        "hmr": true,
+        "proxyConfig": "apps/convinz/proxy.conf.json"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "convinz:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/convinz/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/convinz"],
+      "options": {
+        "jestConfig": "apps/convinz/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
