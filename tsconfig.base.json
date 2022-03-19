@@ -18,7 +18,9 @@
       "@convinz/pages": ["libs/pages/src/index.ts"],
       "@convinz/router": ["libs/router/src/index.ts"],
       "@convinz/shared/config": ["libs/shared/config/src/index.ts"],
-      "@convinz/shared/types": ["libs/shared/types/src/index.ts"]
+      "@convinz/shared/types": ["libs/shared/types/src/index.ts"],
+      "@convinz/shared/util": ["libs/shared/util/src/index.ts"],
+      "@convinz/stores": ["libs/stores/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

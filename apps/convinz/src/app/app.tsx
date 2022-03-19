@@ -1,21 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Provider as StoreProvider } from 'mobx-react';
 import * as fromRouter from '@convinz/router';
-import { io } from 'socket.io-client';
+import { gameStore } from '@convinz/stores';
 
-const socket = io('http://localhost:3333', {
-  transports: ['websocket'],
-});
-
-const stores = {};
+const stores = { gameStore };
 
 export const App: React.FC = () => {
-  useEffect(() => {
-    socket.on('message', (data) => {
-      console.log(data);
-    });
-  });
-
   return (
     <React.StrictMode>
       <StoreProvider {...stores}>

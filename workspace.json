@@ -7,6 +7,8 @@
     "pages": "libs/pages",
     "router": "libs/router",
     "shared-config": "libs/shared/config",
-    "shared-types": "libs/shared/types"
+    "shared-types": "libs/shared/types",
+    "shared-util": "libs/shared/util",
+    "stores": "libs/stores"
   }
 }

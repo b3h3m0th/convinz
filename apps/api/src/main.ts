@@ -8,6 +8,7 @@ import {
   ServerToClientEvents,
   SocketData,
 } from '@convinz/shared/types';
+import { createGameCode } from '@convinz/shared/util';
 
 const app = express();
 const server = http.createServer(app);
@@ -30,13 +31,14 @@ app.get('/api', (req, res) => {
 io.on('connection', (socket) => {
   console.log(socket.id);
 
-  socket.on('create', (code) => {
-    console.log(code);
-    socket.join(code);
+  socket.on('create', () => {
+    const gameCode = createGameCode();
+    socket.join(gameCode);
+    socket.emit('created', gameCode);
   });
 
   socket.on('join', (code) => {
-    console.log(code);
+    socket.join(code);
   });
 });
 
