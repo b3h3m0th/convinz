@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { Provider as StoreProvider } from 'mobx-react';
+import * as fromRouter from '@convinz/router';
 import { io } from 'socket.io-client';
 
 const socket = io('http://localhost:3333', {
   transports: ['websocket'],
 });
 
-export const App = () => {
+const stores = {};
+
+export const App: React.FC = () => {
   useEffect(() => {
     socket.on('message', (data) => {
       console.log(data);
@@ -13,24 +17,11 @@ export const App = () => {
   });
 
   return (
-    <>
-      <div style={{ textAlign: 'center' }}>
-        <h1>Welcome to convinz!</h1>
-        <img
-          width="450"
-          src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-          alt="Nx - Smart, Fast and Extensible Build System"
-        />
-      </div>
-      <div>Convinz</div>
-      <button
-        onClick={() => {
-          socket.emit('message', { test: 'hi' });
-        }}
-      >
-        Emit
-      </button>
-    </>
+    <React.StrictMode>
+      <StoreProvider {...stores}>
+        <fromRouter.Router />
+      </StoreProvider>
+    </React.StrictMode>
   );
 };
 

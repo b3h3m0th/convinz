@@ -4,6 +4,8 @@
     "api": "apps/api",
     "convinz": "apps/convinz",
     "convinz-e2e": "apps/convinz-e2e",
+    "pages": "libs/pages",
+    "router": "libs/router",
     "shared-config": "libs/shared/config"
   }
 }
