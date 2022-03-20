@@ -6,7 +6,6 @@ import './game.scss';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
-import { ROUTES } from '@convinz/router';
 import { GameCode } from '@convinz/shared/types';
 
 export interface GameProps {}
@@ -25,7 +24,7 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       const code = getGameCodeFromURL();
       if (code) {
         console.log(code);
-        socket.emit('join', code);
+        socket.emit('join', code, 'user');
         gameStore.setGameCode(code);
       }
     }, []);
