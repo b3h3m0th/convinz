@@ -1,30 +1,19 @@
-import {
-  ClientToServerEvents,
-  ServerToClientEvents,
-} from '@convinz/shared/types';
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
+import './home.scss';
 import type { GameCode } from '@convinz/shared/types';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { ChangeEvent, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ROUTES } from '@convinz/router';
-import './home.scss';
-
-const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  'http://localhost:3333',
-  {
-    transports: ['websocket'],
-  }
-);
+import { socket } from '@convinz/socket';
 
 socket.on('connect', () => {
   gameStore.setIsConnected(true);
   console.log(`connected with id: ${socket.id}`);
 });
 
-socket.on('created', (gameCode) => {
+socket.on('created', (gameCode: GameCode) => {
   gameStore.setHasJoinedLobby(true);
   console.log(`created lobby: ${gameCode}`);
   gameStore.setGameCode(gameCode);

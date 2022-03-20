@@ -9,6 +9,7 @@
     "shared-config": "libs/shared/config",
     "shared-types": "libs/shared/types",
     "shared-util": "libs/shared/util",
+    "socket": "libs/socket",
     "stores": "libs/stores"
   }
 }

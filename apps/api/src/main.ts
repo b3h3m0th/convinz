@@ -40,6 +40,13 @@ io.on('connection', (socket) => {
   socket.on('join', (code) => {
     socket.join(code);
   });
+
+  socket.on('sendMessage', (message, gameCode) => {
+    console.log(message);
+    // io.sockets.in(gameCode).emit('receiveMessage', message);
+    // socket.to(gameCode).emit('receiveMessage', message);
+    io.to(gameCode).emit('receiveMessage', message);
+  });
 });
 
 const port = process.env.port || 3333;
