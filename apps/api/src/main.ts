@@ -8,7 +8,7 @@ import {
   ServerToClientEvents,
   SocketData,
 } from '@convinz/shared/types';
-import { createGameCode } from '@convinz/shared/util';
+import { generateGameCode } from '@convinz/shared/util';
 
 const app = express();
 const server = http.createServer(app);
@@ -22,22 +22,26 @@ const io = new socketio.Server<
     origin: ['http://localhost:4200'],
   },
 });
+
 app.use(cors());
 
 app.get('/api', (req, res) => {
-  res.json({ hi: 'hi' });
+  res.json({ convinz: 'convinz' });
 });
 
 io.on('connection', (socket) => {
   console.log(socket.id);
 
-  socket.on('create', () => {
-    const gameCode = createGameCode();
+  socket.on('create', (nickname) => {
+    const gameCode = generateGameCode();
+    (socket as any).nickname = nickname;
     socket.join(gameCode);
     socket.emit('created', gameCode);
+    console.log(socket);
   });
 
-  socket.on('join', (code) => {
+  socket.on('join', (code, nickname) => {
+    (socket as any).nickname = nickname;
     socket.join(code);
     socket.emit('joined', code);
   });
