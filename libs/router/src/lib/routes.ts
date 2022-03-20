@@ -26,7 +26,7 @@ export const pages = {
  */
 export type ROUTES = {
   [K in keyof typeof pages]: K extends 'home'
-    ? ``
+    ? `/`
     : K extends 'game'
     ? `play`
     : K extends 'error'
@@ -36,7 +36,7 @@ export type ROUTES = {
 export const ROUTES: ROUTES = Object.keys(pages).reduce(
   (acc, curr) =>
     curr === propnameOf<typeof pages>(pages, (p) => p.home)
-      ? { ...acc, [curr]: `` }
+      ? { ...acc, [curr]: `/` }
       : curr === propnameOf<typeof pages>(pages, (p) => p.game)
       ? { ...acc, [curr]: `play` }
       : curr === propnameOf<typeof pages>(pages, (p) => p.error)

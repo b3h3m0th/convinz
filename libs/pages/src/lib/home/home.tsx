@@ -50,7 +50,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
 
     useEffect(() => {
       if (gameStore.hasJoinedLobby && gameStore.gameCode)
-        navigate(`/${ROUTES.game}/${gameStore.gameCode}`);
+        navigate(`${ROUTES.game}/${gameStore.gameCode}`);
     }, [gameStore.hasJoinedLobby]);
 
     return (

@@ -8,11 +8,14 @@ import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
 import { GameCode } from '@convinz/shared/types';
 import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@convinz/router';
 
 export interface GameProps {}
 
 export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
   observer(({}: GameProps) => {
+    const navigate = useNavigate();
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -52,7 +55,21 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
     return (
       <div className="game">
-        <h1>game</h1>
+        <h1>game #{gameStore.gameCode}</h1>
+        <button
+          onClick={() => {
+            socket.emit('leave', (result) => {
+              if (!result.error) {
+                socket.off();
+                gameStore.setHasJoinedLobby(false);
+                gameStore.setGameCode(null);
+                navigate(`${ROUTES.home}`);
+              } else console.log('nope');
+            });
+          }}
+        >
+          Leave lobby
+        </button>
         <ul>
           <p>connected users</p>
           {gameStore.connectedPlayers.map((p, i) => (
