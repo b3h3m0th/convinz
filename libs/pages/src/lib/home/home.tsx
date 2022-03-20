@@ -5,9 +5,11 @@ import {
 import type { GameCode } from '@convinz/shared/types';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-// import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { ROUTES } from '@convinz/router';
 import './home.scss';
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
@@ -18,11 +20,14 @@ const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
 );
 
 socket.on('connect', () => {
+  gameStore.setIsConnected(true);
   console.log(`connected with id: ${socket.id}`);
 });
 
 socket.on('created', (gameCode) => {
+  gameStore.setHasJoinedLobby(true);
   console.log(`created lobby: ${gameCode}`);
+  gameStore.setGameCode(gameCode);
 });
 
 /* eslint-disable-next-line */
@@ -30,6 +35,8 @@ export interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
   observer((props: HomeProps) => {
+    const navigate = useNavigate();
+
     const onJoinGame = () => {
       if (gameStore.gameCode) {
         console.log('join', gameStore.gameCode);
@@ -40,7 +47,10 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
       socket.emit('create');
     };
 
-    console.log(gameStore.gameCode);
+    useEffect(() => {
+      if (gameStore.hasJoinedLobby && gameStore.gameCode)
+        navigate(`/${ROUTES.game}/${gameStore.gameCode}`);
+    }, [gameStore.hasJoinedLobby]);
 
     return (
       <div className="home">
