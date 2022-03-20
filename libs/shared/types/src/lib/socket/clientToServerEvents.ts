@@ -1,4 +1,5 @@
 import { GameCode } from '../game';
+import { ChatMessage } from '../game/message';
 
 export interface ClientToServerEvents {
   create: (
@@ -19,5 +20,5 @@ export interface ClientToServerEvents {
     }) => void
   ) => void;
   leave: (cb: (result: { error: boolean }) => void) => void;
-  sendMessage: (message: string, lobby: GameCode) => void;
+  sendMessage: (message: ChatMessage) => void;
 }

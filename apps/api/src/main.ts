@@ -56,9 +56,9 @@ io.on('connection', (socket) => {
     await io.to(code).emit('joined', nickname, connectedClients, code);
   });
 
-  socket.on('sendMessage', (message, gameCode) => {
+  socket.on('sendMessage', (message) => {
     console.log(message);
-    io.to(gameCode).emit('receiveMessage', message);
+    io.to(message.lobby).emit('receiveMessage', message);
   });
 
   socket.on('leave', (cb) => {

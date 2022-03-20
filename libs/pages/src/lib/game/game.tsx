@@ -7,13 +7,14 @@ import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
 import { GameCode } from '@convinz/shared/types';
+import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 
 export interface GameProps {}
 
 export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
   observer(({}: GameProps) => {
     const [message, setMessage] = useState<string>('');
-    const [messages, setMessages] = useState<string[]>([]);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
 
     const getGameCodeFromURL: () => GameCode = () => {
       const parts = window.location.pathname.split('/');
@@ -45,7 +46,6 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
     useEffect(() => {
       socket.on('receiveMessage', (message) => {
-        console.log(messages);
         setMessages([message, ...messages]);
       });
     }, [messages]);
@@ -68,7 +68,11 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         />
         <button
           onClick={() =>
-            socket.emit('sendMessage', message, gameStore.gameCode)
+            socket.emit('sendMessage', {
+              sender: gameStore.nickname,
+              message: message,
+              lobby: gameStore.gameCode,
+            })
           }
         >
           send
@@ -76,7 +80,9 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         <div>
           <ul>
             {messages.map((m, i) => (
-              <li key={i}>{m}</li>
+              <li key={i}>
+                {m.sender}: {m.message}
+              </li>
             ))}
           </ul>
         </div>
