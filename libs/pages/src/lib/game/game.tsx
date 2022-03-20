@@ -41,8 +41,11 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       });
 
       return () => {
-        socket.emit('leave', (result) => {
-          if (!result.error) socket.off();
+        socket.emit('leave', gameStore.gameCode, (result) => {
+          if (!result.error) {
+            socket.off();
+            gameStore.setConnectedPlayers(result.nicknames);
+          }
         });
       };
     }, []);
@@ -58,13 +61,14 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         <h1>game #{gameStore.gameCode}</h1>
         <button
           onClick={() => {
-            socket.emit('leave', (result) => {
+            socket.emit('leave', gameStore.gameCode, (result) => {
               if (!result.error) {
-                socket.off();
+                // socket.off();
                 gameStore.setHasJoinedLobby(false);
                 gameStore.setGameCode(null);
+                gameStore.setConnectedPlayers(result.nicknames);
                 navigate(`${ROUTES.home}`);
-              } else console.log('nope');
+              }
             });
           }}
         >

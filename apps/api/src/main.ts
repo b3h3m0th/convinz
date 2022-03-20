@@ -61,8 +61,9 @@ io.on('connection', (socket) => {
     io.to(message.lobby).emit('receiveMessage', message);
   });
 
-  socket.on('leave', (cb) => {
-    cb({ error: false });
+  socket.on('leave', async (code, cb) => {
+    await socket.leave(code);
+    cb({ error: false, nicknames: getConnectedRoomClientNicknames(code) });
   });
 });
 

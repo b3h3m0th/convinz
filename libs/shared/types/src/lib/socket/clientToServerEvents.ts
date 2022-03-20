@@ -6,8 +6,8 @@ export interface ClientToServerEvents {
     nickname: string,
     cb: (result: {
       gameCode: GameCode;
-      error: boolean;
       nicknames: string[];
+      error: boolean;
     }) => void
   ) => void;
   join: (
@@ -15,10 +15,13 @@ export interface ClientToServerEvents {
     nickname: string,
     cb: (result: {
       gameCode: GameCode;
-      error: boolean;
       nicknames: string[];
+      error: boolean;
     }) => void
   ) => void;
-  leave: (cb: (result: { error: boolean }) => void) => void;
+  leave: (
+    code: GameCode,
+    cb: (result: { nicknames: string[]; error: boolean }) => void
+  ) => void;
   sendMessage: (message: ChatMessage) => void;
 }
