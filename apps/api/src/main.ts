@@ -9,10 +9,11 @@ import {
   SocketData,
 } from '@convinz/shared/types';
 import { generateGameCode } from '@convinz/shared/util';
+import { getConnectedRoomClientNicknames } from './app/player';
 
 const app = express();
 const server = http.createServer(app);
-const io = new socketio.Server<
+export const io = new socketio.Server<
   ClientToServerEvents,
   ServerToClientEvents,
   InterServerEvents,
@@ -30,27 +31,38 @@ app.get('/api', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log(socket.id);
-
-  socket.on('create', (nickname) => {
+  socket.on('create', async (nickname, cb) => {
     const gameCode = generateGameCode();
     (socket as any).nickname = nickname;
-    socket.join(gameCode);
-    socket.emit('created', gameCode);
-    console.log(socket);
+    await socket.join(gameCode);
+    const connectedClients = getConnectedRoomClientNicknames(gameCode);
+    cb({
+      gameCode: gameCode,
+      error: false,
+      nicknames: connectedClients,
+    });
+    await io.to(gameCode).emit('joined', nickname, connectedClients, gameCode);
   });
 
-  socket.on('join', (code, nickname) => {
+  socket.on('join', async (code, nickname, cb) => {
     (socket as any).nickname = nickname;
-    socket.join(code);
-    socket.emit('joined', code);
+    await socket.join(code);
+    const connectedClients = getConnectedRoomClientNicknames(code);
+    cb({
+      gameCode: code,
+      error: false,
+      nicknames: connectedClients,
+    });
+    await io.to(code).emit('joined', nickname, connectedClients, code);
   });
 
   socket.on('sendMessage', (message, gameCode) => {
     console.log(message);
-    // io.sockets.in(gameCode).emit('receiveMessage', message);
-    // socket.to(gameCode).emit('receiveMessage', message);
     io.to(gameCode).emit('receiveMessage', message);
+  });
+
+  socket.on('leave', (cb) => {
+    cb({ error: false });
   });
 });
 

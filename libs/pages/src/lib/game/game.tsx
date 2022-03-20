@@ -22,20 +22,43 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
     useEffect(() => {
       const code = getGameCodeFromURL();
-      if (code) {
-        console.log(code);
-        socket.emit('join', code, 'user');
-        gameStore.setGameCode(code);
+      if (code && !gameStore.hasJoinedLobby) {
+        socket.emit('join', code, 'user', (result) => {
+          if (!result.error) {
+            gameStore.setHasJoinedLobby(true);
+            console.log(`joined lobby: ${result.gameCode}`);
+            gameStore.setGameCode(result.gameCode);
+          }
+        });
       }
+
+      socket.on('joined', (nickname, nicknames, gameCode) => {
+        gameStore.setConnectedPlayers(nicknames);
+      });
+
+      return () => {
+        socket.emit('leave', (result) => {
+          if (!result.error) socket.off();
+        });
+      };
     }, []);
 
-    socket.on('receiveMessage', (message) => {
-      setMessages([message, ...messages]);
-    });
+    useEffect(() => {
+      socket.on('receiveMessage', (message) => {
+        console.log(messages);
+        setMessages([message, ...messages]);
+      });
+    }, [messages]);
 
     return (
       <div className="game">
         <h1>game</h1>
+        <ul>
+          <p>connected users</p>
+          {gameStore.connectedPlayers.map((p, i) => (
+            <li key={i}>{p}</li>
+          ))}
+        </ul>
         <input
           type="text"
           value={message}

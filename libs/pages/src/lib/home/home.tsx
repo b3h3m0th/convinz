@@ -3,7 +3,7 @@ import './home.scss';
 import type { GameCode } from '@convinz/shared/types';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import { socket } from '@convinz/socket';
@@ -13,32 +13,39 @@ socket.on('connect', () => {
   console.log(`connected with id: ${socket.id}`);
 });
 
-socket.on('created', (gameCode: GameCode) => {
-  gameStore.setHasJoinedLobby(true);
-  console.log(`created lobby: ${gameCode}`);
-  gameStore.setGameCode(gameCode);
-});
-
-socket.on('joined', (gameCode: GameCode) => {
-  gameStore.setHasJoinedLobby(true);
-  console.log(`joined lobby: ${gameCode}`);
-  gameStore.setGameCode(gameCode);
-});
-
 /* eslint-disable-next-line */
 export interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
   observer((props: HomeProps) => {
-    const [nickname, setNickname] = useState<string>('');
     const navigate = useNavigate();
 
     const onJoinGame = () => {
-      if (gameStore.gameCode) socket.emit('join', gameStore.gameCode, nickname);
+      if (gameStore.gameCode)
+        socket.emit(
+          'join',
+          gameStore.gameCode,
+          gameStore.nickname,
+          (result) => {
+            if (!result.error) {
+              gameStore.setHasJoinedLobby(true);
+              gameStore.setConnectedPlayers(result.nicknames);
+              console.log(`joined lobby: ${result.gameCode}`);
+              gameStore.setGameCode(result.gameCode);
+            }
+          }
+        );
     };
 
     const onCreateGame = () => {
-      socket.emit('create', nickname);
+      socket.emit('create', gameStore.nickname, (result) => {
+        if (!result.error) {
+          gameStore.setHasJoinedLobby(true);
+          gameStore.setConnectedPlayers(result.nicknames);
+          console.log(`created lobby: ${result.gameCode}`);
+          gameStore.setGameCode(result.gameCode);
+        }
+      });
     };
 
     useEffect(() => {
@@ -72,9 +79,9 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             id="nickname"
             type="text"
             className="home__content__nickname-input"
-            value={nickname}
+            value={gameStore.nickname}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setNickname(e.target.value)
+              gameStore.setNickname(e.target.value)
             }
           />
           <br />
