@@ -23,12 +23,17 @@ export class GameStore implements IStore {
       console.log(`connected with id: ${socket.id}`);
     });
 
-    socket.on('joined', (players, gameCode) => {
+    socket.on('disconnect', () => {
+      this.setIsConnected(false);
+      console.log(`disconnected`);
+    });
+
+    socket.on('joined', (players) => {
       console.log(players);
       this.setConnectedPlayers(players);
     });
 
-    socket.on('left', (players, gameCode) => {
+    socket.on('left', (players) => {
       console.log(players);
       this.setConnectedPlayers(players);
     });

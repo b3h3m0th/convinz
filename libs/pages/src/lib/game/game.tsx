@@ -37,18 +37,19 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         });
       }
 
-      socket.on('receiveMessage', (message) => {
-        setMessages([message, ...messages]);
-      });
-
       return () => {
         socket.emit('leave', gameStore.gameCode, (result) => {
           if (!result.error) {
             gameStore.setConnectedPlayers(result.players);
-            socket.off();
           }
         });
       };
+    }, []);
+
+    useEffect(() => {
+      socket.on('receiveMessage', (message) => {
+        setMessages((prevMessages) => [message, ...prevMessages]);
+      });
     }, []);
 
     return (
@@ -58,8 +59,6 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           onClick={() => {
             socket.emit('leave', gameStore.gameCode, (result) => {
               if (!result.error) {
-                console.log(result.players);
-                // socket.off();
                 gameStore.setHasJoinedLobby(false);
                 gameStore.setGameCode(null);
                 gameStore.setConnectedPlayers(result.players);

@@ -70,7 +70,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', (message) => {
-    console.log(message);
     io.to(message.lobby).emit('receiveMessage', message);
   });
 
