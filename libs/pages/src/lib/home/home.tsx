@@ -23,13 +23,12 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           gameStore.player.nickname,
           GameAccessionType.GAME_CODE,
           (result) => {
-            console.log(result.players);
             if (!result.error) {
               gameStore.setPlayer(result.player);
               gameStore.setHasJoinedLobby(true);
               gameStore.setConnectedPlayers(result.players);
-              console.log(`joined lobby: ${result.gameCode}`);
               gameStore.setGameCode(result.gameCode);
+              console.log(`joined lobby: ${result.gameCode}`);
             }
           }
         );
@@ -41,8 +40,8 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           gameStore.setPlayer(result.player);
           gameStore.setHasJoinedLobby(true);
           gameStore.setConnectedPlayers(result.players);
-          console.log(`created lobby: ${result.gameCode}`);
           gameStore.setGameCode(result.gameCode);
+          console.log(`created lobby: ${result.gameCode}`);
         }
       });
     };

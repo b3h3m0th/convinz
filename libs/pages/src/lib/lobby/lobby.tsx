@@ -10,6 +10,7 @@ import { GameAccessionType, GameCode, Role } from '@convinz/shared/types';
 import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
+import Game from '../game/game';
 
 export interface LobbyProps {}
 
@@ -53,6 +54,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
           if (!result.error) {
             gameStore.setConnectedPlayers(result.players);
             gameStore.setHasJoinedLobby(false);
+            gameStore.setHasGameStarted(false);
           }
         });
       };
@@ -65,7 +67,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
     }, []);
 
     return (
-      <div className="game">
+      <div className="lobby">
         <h1>game #{gameStore.gameCode}</h1>
         <button
           onClick={() => {
@@ -110,9 +112,11 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         </button>
 
         {gameStore.player.role === Role.CAPTAIN &&
-        gameStore.connectedPlayers.length > 1 ? (
-          <button>Start game</button>
+        gameStore.connectedPlayers.length > 1 &&
+        !gameStore.hasGameStarted ? (
+          <button onClick={() => gameStore.startGame()}>Start game</button>
         ) : null}
+        <div>{gameStore.hasGameStarted && <Game />}</div>
         <div>
           <ul>
             {messages.map((m, i) => (

@@ -26,5 +26,6 @@ export interface ClientToServerEvents {
     gameCode: GameCode,
     cb: (result: { players: Player[]; error: boolean }) => void
   ) => void;
+  start: (gameCode: GameCode, cb: (result: { error: boolean }) => void) => void;
   sendMessage: (message: ChatMessage) => void;
 }

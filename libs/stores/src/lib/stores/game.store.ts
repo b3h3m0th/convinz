@@ -11,6 +11,7 @@ export class GameStore implements IStore {
   @observable player: Player = new Player('', '', '', Role.MEMBER);
   @observable isConnected = false;
   @observable hasJoinedLobby = false;
+  @observable hasGameStarted = false;
   @observable connectedPlayers: Player[] = [];
 
   constructor() {
@@ -31,13 +32,15 @@ export class GameStore implements IStore {
     });
 
     socket.on('joined', (players) => {
-      console.log(players);
       this.setConnectedPlayers(players);
     });
 
     socket.on('left', (players) => {
-      console.log(players);
       this.setConnectedPlayers(players);
+    });
+
+    socket.on('started', (gameCode) => {
+      this.hasGameStarted = true;
     });
   }
 
@@ -59,6 +62,18 @@ export class GameStore implements IStore {
 
   @action setHasJoinedLobby(value: boolean) {
     this.hasJoinedLobby = value;
+  }
+
+  @action setHasGameStarted(value: boolean) {
+    this.hasGameStarted = value;
+  }
+
+  @action startGame() {
+    socket.emit('start', this.gameCode, (error) => {
+      if (!error) {
+        this.hasGameStarted = true;
+      }
+    });
   }
 
   @action setConnectedPlayers(players: Player[]) {

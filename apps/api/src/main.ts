@@ -33,6 +33,10 @@ app.get('/api', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+  socket.on('disconnecting', (reason) => {
+    console.log('disconnect', reason);
+  });
+
   socket.on('create', async (nickname, cb) => {
     const gameCode = generateGameCode();
     await socket.join(gameCode);
@@ -93,8 +97,9 @@ io.on('connection', (socket) => {
     io.to(message.lobby).emit('receiveMessage', message);
   });
 
-  socket.on('disconnecting', (reason) => {
-    console.log('disconnect', reason); // the Set contains at least the socket ID
+  socket.on('start', (gameCode, cb) => {
+    cb({ error: false });
+    io.to(gameCode).emit('started', gameCode);
   });
 });
 
