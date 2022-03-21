@@ -32,29 +32,24 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
             gameStore.setHasJoinedLobby(true);
             console.log(`joined lobby: ${result.gameCode}`);
             gameStore.setGameCode(result.gameCode);
+            gameStore.setConnectedPlayers(result.players);
           }
         });
       }
 
-      socket.on('joined', (nickname, nicknames, gameCode) => {
-        gameStore.setConnectedPlayers(nicknames);
+      socket.on('receiveMessage', (message) => {
+        setMessages([message, ...messages]);
       });
 
       return () => {
         socket.emit('leave', gameStore.gameCode, (result) => {
           if (!result.error) {
+            gameStore.setConnectedPlayers(result.players);
             socket.off();
-            gameStore.setConnectedPlayers(result.nicknames);
           }
         });
       };
     }, []);
-
-    useEffect(() => {
-      socket.on('receiveMessage', (message) => {
-        setMessages([message, ...messages]);
-      });
-    }, [messages]);
 
     return (
       <div className="game">
@@ -63,10 +58,11 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           onClick={() => {
             socket.emit('leave', gameStore.gameCode, (result) => {
               if (!result.error) {
+                console.log(result.players);
                 // socket.off();
                 gameStore.setHasJoinedLobby(false);
                 gameStore.setGameCode(null);
-                gameStore.setConnectedPlayers(result.nicknames);
+                gameStore.setConnectedPlayers(result.players);
                 navigate(`${ROUTES.home}`);
               }
             });
@@ -76,9 +72,10 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         </button>
         <ul>
           <p>connected users</p>
-          {gameStore.connectedPlayers.map((p, i) => (
-            <li key={i}>{p}</li>
-          ))}
+          {gameStore.connectedPlayers.length > 0 &&
+            gameStore.connectedPlayers.map((p, i) => (
+              <li key={JSON.stringify(p)}>{p.nickname}</li>
+            ))}
         </ul>
         <input
           type="text"

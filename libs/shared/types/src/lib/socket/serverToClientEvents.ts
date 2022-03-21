@@ -1,11 +1,8 @@
-import type { GameCode } from '../game';
+import type { GameCode, Player } from '../game';
 import { ChatMessage } from '../game/message';
 
 export interface ServerToClientEvents {
-  joined: (
-    nickname: string,
-    connectedClientNicknames: string[],
-    gameCode: GameCode
-  ) => void;
+  joined: (players: Player[], gameCode: GameCode) => void;
+  left: (players: Player[], gameCode: GameCode) => void;
   receiveMessage: (message: ChatMessage) => void;
 }

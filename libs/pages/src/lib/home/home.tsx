@@ -8,11 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import { socket } from '@convinz/socket';
 
-socket.on('connect', () => {
-  gameStore.setIsConnected(true);
-  console.log(`connected with id: ${socket.id}`);
-});
-
 /* eslint-disable-next-line */
 export interface HomeProps {}
 
@@ -29,7 +24,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           (result) => {
             if (!result.error) {
               gameStore.setHasJoinedLobby(true);
-              gameStore.setConnectedPlayers(result.nicknames);
+              gameStore.setConnectedPlayers(result.players);
               console.log(`joined lobby: ${result.gameCode}`);
               gameStore.setGameCode(result.gameCode);
             }
@@ -41,7 +36,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
       socket.emit('create', gameStore.nickname, (result) => {
         if (!result.error) {
           gameStore.setHasJoinedLobby(true);
-          gameStore.setConnectedPlayers(result.nicknames);
+          gameStore.setConnectedPlayers(result.players);
           console.log(`created lobby: ${result.gameCode}`);
           gameStore.setGameCode(result.gameCode);
         }

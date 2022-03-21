@@ -1,4 +1,5 @@
-import type { GameCode } from '@convinz/shared/types';
+import type { GameCode, Player } from '@convinz/shared/types';
+import { socket } from '@convinz/socket';
 import { action, makeAutoObservable, observable } from 'mobx';
 import { IStore } from '../interfaces';
 
@@ -8,10 +9,29 @@ export class GameStore implements IStore {
   @observable nickname = '';
   @observable isConnected = false;
   @observable hasJoinedLobby = false;
-  @observable connectedPlayers: string[] = [];
+  @observable connectedPlayers: Player[] = [];
 
   constructor() {
     makeAutoObservable(this);
+
+    this.onSocketListeners();
+  }
+
+  onSocketListeners() {
+    socket.on('connect', () => {
+      this.setIsConnected(true);
+      console.log(`connected with id: ${socket.id}`);
+    });
+
+    socket.on('joined', (players, gameCode) => {
+      console.log(players);
+      this.setConnectedPlayers(players);
+    });
+
+    socket.on('left', (players, gameCode) => {
+      console.log(players);
+      this.setConnectedPlayers(players);
+    });
   }
 
   @action setGameCode(code: GameCode) {
@@ -30,11 +50,11 @@ export class GameStore implements IStore {
     this.hasJoinedLobby = value;
   }
 
-  @action setConnectedPlayers(players: string[]) {
+  @action setConnectedPlayers(players: Player[]) {
     this.connectedPlayers = players;
   }
 
-  @action addConnectedPlayer(player: string) {
+  @action addConnectedPlayer(player: Player) {
     this.connectedPlayers.push(player);
   }
 }

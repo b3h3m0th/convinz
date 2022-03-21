@@ -1,12 +1,12 @@
-import { GameCode } from '../game';
-import { ChatMessage } from '../game/message';
+import { GameCode, Player } from '../game';
+import { ChatMessage } from '../game';
 
 export interface ClientToServerEvents {
   create: (
     nickname: string,
     cb: (result: {
       gameCode: GameCode;
-      nicknames: string[];
+      players: Player[];
       error: boolean;
     }) => void
   ) => void;
@@ -15,13 +15,13 @@ export interface ClientToServerEvents {
     nickname: string,
     cb: (result: {
       gameCode: GameCode;
-      nicknames: string[];
+      players: Player[];
       error: boolean;
     }) => void
   ) => void;
   leave: (
-    code: GameCode,
-    cb: (result: { nicknames: string[]; error: boolean }) => void
+    gameCode: GameCode,
+    cb: (result: { players: Player[]; error: boolean }) => void
   ) => void;
   sendMessage: (message: ChatMessage) => void;
 }

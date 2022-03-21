@@ -5,11 +5,12 @@ import * as socketio from 'socket.io';
 import {
   ClientToServerEvents,
   InterServerEvents,
+  Player,
   ServerToClientEvents,
   SocketData,
 } from '@convinz/shared/types';
 import { generateGameCode } from '@convinz/shared/util';
-import { getConnectedRoomClientNicknames } from './app/player';
+import { addPlayer, getPlayersInRoom, removePlayer } from './app/player';
 
 const app = express();
 const server = http.createServer(app);
@@ -33,27 +34,39 @@ app.get('/api', (req, res) => {
 io.on('connection', (socket) => {
   socket.on('create', async (nickname, cb) => {
     const gameCode = generateGameCode();
-    (socket as any).nickname = nickname;
     await socket.join(gameCode);
-    const connectedClients = getConnectedRoomClientNicknames(gameCode);
+    addPlayer(new Player(socket.id, nickname, gameCode));
+    const connectedClients = getPlayersInRoom(gameCode);
+
     cb({
       gameCode: gameCode,
       error: false,
-      nicknames: connectedClients,
+      players: connectedClients,
     });
-    await io.to(gameCode).emit('joined', nickname, connectedClients, gameCode);
+    await io.to(gameCode).emit('joined', connectedClients, gameCode);
   });
 
   socket.on('join', async (code, nickname, cb) => {
-    (socket as any).nickname = nickname;
     await socket.join(code);
-    const connectedClients = getConnectedRoomClientNicknames(code);
+    addPlayer(new Player(socket.id, nickname, code));
+
+    const connectedClients = getPlayersInRoom(code);
     cb({
       gameCode: code,
       error: false,
-      nicknames: connectedClients,
+      players: connectedClients,
     });
-    await io.to(code).emit('joined', nickname, connectedClients, code);
+    await io.to(code).emit('joined', connectedClients, code);
+  });
+
+  socket.on('leave', async (code, cb) => {
+    removePlayer(socket.id);
+    const connectedClients = getPlayersInRoom(code);
+    socket.leave(code);
+
+    await io.to(code).emit('left', connectedClients, code);
+
+    cb({ error: false, players: connectedClients });
   });
 
   socket.on('sendMessage', (message) => {
@@ -61,9 +74,8 @@ io.on('connection', (socket) => {
     io.to(message.lobby).emit('receiveMessage', message);
   });
 
-  socket.on('leave', async (code, cb) => {
-    await socket.leave(code);
-    cb({ error: false, nicknames: getConnectedRoomClientNicknames(code) });
+  socket.on('disconnecting', () => {
+    console.log('disconnect', socket.rooms); // the Set contains at least the socket ID
   });
 });
 
