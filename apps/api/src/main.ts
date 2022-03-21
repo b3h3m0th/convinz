@@ -4,9 +4,9 @@ import * as http from 'http';
 import * as socketio from 'socket.io';
 import {
   ClientToServerEvents,
-  GameAccessionType,
   InterServerEvents,
   Player,
+  Role,
   ServerToClientEvents,
   SocketData,
 } from '@convinz/shared/types';
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
   socket.on('create', async (nickname, cb) => {
     const gameCode = generateGameCode();
     await socket.join(gameCode);
-    addPlayer(new Player(socket.id, nickname, gameCode));
+    addPlayer(new Player(socket.id, nickname, gameCode, Role.CAPTAIN));
     const connectedClients = getPlayersInRoom(gameCode);
 
     cb({
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
     }
 
     await socket.join(code);
-    addPlayer(new Player(socket.id, nickname, code));
+    addPlayer(new Player(socket.id, nickname, code, Role.MEMBER));
 
     const connectedClientsAfterSelfJoin = getPlayersInRoom(code);
 
@@ -87,8 +87,8 @@ io.on('connection', (socket) => {
     io.to(message.lobby).emit('receiveMessage', message);
   });
 
-  socket.on('disconnecting', () => {
-    console.log('disconnect', socket.rooms); // the Set contains at least the socket ID
+  socket.on('disconnecting', (reason) => {
+    console.log('disconnect', reason); // the Set contains at least the socket ID
   });
 });
 

@@ -1,5 +1,4 @@
 import type { GameCode, Player } from '@convinz/shared/types';
-import { io } from '../../main';
 
 const players: Player[] = [];
 

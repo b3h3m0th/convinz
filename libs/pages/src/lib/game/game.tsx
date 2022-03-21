@@ -6,7 +6,7 @@ import './game.scss';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
-import { GameAccessionType, GameCode } from '@convinz/shared/types';
+import { GameAccessionType, GameCode, Role } from '@convinz/shared/types';
 import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
@@ -82,7 +82,9 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           <p>connected users</p>
           {gameStore.connectedPlayers.length > 0 &&
             gameStore.connectedPlayers.map((p, i) => (
-              <li key={JSON.stringify(p)}>{p.nickname}</li>
+              <li key={JSON.stringify(p)}>
+                {p.nickname} {p.role === Role.CAPTAIN && '(Lobby Captain)'}
+              </li>
             ))}
         </ul>
         <input
