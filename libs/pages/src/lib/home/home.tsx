@@ -25,6 +25,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           (result) => {
             console.log(result.players);
             if (!result.error) {
+              gameStore.setPlayer(result.player);
               gameStore.setHasJoinedLobby(true);
               gameStore.setConnectedPlayers(result.players);
               console.log(`joined lobby: ${result.gameCode}`);
@@ -37,6 +38,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     const onCreateGame = () => {
       socket.emit('create', gameStore.player.nickname, (result) => {
         if (!result.error) {
+          gameStore.setPlayer(result.player);
           gameStore.setHasJoinedLobby(true);
           gameStore.setConnectedPlayers(result.players);
           console.log(`created lobby: ${result.gameCode}`);

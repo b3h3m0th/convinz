@@ -6,6 +6,7 @@ export interface ClientToServerEvents {
     nickname: string,
     cb: (result: {
       gameCode: GameCode;
+      player: Player;
       players: Player[];
       error: boolean;
     }) => void
@@ -17,6 +18,7 @@ export interface ClientToServerEvents {
     cb: (result: {
       gameCode: GameCode;
       players: Player[];
+      player: Player;
       error: boolean;
     }) => void
   ) => void;

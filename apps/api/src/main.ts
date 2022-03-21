@@ -36,13 +36,16 @@ io.on('connection', (socket) => {
   socket.on('create', async (nickname, cb) => {
     const gameCode = generateGameCode();
     await socket.join(gameCode);
-    addPlayer(new Player(socket.id, nickname, gameCode, Role.CAPTAIN));
+
+    const newPlayer = new Player(socket.id, nickname, gameCode, Role.CAPTAIN);
+    addPlayer(newPlayer);
     const connectedClients = getPlayersInRoom(gameCode);
 
     cb({
       gameCode: gameCode,
       error: false,
       players: connectedClients,
+      player: newPlayer,
     });
     await io.to(gameCode).emit('joined', connectedClients, gameCode);
   });
@@ -55,13 +58,15 @@ io.on('connection', (socket) => {
         gameCode: code,
         error: true,
         players: alreadyConnectedClients,
+        player: null,
       });
       await io.to(code).emit('joined', alreadyConnectedClients, code);
       return;
     }
 
     await socket.join(code);
-    addPlayer(new Player(socket.id, nickname, code, Role.MEMBER));
+    const newPlayer = new Player(socket.id, nickname, code, Role.MEMBER);
+    addPlayer(newPlayer);
 
     const connectedClientsAfterSelfJoin = getPlayersInRoom(code);
 
@@ -69,6 +74,7 @@ io.on('connection', (socket) => {
       gameCode: code,
       error: false,
       players: connectedClientsAfterSelfJoin,
+      player: newPlayer,
     });
     await io.to(code).emit('joined', connectedClientsAfterSelfJoin, code);
   });

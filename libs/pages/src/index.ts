@@ -1,3 +1,3 @@
 export * from './lib/home/home';
-export * from './lib/game/game';
+export * from './lib/lobby/lobby';
 export * from './lib/error/error';

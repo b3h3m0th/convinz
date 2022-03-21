@@ -10,7 +10,7 @@ export const pages = {
   },
   game: {
     component: lazy(() =>
-      import('@convinz/pages').then((module) => ({ default: module.Game }))
+      import('@convinz/pages').then((module) => ({ default: module.Lobby }))
     ),
   },
   error: {

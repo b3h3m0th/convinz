@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable no-empty-pattern */
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import './game.scss';
+import './lobby.scss';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
@@ -11,10 +11,10 @@ import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 
-export interface GameProps {}
+export interface LobbyProps {}
 
-export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
-  observer(({}: GameProps) => {
+export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
+  observer(({}: LobbyProps) => {
     const navigate = useNavigate();
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -108,6 +108,11 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         >
           send
         </button>
+
+        {gameStore.player.role === Role.CAPTAIN &&
+        gameStore.connectedPlayers.length > 1 ? (
+          <button>Start game</button>
+        ) : null}
         <div>
           <ul>
             {messages.map((m, i) => (
@@ -122,4 +127,4 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
   })
 );
 
-export default Game;
+export default Lobby;
