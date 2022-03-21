@@ -4,6 +4,7 @@ import * as http from 'http';
 import * as socketio from 'socket.io';
 import {
   ClientToServerEvents,
+  GameAccessionType,
   InterServerEvents,
   Player,
   ServerToClientEvents,
@@ -46,17 +47,30 @@ io.on('connection', (socket) => {
     await io.to(gameCode).emit('joined', connectedClients, gameCode);
   });
 
-  socket.on('join', async (code, nickname, cb) => {
+  socket.on('join', async (code, nickname, gameAccessionType, cb) => {
+    const alreadyConnectedClients = getPlayersInRoom(code);
+
+    if (alreadyConnectedClients.length < 1) {
+      cb({
+        gameCode: code,
+        error: true,
+        players: alreadyConnectedClients,
+      });
+      await io.to(code).emit('joined', alreadyConnectedClients, code);
+      return;
+    }
+
     await socket.join(code);
     addPlayer(new Player(socket.id, nickname, code));
 
-    const connectedClients = getPlayersInRoom(code);
+    const connectedClientsAfterSelfJoin = getPlayersInRoom(code);
+
     cb({
       gameCode: code,
       error: false,
-      players: connectedClients,
+      players: connectedClientsAfterSelfJoin,
     });
-    await io.to(code).emit('joined', connectedClients, code);
+    await io.to(code).emit('joined', connectedClientsAfterSelfJoin, code);
   });
 
   socket.on('leave', async (code, cb) => {

@@ -1,6 +1,6 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import './home.scss';
-import type { GameCode } from '@convinz/shared/types';
+import { GameAccessionType, GameCode } from '@convinz/shared/types';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { ChangeEvent, useEffect } from 'react';
@@ -21,7 +21,9 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           'join',
           gameStore.gameCode,
           gameStore.nickname,
+          GameAccessionType.GAME_CODE,
           (result) => {
+            console.log(result.players);
             if (!result.error) {
               gameStore.setHasJoinedLobby(true);
               gameStore.setConnectedPlayers(result.players);

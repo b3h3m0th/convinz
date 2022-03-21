@@ -1,4 +1,4 @@
-import { GameCode } from './gameCode';
+import { GameCode } from './game';
 
 export class Player {
   constructor(

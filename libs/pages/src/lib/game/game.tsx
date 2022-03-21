@@ -6,7 +6,7 @@ import './game.scss';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
-import { GameCode } from '@convinz/shared/types';
+import { GameAccessionType, GameCode } from '@convinz/shared/types';
 import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
@@ -27,20 +27,29 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     useEffect(() => {
       const code = getGameCodeFromURL();
       if (code && !gameStore.hasJoinedLobby) {
-        socket.emit('join', code, 'user', (result) => {
-          if (!result.error) {
-            gameStore.setHasJoinedLobby(true);
-            console.log(`joined lobby: ${result.gameCode}`);
-            gameStore.setGameCode(result.gameCode);
-            gameStore.setConnectedPlayers(result.players);
+        gameStore.setNickname(prompt('nickname') || 'anonymous');
+
+        socket.emit(
+          'join',
+          code,
+          gameStore.nickname,
+          GameAccessionType.INSTANT_URL,
+          (result) => {
+            if (!result.error) {
+              console.log(`joined lobby: ${result.gameCode}`);
+              gameStore.setHasJoinedLobby(true);
+              gameStore.setGameCode(result.gameCode);
+              gameStore.setConnectedPlayers(result.players);
+            }
           }
-        });
+        );
       }
 
       return () => {
         socket.emit('leave', gameStore.gameCode, (result) => {
           if (!result.error) {
             gameStore.setConnectedPlayers(result.players);
+            gameStore.setHasJoinedLobby(false);
           }
         });
       };

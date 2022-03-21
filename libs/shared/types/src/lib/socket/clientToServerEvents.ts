@@ -1,4 +1,4 @@
-import { GameCode, Player } from '../game';
+import type { GameAccessionType, GameCode, Player } from '../game';
 import { ChatMessage } from '../game';
 
 export interface ClientToServerEvents {
@@ -13,6 +13,7 @@ export interface ClientToServerEvents {
   join: (
     code: string,
     nickname: string,
+    gameAccessionType: GameAccessionType,
     cb: (result: {
       gameCode: GameCode;
       players: Player[];

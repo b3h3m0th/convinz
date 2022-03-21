@@ -1,4 +1,4 @@
-import { GameCode } from './gameCode';
+import { GameCode } from './game';
 
 export type ChatMessage = {
   sender: string;
