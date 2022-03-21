@@ -20,7 +20,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
         socket.emit(
           'join',
           gameStore.gameCode,
-          gameStore.nickname,
+          gameStore.player.nickname,
           GameAccessionType.GAME_CODE,
           (result) => {
             console.log(result.players);
@@ -35,7 +35,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     };
 
     const onCreateGame = () => {
-      socket.emit('create', gameStore.nickname, (result) => {
+      socket.emit('create', gameStore.player.nickname, (result) => {
         if (!result.error) {
           gameStore.setHasJoinedLobby(true);
           gameStore.setConnectedPlayers(result.players);
@@ -76,9 +76,12 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             id="nickname"
             type="text"
             className="home__content__nickname-input"
-            value={gameStore.nickname}
+            value={gameStore.player.nickname}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              gameStore.setNickname(e.target.value)
+              gameStore.setPlayer({
+                ...gameStore.player,
+                nickname: e.target.value,
+              })
             }
           />
           <br />

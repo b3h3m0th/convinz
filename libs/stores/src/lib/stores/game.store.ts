@@ -1,4 +1,5 @@
-import type { GameCode, Player } from '@convinz/shared/types';
+import { Player, Role } from '@convinz/shared/types';
+import type { GameCode } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { action, makeAutoObservable, observable } from 'mobx';
 import { IStore } from '../interfaces';
@@ -7,6 +8,7 @@ export class GameStore implements IStore {
   storeKey = 'gameStore' as const;
   @observable gameCode: GameCode = null;
   @observable nickname = '';
+  @observable player: Player = new Player('', '', '', Role.MEMBER);
   @observable isConnected = false;
   @observable hasJoinedLobby = false;
   @observable connectedPlayers: Player[] = [];
@@ -45,6 +47,10 @@ export class GameStore implements IStore {
 
   @action setNickname(value: string) {
     this.nickname = value;
+  }
+
+  @action setPlayer(player: Player) {
+    this.player = player;
   }
 
   @action setIsConnected(value: boolean) {

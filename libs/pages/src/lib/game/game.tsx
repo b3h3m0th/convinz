@@ -27,12 +27,15 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     useEffect(() => {
       const code = getGameCodeFromURL();
       if (code && !gameStore.hasJoinedLobby) {
-        gameStore.setNickname(prompt('nickname') || 'anonymous');
+        gameStore.setPlayer({
+          ...gameStore.player,
+          nickname: prompt('nickname') || 'anonymous',
+        });
 
         socket.emit(
           'join',
           code,
-          gameStore.nickname,
+          gameStore.player.nickname,
           GameAccessionType.INSTANT_URL,
           (result) => {
             if (!result.error) {
@@ -97,7 +100,7 @@ export const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         <button
           onClick={() =>
             socket.emit('sendMessage', {
-              sender: gameStore.nickname,
+              sender: gameStore.player.nickname,
               message: message,
               lobby: gameStore.gameCode,
             })
