@@ -84,7 +84,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leave', async (code, cb) => {
-    console.log(socket.id);
     const leftPlayer = removePlayer(socket.id);
     const connectedClients = getPlayersInRoom(code);
 
