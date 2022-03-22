@@ -94,7 +94,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 });
               }}
             >
-              Leave lobby
+              Leave Lobby
             </Button>
             <Table mt={'md'} mb={'md'}>
               <thead>
