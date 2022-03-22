@@ -9,6 +9,7 @@ import { ROUTES } from '@convinz/router';
 import { socket } from '@convinz/socket';
 import { Button, Text, TextInput, Title } from '@mantine/core';
 import { Hash } from 'tabler-icons-react';
+import { gameCodeLength } from '@convinz/shared/util';
 
 /* eslint-disable-next-line */
 export interface HomeProps {}
@@ -61,6 +62,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           <TextInput
             icon={<Hash size={14} />}
             label="Game Code"
+            placeholder={'X'.repeat(gameCodeLength)}
             value={`${
               (gameStore.gameCode as string)
                 ? (gameStore.gameCode as string)
@@ -88,7 +90,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           <Button
             disabled={
               !gameStore.player.nickname.length ||
-              !(gameStore.gameCode as string)
+              !((gameStore.gameCode as string).length === gameCodeLength)
             }
             onClick={() => onJoinGame()}
             mr="xs"
@@ -98,7 +100,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           <Button
             disabled={
               !gameStore.player.nickname.length ||
-              !(gameStore.gameCode as string)
+              !((gameStore.gameCode as string).length === gameCodeLength)
             }
             onClick={() => onCreateGame()}
             ml="xs"
