@@ -30,7 +30,8 @@
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
     "tabler-icons-react": "^1.39.0",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "use-sound": "^4.0.1"
   },
   "devDependencies": {
     "@nrwl/cli": "13.9.3",
