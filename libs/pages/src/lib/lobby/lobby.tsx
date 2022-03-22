@@ -11,7 +11,15 @@ import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import Game from '../game/game';
-import { Button, Navbar, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Navbar,
+  Table,
+  TextInput,
+  Title,
+} from '@mantine/core';
+import { ArrowRight } from 'tabler-icons-react';
 
 export interface LobbyProps {}
 
@@ -88,33 +96,49 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
             >
               Leave lobby
             </Button>
-            <ul>
-              <p>connected users</p>
-              {gameStore.connectedPlayers.length > 0 &&
-                gameStore.connectedPlayers.map((p, i) => (
-                  <li key={JSON.stringify(p)}>
-                    {p.nickname} {p.role === Role.CAPTAIN && '(Lobby Captain)'}
-                  </li>
+            <Table mt={'md'} mb={'md'}>
+              <thead>
+                <tr>
+                  <th style={{ paddingLeft: 0 }}>Connected Users</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gameStore.connectedPlayers.map((p) => (
+                  <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
+                    <td style={{ paddingLeft: 0 }}>
+                      {p.nickname}{' '}
+                      {p.role === Role.CAPTAIN && '(Lobby Captain)'}
+                    </td>
+                  </tr>
                 ))}
-            </ul>
-            <input
-              type="text"
+              </tbody>
+            </Table>
+
+            <TextInput
+              size="md"
+              rightSection={
+                <ActionIcon
+                  size={32}
+                  radius="sm"
+                  variant="filled"
+                  onClick={() => {
+                    socket.emit('sendMessage', {
+                      sender: gameStore.player.nickname,
+                      message: message,
+                      lobby: gameStore.gameCode,
+                    });
+                  }}
+                >
+                  <ArrowRight size={18} />
+                </ActionIcon>
+              }
+              placeholder="Chat"
+              rightSectionWidth={42}
               value={message}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setMessage(e.target.value)
               }
             />
-            <button
-              onClick={() =>
-                socket.emit('sendMessage', {
-                  sender: gameStore.player.nickname,
-                  message: message,
-                  lobby: gameStore.gameCode,
-                })
-              }
-            >
-              send
-            </button>
 
             {gameStore.player.role === Role.CAPTAIN &&
             gameStore.connectedPlayers.length > 1 &&
