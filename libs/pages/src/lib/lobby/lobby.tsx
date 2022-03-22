@@ -30,35 +30,8 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-    const getGameCodeFromURL: () => GameCode = () => {
-      const parts = window.location.pathname.split('/');
-      return parts[parts.length - 1];
-    };
-
     useEffect(() => {
-      const code = getGameCodeFromURL();
-      if (code && !gameStore.hasJoinedLobby) {
-        gameStore.setPlayer({
-          ...gameStore.player,
-          nickname: prompt('nickname') || 'anonymous',
-        });
-
-        socket.emit(
-          'join',
-          code,
-          gameStore.player.nickname,
-          GameAccessionType.INSTANT_URL,
-          (result) => {
-            if (!result.error) {
-              console.log(`joined lobby: ${result.gameCode}`);
-              gameStore.setPlayer(result.player);
-              gameStore.setHasJoinedLobby(true);
-              gameStore.setGameCode(result.gameCode);
-              gameStore.setConnectedPlayers(result.players);
-            }
-          }
-        );
-      }
+      if (!gameStore.hasJoinedLobby) navigate(`${ROUTES.home}`);
 
       return () => {
         if (gameStore.hasJoinedLobby) {
