@@ -1,7 +1,9 @@
 import React from 'react';
+import './app.scss';
 import { Provider as StoreProvider } from 'mobx-react';
 import * as fromRouter from '@convinz/router';
 import { gameStore } from '@convinz/stores';
+import { MantineProvider } from '@mantine/core';
 
 const stores = { gameStore };
 
@@ -9,7 +11,15 @@ export const App: React.FC = () => {
   return (
     <React.StrictMode>
       <StoreProvider {...stores}>
-        <fromRouter.Router />
+        <MantineProvider
+          theme={{
+            spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
+          }}
+          withNormalizeCSS
+          withGlobalStyles
+        >
+          <fromRouter.Router />
+        </MantineProvider>
       </StoreProvider>
     </React.StrictMode>
   );

@@ -7,6 +7,7 @@ import { ChangeEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import { socket } from '@convinz/socket';
+import { Button, Text, TextInput, Title } from '@mantine/core';
 
 /* eslint-disable-next-line */
 export interface HomeProps {}
@@ -53,13 +54,11 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
 
     return (
       <div className="home">
-        <h1>home</h1>
         <div className="home__content">
-          <label htmlFor="gameCode">Game Code</label>
-          <input
-            id="gameCode"
-            type="text"
-            className="home__content__game-code-input"
+          <Title mb="xs">Convinz</Title>
+          <Text mb="md">Win by inventing shit</Text>
+          <TextInput
+            label="Game Code"
             value={`#${
               (gameStore.gameCode as string)
                 ? (gameStore.gameCode as string)
@@ -71,10 +70,8 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
               )
             }
           />
-          <br />
-          <label htmlFor="nickname">Nickname</label>
-          <input
-            id="nickname"
+          <TextInput
+            label="Nickname"
             type="text"
             className="home__content__nickname-input"
             value={gameStore.player.nickname}
@@ -86,8 +83,12 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             }
           />
           <br />
-          <button onClick={() => onJoinGame()}>Join Game</button>
-          <button onClick={() => onCreateGame()}>Create Game</button>
+          <Button onClick={() => onJoinGame()} mr="xs">
+            Join Game
+          </Button>
+          <Button onClick={() => onCreateGame()} ml="xs">
+            Create Game
+          </Button>
         </div>
       </div>
     );
