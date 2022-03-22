@@ -16,6 +16,7 @@ import {
   Button,
   Navbar,
   Table,
+  Text,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -106,12 +107,15 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 {gameStore.connectedPlayers.map((p) => (
                   <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
                     <td style={{ paddingLeft: 0 }}>
-                      <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <Text
+                        color={p.id === gameStore.player.id ? 'blue' : ''}
+                        style={{ display: 'flex', alignItems: 'center' }}
+                      >
                         {p.nickname}{' '}
                         {p.role === Role.CAPTAIN && (
                           <Crown style={{ paddingLeft: '4px' }} />
                         )}
-                      </span>
+                      </Text>
                     </td>
                   </tr>
                 ))}
