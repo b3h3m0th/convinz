@@ -63,6 +63,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             icon={<Hash size={14} />}
             label="Game Code"
             placeholder={'X'.repeat(gameCodeLength)}
+            maxLength={gameCodeLength}
             value={`${
               (gameStore.gameCode as string)
                 ? (gameStore.gameCode as string)

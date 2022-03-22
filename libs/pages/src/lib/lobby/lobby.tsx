@@ -6,7 +6,7 @@ import './lobby.scss';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
-import { GameAccessionType, GameCode, Role } from '@convinz/shared/types';
+import { Role } from '@convinz/shared/types';
 import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
@@ -20,18 +20,36 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { ArrowLeft, ArrowRight, Crown } from 'tabler-icons-react';
+import { useNotifications } from '@mantine/notifications';
+import {
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  Crown,
+} from 'tabler-icons-react';
 
 export interface LobbyProps {}
 
 export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
   observer(({}: LobbyProps) => {
     const navigate = useNavigate();
+    const notifications = useNotifications();
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
     useEffect(() => {
-      if (!gameStore.hasJoinedLobby) navigate(`${ROUTES.home}`);
+      if (!gameStore.hasJoinedLobby) {
+        navigate(`${ROUTES.home}`);
+        notifications.showNotification({
+          message: 'Please join via game code only!',
+          color: 'orange',
+          icon: (
+            <ActionIcon size={32}>
+              <AlertTriangle size={16} color="white" />
+            </ActionIcon>
+          ),
+        });
+      }
 
       return () => {
         if (gameStore.hasJoinedLobby) {

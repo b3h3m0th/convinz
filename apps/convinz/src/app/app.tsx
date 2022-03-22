@@ -4,6 +4,7 @@ import { Provider as StoreProvider } from 'mobx-react';
 import * as fromRouter from '@convinz/router';
 import { gameStore } from '@convinz/stores';
 import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
 
 const stores = { gameStore };
 
@@ -19,7 +20,9 @@ export const App: React.FC = () => {
           withGlobalStyles
         >
           <div className="app">
-            <fromRouter.Router />
+            <NotificationsProvider>
+              <fromRouter.Router />
+            </NotificationsProvider>
           </div>
         </MantineProvider>
       </StoreProvider>
