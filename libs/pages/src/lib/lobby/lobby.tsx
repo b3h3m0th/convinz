@@ -20,7 +20,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { ArrowRight, Crown } from 'tabler-icons-react';
+import { ArrowLeft, ArrowRight, Crown } from 'tabler-icons-react';
 
 export interface LobbyProps {}
 
@@ -98,6 +98,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                   }
                 });
               }}
+              leftIcon={<ArrowLeft size={18} />}
             >
               Leave Lobby
             </Button>
