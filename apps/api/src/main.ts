@@ -86,6 +86,9 @@ io.on('connection', (socket) => {
   socket.on('leave', async (code, cb) => {
     removePlayer(socket.id);
     const connectedClients = getPlayersInRoom(code);
+    if (connectedClients.length > 0) {
+      connectedClients[0].role = Role.CAPTAIN;
+    }
     socket.leave(code);
 
     await io.to(code).emit('left', connectedClients, code);
