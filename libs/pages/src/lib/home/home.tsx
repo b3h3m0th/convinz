@@ -89,8 +89,9 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           <br />
           <Button
             disabled={
-              !gameStore.player.nickname.length ||
-              !((gameStore.gameCode as string).length === gameCodeLength)
+              !(
+                ((gameStore.gameCode as string) ?? '').length === gameCodeLength
+              ) || !gameStore.player?.nickname
             }
             onClick={() => onJoinGame()}
             mr="xs"
@@ -98,10 +99,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             Join Game
           </Button>
           <Button
-            disabled={
-              !gameStore.player.nickname.length ||
-              !((gameStore.gameCode as string).length === gameCodeLength)
-            }
+            disabled={!gameStore.player?.nickname}
             onClick={() => onCreateGame()}
             ml="xs"
           >
