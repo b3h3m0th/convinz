@@ -11,6 +11,7 @@ import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import Game from '../game/game';
+import { Button, Navbar, Title } from '@mantine/core';
 
 export interface LobbyProps {}
 
@@ -68,64 +69,70 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
 
     return (
       <div className="lobby">
-        <h1>game #{gameStore.gameCode}</h1>
-        <button
-          onClick={() => {
-            socket.emit('leave', gameStore.gameCode, (result) => {
-              if (!result.error) {
-                gameStore.setHasJoinedLobby(false);
-                gameStore.setGameCode(null);
-                gameStore.setConnectedPlayers(result.players);
-                navigate(`${ROUTES.home}`);
+        <Navbar height={750} width={{ sm: 300 }} p={'sm'}>
+          <Navbar.Section grow>
+            <Title order={3} mb={'sm'}>
+              Lobby #{gameStore.gameCode}
+            </Title>
+            <Button
+              onClick={() => {
+                socket.emit('leave', gameStore.gameCode, (result) => {
+                  if (!result.error) {
+                    gameStore.setHasJoinedLobby(false);
+                    gameStore.setGameCode(null);
+                    gameStore.setConnectedPlayers(result.players);
+                    navigate(`${ROUTES.home}`);
+                  }
+                });
+              }}
+            >
+              Leave lobby
+            </Button>
+            <ul>
+              <p>connected users</p>
+              {gameStore.connectedPlayers.length > 0 &&
+                gameStore.connectedPlayers.map((p, i) => (
+                  <li key={JSON.stringify(p)}>
+                    {p.nickname} {p.role === Role.CAPTAIN && '(Lobby Captain)'}
+                  </li>
+                ))}
+            </ul>
+            <input
+              type="text"
+              value={message}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setMessage(e.target.value)
               }
-            });
-          }}
-        >
-          Leave lobby
-        </button>
-        <ul>
-          <p>connected users</p>
-          {gameStore.connectedPlayers.length > 0 &&
-            gameStore.connectedPlayers.map((p, i) => (
-              <li key={JSON.stringify(p)}>
-                {p.nickname} {p.role === Role.CAPTAIN && '(Lobby Captain)'}
-              </li>
-            ))}
-        </ul>
-        <input
-          type="text"
-          value={message}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setMessage(e.target.value)
-          }
-        />
-        <button
-          onClick={() =>
-            socket.emit('sendMessage', {
-              sender: gameStore.player.nickname,
-              message: message,
-              lobby: gameStore.gameCode,
-            })
-          }
-        >
-          send
-        </button>
+            />
+            <button
+              onClick={() =>
+                socket.emit('sendMessage', {
+                  sender: gameStore.player.nickname,
+                  message: message,
+                  lobby: gameStore.gameCode,
+                })
+              }
+            >
+              send
+            </button>
 
-        {gameStore.player.role === Role.CAPTAIN &&
-        gameStore.connectedPlayers.length > 1 &&
-        !gameStore.hasGameStarted ? (
-          <button onClick={() => gameStore.startGame()}>Start game</button>
-        ) : null}
-        <div>{gameStore.hasGameStarted && <Game />}</div>
-        <div>
-          <ul>
-            {messages.map((m, i) => (
-              <li key={i}>
-                {m.sender}: {m.message}
-              </li>
-            ))}
-          </ul>
-        </div>
+            {gameStore.player.role === Role.CAPTAIN &&
+            gameStore.connectedPlayers.length > 1 &&
+            !gameStore.hasGameStarted ? (
+              <button onClick={() => gameStore.startGame()}>Start game</button>
+            ) : null}
+            <div>{gameStore.hasGameStarted && <Game />}</div>
+            <div>
+              <ul>
+                {messages.map((m, i) => (
+                  <li key={i}>
+                    {m.sender}: {m.message}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Navbar.Section>
+        </Navbar>
       </div>
     );
   })
