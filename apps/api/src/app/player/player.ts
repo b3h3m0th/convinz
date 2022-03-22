@@ -13,9 +13,11 @@ export const addPlayer = (player: Player): Player => {
 };
 
 export const removePlayer = (id: string) => {
+  let playerToBeRemoved;
   const removeIndex = players.findIndex((p) => p.id === id);
 
-  if (removeIndex !== -1) return players.splice(removeIndex, 1)[0];
+  if (removeIndex !== -1) playerToBeRemoved = players.splice(removeIndex, 1)[0];
+  return playerToBeRemoved;
 };
 
 export const getPlayer = (id: string) => {

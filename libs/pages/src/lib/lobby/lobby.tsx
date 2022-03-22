@@ -51,6 +51,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
           (result) => {
             if (!result.error) {
               console.log(`joined lobby: ${result.gameCode}`);
+              gameStore.setPlayer(result.player);
               gameStore.setHasJoinedLobby(true);
               gameStore.setGameCode(result.gameCode);
               gameStore.setConnectedPlayers(result.players);
@@ -60,13 +61,15 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
       }
 
       return () => {
-        socket.emit('leave', gameStore.gameCode, (result) => {
-          if (!result.error) {
-            gameStore.setConnectedPlayers(result.players);
-            gameStore.setHasJoinedLobby(false);
-            gameStore.setHasGameStarted(false);
-          }
-        });
+        if (gameStore.hasJoinedLobby) {
+          socket.emit('leave', gameStore.gameCode, (result) => {
+            if (!result.error) {
+              gameStore.setConnectedPlayers(result.players);
+              gameStore.setHasJoinedLobby(false);
+              gameStore.setHasGameStarted(false);
+            }
+          });
+        }
       };
     }, []);
 
@@ -86,6 +89,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
             <Button
               onClick={() => {
                 socket.emit('leave', gameStore.gameCode, (result) => {
+                  console.log('leave');
                   if (!result.error) {
                     gameStore.setHasJoinedLobby(false);
                     gameStore.setGameCode(null);
