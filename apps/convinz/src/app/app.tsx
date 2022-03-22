@@ -18,7 +18,9 @@ export const App: React.FC = () => {
           withNormalizeCSS
           withGlobalStyles
         >
-          <fromRouter.Router />
+          <div className="app">
+            <fromRouter.Router />
+          </div>
         </MantineProvider>
       </StoreProvider>
     </React.StrictMode>

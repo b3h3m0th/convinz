@@ -133,7 +133,6 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 <ActionIcon
                   size={32}
                   radius="sm"
-                  variant="filled"
                   onClick={() => {
                     socket.emit('sendMessage', {
                       sender: gameStore.player.nickname,

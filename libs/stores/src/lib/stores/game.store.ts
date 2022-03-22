@@ -7,7 +7,6 @@ import { IStore } from '../interfaces';
 export class GameStore implements IStore {
   storeKey = 'gameStore' as const;
   @observable gameCode: GameCode = null;
-  @observable nickname = '';
   @observable player: Player = new Player('', '', '', Role.MEMBER);
   @observable isConnected = false;
   @observable hasJoinedLobby = false;
@@ -46,10 +45,6 @@ export class GameStore implements IStore {
 
   @action setGameCode(code: GameCode) {
     this.gameCode = code;
-  }
-
-  @action setNickname(value: string) {
-    this.nickname = value;
   }
 
   @action setPlayer(player: Player) {

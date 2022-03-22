@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import { socket } from '@convinz/socket';
 import { Button, Text, TextInput, Title } from '@mantine/core';
+import { Hash } from 'tabler-icons-react';
 
 /* eslint-disable-next-line */
 export interface HomeProps {}
@@ -58,15 +59,16 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           <Title mb="xs">Convinz</Title>
           <Text mb="md">Win by inventing shit</Text>
           <TextInput
+            icon={<Hash size={14} />}
             label="Game Code"
-            value={`#${
+            value={`${
               (gameStore.gameCode as string)
                 ? (gameStore.gameCode as string)
                 : ''
             }`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               gameStore.setGameCode(
-                e.currentTarget.value.substring(1).toUpperCase() as GameCode
+                e.currentTarget.value.toUpperCase() as GameCode
               )
             }
           />
@@ -75,18 +77,32 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             type="text"
             className="home__content__nickname-input"
             value={gameStore.player.nickname}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               gameStore.setPlayer({
                 ...gameStore.player,
                 nickname: e.target.value,
-              })
-            }
+              });
+            }}
           />
           <br />
-          <Button onClick={() => onJoinGame()} mr="xs">
+          <Button
+            disabled={
+              !gameStore.player.nickname.length ||
+              !(gameStore.gameCode as string)
+            }
+            onClick={() => onJoinGame()}
+            mr="xs"
+          >
             Join Game
           </Button>
-          <Button onClick={() => onCreateGame()} ml="xs">
+          <Button
+            disabled={
+              !gameStore.player.nickname.length ||
+              !(gameStore.gameCode as string)
+            }
+            onClick={() => onCreateGame()}
+            ml="xs"
+          >
             Create Game
           </Button>
         </div>
