@@ -15,6 +15,7 @@ import {
   ActionIcon,
   Button,
   Navbar,
+  ScrollArea,
   Table,
   Text,
   TextInput,
@@ -75,7 +76,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
 
     return (
       <div className="lobby">
-        <Navbar width={{ sm: 300 }} p={'sm'}>
+        <Navbar width={{ base: 350 }} p={'sm'}>
           <Navbar.Section grow>
             <Tooltip
               position="bottom"
@@ -92,22 +93,32 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 Lobby #{gameStore.gameCode}
               </Title>
             </Tooltip>
-            <Button
-              onClick={() => {
-                socket.emit('leave', gameStore.gameCode, (result) => {
-                  console.log('leave');
-                  if (!result.error) {
-                    gameStore.setHasJoinedLobby(false);
-                    gameStore.setGameCode(null);
-                    gameStore.setConnectedPlayers(result.players);
-                    navigate(`${ROUTES.home}`);
-                  }
-                });
-              }}
-              leftIcon={<ArrowLeft size={18} />}
-            >
-              Leave Lobby
-            </Button>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                onClick={() => {
+                  socket.emit('leave', gameStore.gameCode, (result) => {
+                    console.log('leave');
+                    if (!result.error) {
+                      gameStore.setHasJoinedLobby(false);
+                      gameStore.setGameCode(null);
+                      gameStore.setConnectedPlayers(result.players);
+                      navigate(`${ROUTES.home}`);
+                    }
+                  });
+                }}
+                leftIcon={<ArrowLeft size={18} />}
+              >
+                Leave Lobby
+              </Button>
+              {gameStore.player.role === Role.CAPTAIN &&
+                gameStore.connectedPlayers.length > 1 &&
+                !gameStore.hasGameStarted && (
+                  <Button onClick={() => gameStore.startGame()} ml={'xs'}>
+                    Start Game
+                  </Button>
+                )}
+            </div>
+
             <Table mt={'md'} mb={'md'}>
               <thead>
                 <tr>
@@ -133,13 +144,6 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
               </tbody>
             </Table>
           </Navbar.Section>
-          {gameStore.player.role === Role.CAPTAIN &&
-          gameStore.connectedPlayers.length > 1 &&
-          !gameStore.hasGameStarted ? (
-            <Navbar.Section>
-              <Button onClick={() => gameStore.startGame()}>Start Game</Button>
-            </Navbar.Section>
-          ) : null}
 
           <Navbar.Section
             style={{
@@ -150,7 +154,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
               height: '50%',
             }}
           >
-            <div>
+            <ScrollArea>
               <ul>
                 {messages.map((m, i) => (
                   <li key={i}>
@@ -158,7 +162,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                   </li>
                 ))}
               </ul>
-            </div>
+            </ScrollArea>
             <TextInput
               size="md"
               rightSection={
