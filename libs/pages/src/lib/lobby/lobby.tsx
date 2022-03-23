@@ -13,6 +13,7 @@ import { ROUTES } from '@convinz/router';
 import Game from '../game/game';
 import {
   ActionIcon,
+  AppShell,
   Button,
   Navbar,
   ScrollArea,
@@ -76,121 +77,127 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
 
     return (
       <div className="lobby">
-        <Navbar width={{ base: 350 }} p={'sm'}>
-          <Navbar.Section grow>
-            <Tooltip
-              position="bottom"
-              withArrow
-              label="Copied"
-              opened={clipboard.copied}
-              mb={'sm'}
-            >
-              <Title
-                style={{ cursor: 'pointer' }}
-                order={3}
-                onClick={() => clipboard.copy(gameStore.gameCode)}
-              >
-                Lobby #{gameStore.gameCode}
-              </Title>
-            </Tooltip>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                onClick={() => {
-                  socket.emit('leave', gameStore.gameCode, (result) => {
-                    console.log('leave');
-                    if (!result.error) {
-                      gameStore.setHasJoinedLobby(false);
-                      gameStore.setGameCode(null);
-                      gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
-                      navigate(`${ROUTES.home}`);
-                    }
-                  });
-                }}
-                leftIcon={<ArrowLeft size={18} />}
-              >
-                Leave Lobby
-              </Button>
-              {gameStore.player.role === Role.CAPTAIN &&
-              gameStore.connectedPlayers.length > 1 &&
-              !gameStore.hasGameStarted ? (
-                <Button onClick={() => gameStore.startGame()} ml={'xs'}>
-                  Start Game
-                </Button>
-              ) : null}
-            </div>
-
-            <Table mt={'md'} mb={'md'}>
-              <thead>
-                <tr>
-                  <th style={{ paddingLeft: 0 }}>Connected Users</th>
-                </tr>
-              </thead>
-              <tbody>
-                {gameStore.connectedPlayers.map((p) => (
-                  <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
-                    <td style={{ paddingLeft: 0 }}>
-                      <Text
-                        color={p.id === gameStore.player.id ? 'blue' : ''}
-                        style={{ display: 'flex', alignItems: 'center' }}
-                      >
-                        {p.nickname}{' '}
-                        {p.role === Role.CAPTAIN && (
-                          <Crown style={{ paddingLeft: '4px' }} />
-                        )}
-                      </Text>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Navbar.Section>
-
-          <Navbar.Section
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              flexDirection: 'column',
-              maxHeight: '50%',
-              height: '50%',
-            }}
-          >
-            <ScrollArea>
-              <ul>
-                {messages.map((m, i) => (
-                  <li key={i}>
-                    {m.sender}: {m.message}
-                  </li>
-                ))}
-              </ul>
-            </ScrollArea>
-            <TextInput
-              size="md"
-              rightSection={
-                <ActionIcon
-                  size={32}
-                  radius="sm"
-                  onClick={() => {
-                    socket.emit('sendMessage', {
-                      sender: gameStore.player.nickname,
-                      message: message,
-                      lobby: gameStore.gameCode,
-                    });
-                  }}
+        <AppShell
+          navbar={
+            <Navbar width={{ base: 350 }} p={'sm'}>
+              <Navbar.Section grow>
+                <Tooltip
+                  position="bottom"
+                  withArrow
+                  label="Copied"
+                  opened={clipboard.copied}
+                  mb={'sm'}
                 >
-                  <ArrowRight size={18} />
-                </ActionIcon>
-              }
-              placeholder="Chat"
-              rightSectionWidth={42}
-              value={message}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setMessage(e.target.value)
-              }
-            />
-          </Navbar.Section>
+                  <Title
+                    style={{ cursor: 'pointer' }}
+                    order={3}
+                    onClick={() => clipboard.copy(gameStore.gameCode)}
+                  >
+                    Lobby #{gameStore.gameCode}
+                  </Title>
+                </Tooltip>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button
+                    onClick={() => {
+                      socket.emit('leave', gameStore.gameCode, (result) => {
+                        console.log('leave');
+                        if (!result.error) {
+                          gameStore.setHasJoinedLobby(false);
+                          gameStore.setGameCode(null);
+                          gameStore.setConnectedPlayersAndUpdateSelfPlayer(
+                            result.players
+                          );
+                          navigate(`${ROUTES.home}`);
+                        }
+                      });
+                    }}
+                    leftIcon={<ArrowLeft size={18} />}
+                  >
+                    Leave Lobby
+                  </Button>
+                  {gameStore.player.role === Role.CAPTAIN &&
+                  gameStore.connectedPlayers.length > 1 &&
+                  !gameStore.hasGameStarted ? (
+                    <Button onClick={() => gameStore.startGame()} ml={'xs'}>
+                      Start Game
+                    </Button>
+                  ) : null}
+                </div>
 
+                <Table mt={'md'} mb={'md'}>
+                  <thead>
+                    <tr>
+                      <th style={{ paddingLeft: 0 }}>Connected Users</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {gameStore.connectedPlayers.map((p) => (
+                      <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
+                        <td style={{ paddingLeft: 0 }}>
+                          <Text
+                            color={p.id === gameStore.player.id ? 'blue' : ''}
+                            style={{ display: 'flex', alignItems: 'center' }}
+                          >
+                            {p.nickname}{' '}
+                            {p.role === Role.CAPTAIN && (
+                              <Crown style={{ paddingLeft: '4px' }} />
+                            )}
+                          </Text>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Navbar.Section>
+
+              <Navbar.Section
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  flexDirection: 'column',
+                  maxHeight: '50%',
+                  height: '50%',
+                }}
+              >
+                <ScrollArea>
+                  <ul>
+                    {messages.map((m, i) => (
+                      <li key={i}>
+                        {m.sender}: {m.message}
+                      </li>
+                    ))}
+                  </ul>
+                </ScrollArea>
+                <TextInput
+                  size="md"
+                  rightSection={
+                    <ActionIcon
+                      size={32}
+                      radius="sm"
+                      onClick={() => {
+                        socket.emit('sendMessage', {
+                          sender: gameStore.player.nickname,
+                          message: message,
+                          lobby: gameStore.gameCode,
+                        });
+                      }}
+                    >
+                      <ArrowRight size={18} />
+                    </ActionIcon>
+                  }
+                  placeholder="Chat"
+                  rightSectionWidth={42}
+                  value={message}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setMessage(e.target.value)
+                  }
+                />
+              </Navbar.Section>
+            </Navbar>
+          }
+        >
           <div>{gameStore.hasGameStarted && <Game />}</div>
-        </Navbar>
+        </AppShell>
       </div>
     );
   })
