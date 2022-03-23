@@ -1,7 +1,7 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable no-empty-pattern */
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import './lobby.scss';
 import { gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
@@ -39,6 +39,8 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
     const navigate = useNavigate();
     const notifications = useNotifications();
     const clipboard = useClipboard({ timeout: 500 });
+    const chatViewport = useRef<HTMLDivElement>(null);
+
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -74,6 +76,12 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         setMessages((prevMessages) => [message, ...prevMessages]);
       });
     }, []);
+
+    const scrollChatToBottom = () =>
+      chatViewport.current?.scrollTo({
+        top: chatViewport.current.scrollHeight,
+        behavior: 'smooth',
+      });
 
     return (
       <div className="lobby">
@@ -159,10 +167,10 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                   height: '50%',
                 }}
               >
-                <ScrollArea>
+                <ScrollArea viewportRef={chatViewport}>
                   <ul>
-                    {messages.map((m, i) => (
-                      <li key={i}>
+                    {messages.reverse().map((m, i) => (
+                      <li key={`${JSON.stringify(m)}-${i}`}>
                         {m.sender}: {m.message}
                       </li>
                     ))}
@@ -180,6 +188,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                           message: message,
                           lobby: gameStore.gameCode,
                         });
+                        scrollChatToBottom();
                       }}
                     >
                       <ArrowRight size={18} />
