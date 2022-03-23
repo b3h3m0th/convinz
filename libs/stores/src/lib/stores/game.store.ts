@@ -1,7 +1,7 @@
 import { Player, Role } from '@convinz/shared/types';
 import type { GameCode } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
-import { action, makeAutoObservable, observable } from 'mobx';
+import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IStore } from '../interfaces';
 
 export class GameStore implements IStore {
@@ -31,11 +31,11 @@ export class GameStore implements IStore {
     });
 
     socket.on('joined', (players) => {
-      this.setConnectedPlayers(players);
+      this.setConnectedPlayersAndUpdateSelfPlayer(players);
     });
 
     socket.on('left', (players) => {
-      this.setConnectedPlayers(players);
+      this.setConnectedPlayersAndUpdateSelfPlayer(players);
     });
 
     socket.on('started', (gameCode) => {
@@ -71,8 +71,14 @@ export class GameStore implements IStore {
     });
   }
 
-  @action setConnectedPlayers(players: Player[]) {
+  @action setConnectedPlayersAndUpdateSelfPlayer(players: Player[]) {
     this.connectedPlayers = players;
+
+    const self = toJS(this.connectedPlayers).filter(
+      (p) => p.id === this.player.id
+    )[0];
+
+    self && this.setPlayer(self);
   }
 
   @action addConnectedPlayer(player: Player) {

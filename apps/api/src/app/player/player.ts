@@ -3,11 +3,6 @@ import type { GameCode, Player } from '@convinz/shared/types';
 const players: Player[] = [];
 
 export const addPlayer = (player: Player): Player => {
-  // const numberOfUsersInRoom = players.filter(
-  //   (user) => user.room === player.room
-  // ).length;
-  // if (numberOfUsersInRoom === 2) return { error: 'Room full' };
-
   players.push(player);
   return player;
 };

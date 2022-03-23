@@ -59,7 +59,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         if (gameStore.hasJoinedLobby) {
           socket.emit('leave', gameStore.gameCode, (result) => {
             if (!result.error) {
-              gameStore.setConnectedPlayers(result.players);
+              gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
               gameStore.setHasJoinedLobby(false);
               gameStore.setHasGameStarted(false);
             }
@@ -101,7 +101,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                     if (!result.error) {
                       gameStore.setHasJoinedLobby(false);
                       gameStore.setGameCode(null);
-                      gameStore.setConnectedPlayers(result.players);
+                      gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
                       navigate(`${ROUTES.home}`);
                     }
                   });
@@ -111,12 +111,12 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 Leave Lobby
               </Button>
               {gameStore.player.role === Role.CAPTAIN &&
-                gameStore.connectedPlayers.length > 1 &&
-                !gameStore.hasGameStarted && (
-                  <Button onClick={() => gameStore.startGame()} ml={'xs'}>
-                    Start Game
-                  </Button>
-                )}
+              gameStore.connectedPlayers.length > 1 &&
+              !gameStore.hasGameStarted ? (
+                <Button onClick={() => gameStore.startGame()} ml={'xs'}>
+                  Start Game
+                </Button>
+              ) : null}
             </div>
 
             <Table mt={'md'} mb={'md'}>
