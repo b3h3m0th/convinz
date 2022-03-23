@@ -19,6 +19,7 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import {
@@ -27,6 +28,7 @@ import {
   ArrowRight,
   Crown,
 } from 'tabler-icons-react';
+import { useClipboard } from '@mantine/hooks';
 
 export interface LobbyProps {}
 
@@ -34,6 +36,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
   observer(({}: LobbyProps) => {
     const navigate = useNavigate();
     const notifications = useNotifications();
+    const clipboard = useClipboard({ timeout: 500 });
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -72,11 +75,23 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
 
     return (
       <div className="lobby">
-        <Navbar height={750} width={{ sm: 300 }} p={'sm'}>
+        <Navbar width={{ sm: 300 }} p={'sm'}>
           <Navbar.Section grow>
-            <Title order={3} mb={'sm'}>
-              Lobby #{gameStore.gameCode}
-            </Title>
+            <Tooltip
+              position="bottom"
+              withArrow
+              label="Copied"
+              opened={clipboard.copied}
+              mb={'sm'}
+            >
+              <Title
+                style={{ cursor: 'pointer' }}
+                order={3}
+                onClick={() => clipboard.copy(gameStore.gameCode)}
+              >
+                Lobby #{gameStore.gameCode}
+              </Title>
+            </Tooltip>
             <Button
               onClick={() => {
                 socket.emit('leave', gameStore.gameCode, (result) => {
@@ -117,7 +132,33 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 ))}
               </tbody>
             </Table>
+          </Navbar.Section>
+          {gameStore.player.role === Role.CAPTAIN &&
+          gameStore.connectedPlayers.length > 1 &&
+          !gameStore.hasGameStarted ? (
+            <Navbar.Section>
+              <Button onClick={() => gameStore.startGame()}>Start Game</Button>
+            </Navbar.Section>
+          ) : null}
 
+          <Navbar.Section
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              flexDirection: 'column',
+              maxHeight: '50%',
+              height: '50%',
+            }}
+          >
+            <div>
+              <ul>
+                {messages.map((m, i) => (
+                  <li key={i}>
+                    {m.sender}: {m.message}
+                  </li>
+                ))}
+              </ul>
+            </div>
             <TextInput
               size="md"
               rightSection={
@@ -142,23 +183,9 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 setMessage(e.target.value)
               }
             />
-
-            {gameStore.player.role === Role.CAPTAIN &&
-            gameStore.connectedPlayers.length > 1 &&
-            !gameStore.hasGameStarted ? (
-              <button onClick={() => gameStore.startGame()}>Start game</button>
-            ) : null}
-            <div>{gameStore.hasGameStarted && <Game />}</div>
-            <div>
-              <ul>
-                {messages.map((m, i) => (
-                  <li key={i}>
-                    {m.sender}: {m.message}
-                  </li>
-                ))}
-              </ul>
-            </div>
           </Navbar.Section>
+
+          <div>{gameStore.hasGameStarted && <Game />}</div>
         </Navbar>
       </div>
     );
