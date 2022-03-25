@@ -10,8 +10,9 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
   observer(({}: GameProps) => {
     return (
       <div className="game">
+        <h1>Convinz</h1>
         <div>game</div>
-      </div> 
+      </div>
     );
   })
 );
