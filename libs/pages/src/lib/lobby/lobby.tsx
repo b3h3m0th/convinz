@@ -73,7 +73,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
 
     useEffect(() => {
       socket.on('receiveMessage', (message) => {
-        setMessages((prevMessages) => [message, ...prevMessages]);
+        setMessages((prevMessages) => [...prevMessages, message]);
       });
     }, []);
 
@@ -169,7 +169,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
               >
                 <ScrollArea viewportRef={chatViewport}>
                   <ul>
-                    {messages.reverse().map((m, i) => (
+                    {messages.map((m, i) => (
                       <li key={`${JSON.stringify(m)}-${i}`}>
                         {m.sender}: {m.message}
                       </li>
