@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     console.log('disconnect', reason);
   });
 
-  socket.on('create', async (nickname, cb) => {
+  socket.on('createGame', async (nickname, cb) => {
     const gameCode = generateGameCode();
     await socket.join(gameCode);
 
@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
     await io.to(gameCode).emit('joined', connectedClients, gameCode);
   });
 
-  socket.on('join', async (code, nickname, gameAccessionType, cb) => {
+  socket.on('joinGame', async (code, nickname, gameAccessionType, cb) => {
     const alreadyConnectedClients = getPlayersInRoom(code);
 
     if (alreadyConnectedClients.length < 1) {
@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
         players: alreadyConnectedClients,
         player: null,
       });
-      await io.to(code).emit('joined', alreadyConnectedClients, code);
+      io.to(code).emit('joined', alreadyConnectedClients, code);
       return;
     }
 
@@ -80,10 +80,10 @@ io.on('connection', (socket) => {
       players: connectedClientsAfterSelfJoin,
       player: newPlayer,
     });
-    await io.to(code).emit('joined', connectedClientsAfterSelfJoin, code);
+    io.to(code).emit('joined', connectedClientsAfterSelfJoin, code);
   });
 
-  socket.on('leave', async (code, cb) => {
+  socket.on('leaveGame', async (code, cb) => {
     const leftPlayer = removePlayer(socket.id);
     const connectedClients = getPlayersInRoom(code);
 
@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
     }
     socket.leave(code);
 
-    await io.to(code).emit('left', connectedClients, code);
+    io.to(code).emit('left', connectedClients, code);
 
     cb({ error: false, players: connectedClients });
   });

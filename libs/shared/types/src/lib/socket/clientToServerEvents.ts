@@ -2,7 +2,7 @@ import type { GameAccessionType, GameCode, Player } from '../game';
 import { ChatMessage } from '../game';
 
 export interface ClientToServerEvents {
-  create: (
+  createGame: (
     nickname: string,
     cb: (result: {
       gameCode: GameCode;
@@ -11,7 +11,7 @@ export interface ClientToServerEvents {
       error: boolean;
     }) => void
   ) => void;
-  join: (
+  joinGame: (
     code: string,
     nickname: string,
     gameAccessionType: GameAccessionType,
@@ -22,7 +22,7 @@ export interface ClientToServerEvents {
       error: boolean;
     }) => void
   ) => void;
-  leave: (
+  leaveGame: (
     gameCode: GameCode,
     cb: (result: { players: Player[]; error: boolean }) => void
   ) => void;

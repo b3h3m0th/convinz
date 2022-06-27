@@ -21,7 +21,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     const onJoinGame = () => {
       if (gameStore.gameCode)
         socket.emit(
-          'join',
+          'joinGame',
           gameStore.gameCode,
           gameStore.player.nickname,
           GameAccessionType.GAME_CODE,
@@ -38,7 +38,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     };
 
     const onCreateGame = () => {
-      socket.emit('create', gameStore.player.nickname, (result) => {
+      socket.emit('createGame', gameStore.player.nickname, (result) => {
         if (result.error) return;
 
         gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);

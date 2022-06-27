@@ -58,23 +58,26 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         });
       }
 
-      return () => {
-        if (gameStore.hasJoinedLobby) {
-          socket.emit('leave', gameStore.gameCode, (result) => {
-            if (!result.error) {
-              gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
-              gameStore.setHasJoinedLobby(false);
-              gameStore.setHasGameStarted(false);
-            }
-          });
-        }
-      };
-    }, []);
-
-    useEffect(() => {
       socket.on('receiveMessage', (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
+
+      socket.on('left', (players) => {
+        console.log(players);
+        gameStore.setConnectedPlayersAndUpdateSelfPlayer(players);
+      });
+
+      return () => {
+        if (gameStore.hasJoinedLobby) {
+          socket.emit('leaveGame', gameStore.gameCode, (result) => {
+            if (result.error) return;
+
+            gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
+            gameStore.setHasJoinedLobby(false);
+            gameStore.setHasGameStarted(false);
+          });
+        }
+      };
     }, []);
 
     const scrollChatToBottom = () =>
@@ -82,6 +85,8 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         top: chatViewport.current.scrollHeight,
         behavior: 'smooth',
       });
+
+    const clearChatInput = () => setMessage('');
 
     return (
       <div className="lobby">
@@ -107,7 +112,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Button
                     onClick={() => {
-                      socket.emit('leave', gameStore.gameCode, (result) => {
+                      socket.emit('leaveGame', gameStore.gameCode, (result) => {
                         console.log('leave');
                         if (!result.error) {
                           gameStore.setHasJoinedLobby(false);
@@ -183,12 +188,15 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                       size={32}
                       radius="sm"
                       onClick={() => {
+                        if (message.length < 1) return;
+
                         socket.emit('sendMessage', {
                           sender: gameStore.player.nickname,
                           message: message,
                           lobby: gameStore.gameCode,
                         });
                         scrollChatToBottom();
+                        clearChatInput();
                       }}
                     >
                       <ArrowRight size={18} />
