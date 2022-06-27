@@ -26,26 +26,26 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           gameStore.player.nickname,
           GameAccessionType.GAME_CODE,
           (result) => {
-            if (!result.error) {
-              gameStore.setPlayer(result.player);
-              gameStore.setHasJoinedLobby(true);
-              gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
-              gameStore.setGameCode(result.gameCode);
-              console.log(`joined lobby: ${result.gameCode}`);
-            }
+            if (result.error) return;
+
+            gameStore.setPlayer(result.player);
+            gameStore.setHasJoinedLobby(true);
+            gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
+            gameStore.setGameCode(result.gameCode);
+            console.log(`joined lobby: ${result.gameCode}`);
           }
         );
     };
 
     const onCreateGame = () => {
       socket.emit('create', gameStore.player.nickname, (result) => {
-        if (!result.error) {
-          gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
-          gameStore.setPlayer(result.player);
-          gameStore.setHasJoinedLobby(true);
-          gameStore.setGameCode(result.gameCode);
-          console.log(`created lobby: ${result.gameCode}`);
-        }
+        if (result.error) return;
+
+        gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
+        gameStore.setPlayer(result.player);
+        gameStore.setHasJoinedLobby(true);
+        gameStore.setGameCode(result.gameCode);
+        console.log(`created lobby: ${result.gameCode}`);
       });
     };
 
