@@ -8,7 +8,11 @@ export interface ServerToClientEvents {
     player: Player;
     error: boolean;
   }) => void;
-  leftLobby: (result: { players: Player[]; error: boolean }) => void;
+  leftLobby: (result: {
+    player: Player;
+    players: Player[];
+    error: boolean;
+  }) => void;
   startedGame: (result: { gameCode: GameCode; error: boolean }) => void;
   receiveChatMessage: (message: ChatMessage) => void;
 }

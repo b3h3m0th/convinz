@@ -45,6 +45,7 @@ export class GameStore implements IStore {
 
       gameStore.setHasJoinedLobby(false);
       gameStore.setHasGameStarted(false);
+      this.setPlayer(result.player);
       gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
     });
 

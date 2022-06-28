@@ -65,6 +65,11 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
       });
     }, []);
 
+    useEffect(() => {
+      if (!gameStore.hasJoinedLobby || !gameStore.gameCode)
+        navigate(`${ROUTES.home}`);
+    }, [gameStore.hasJoinedLobby, gameStore.gameCode]);
+
     useBeforeUnload(() => {
       if (gameStore.hasJoinedLobby)
         socket.emit('leaveLobby', gameStore.gameCode);
@@ -113,10 +118,9 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 </Tooltip>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Button
-                    onClick={() => {
-                      socket.emit('leaveLobby', gameStore.gameCode);
-                      navigate(`${ROUTES.home}`);
-                    }}
+                    onClick={() =>
+                      socket.emit('leaveLobby', gameStore.gameCode)
+                    }
                     leftIcon={<ArrowLeft size={18} />}
                   >
                     Leave Lobby

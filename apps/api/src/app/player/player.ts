@@ -7,7 +7,7 @@ export const addPlayer = (player: Player): Player => {
   return player;
 };
 
-export const removePlayer = (id: string) => {
+export const removePlayer = (id: string): Player => {
   let playerToBeRemoved;
   const removeIndex = players.findIndex((p) => p.id === id);
 
