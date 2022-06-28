@@ -1,1 +1,3 @@
-export { default as terms } from './terms.json';
+import * as t from './terms.json';
+
+export const terms = t;
