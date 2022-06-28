@@ -1,7 +1,8 @@
-import { defaultPlayer, Player } from '@convinz/shared/types';
+import { defaultPlayer, Player, Role } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IStore } from '../interfaces';
+import { chatStore } from './chat.store';
 
 export class GameStore implements IStore {
   storeKey = 'gameStore' as const;
@@ -35,6 +36,16 @@ export class GameStore implements IStore {
       this.setHasJoinedLobby(true);
       this.setConnectedPlayersAndUpdateSelfPlayer(result.players);
       console.log(`joined lobby: ${result.gameCode}`);
+
+      chatStore.addMessage({
+        lobby: this.player.room,
+        sender: Role.SYSTEM,
+        message: `${
+          this.player.id === result?.joinedPlayer?.id
+            ? 'You'
+            : result?.joinedPlayer?.nickname || 'Somebody'
+        } joined the lobby.`,
+      });
     });
 
     socket.on('leftLobby', (result) => {
@@ -47,6 +58,14 @@ export class GameStore implements IStore {
         gameStore.setHasJoinedLobby(false);
         gameStore.setHasGameStarted(false);
       }
+
+      chatStore.addMessage({
+        lobby: this.player.room,
+        sender: Role.SYSTEM,
+        message: `${
+          result?.leftPlayer?.nickname || 'Somebody'
+        } left the lobby.`,
+      });
     });
 
     socket.on('startedGame', (gameCode) => {

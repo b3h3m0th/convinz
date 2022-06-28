@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
       error: false,
       players: connectedClients,
       player: newPlayer,
+      joinedPlayer: newPlayer,
     });
   });
 
@@ -78,6 +79,7 @@ io.on('connection', (socket) => {
       error: false,
       players: connectedClientsAfterSelfJoin,
       player: newPlayer,
+      joinedPlayer: newPlayer,
     });
 
     // broadcast for already connected players
@@ -85,6 +87,7 @@ io.on('connection', (socket) => {
       gameCode: gameCode,
       error: false,
       players: connectedClientsAfterSelfJoin,
+      joinedPlayer: newPlayer,
     });
   });
 
@@ -101,12 +104,14 @@ io.on('connection', (socket) => {
       error: false,
       players: connectedClients,
       player: defaultPlayer,
+      leftPlayer: leftPlayer,
     });
 
     // broadcast for already connected players
     socket.to(gameCode).emit('leftLobby', {
       error: false,
       players: connectedClients,
+      leftPlayer: leftPlayer,
     });
 
     socket.leave(gameCode);
