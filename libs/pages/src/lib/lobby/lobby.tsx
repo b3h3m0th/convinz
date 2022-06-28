@@ -31,6 +31,7 @@ import {
   Crown,
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
+import { useBeforeUnload } from '@convinz/shared/hooks';
 
 export interface LobbyProps {}
 
@@ -62,11 +63,6 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         setMessages((prevMessages) => [...prevMessages, message]);
       });
 
-      socket.on('left', (players) => {
-        console.log(players);
-        gameStore.setConnectedPlayersAndUpdateSelfPlayer(players);
-      });
-
       return () => {
         if (gameStore.hasJoinedLobby) {
           socket.emit('leaveGame', gameStore.gameCode, (result) => {
@@ -79,6 +75,18 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         }
       };
     }, []);
+
+    useBeforeUnload(() => {
+      if (gameStore.hasJoinedLobby) {
+        socket.emit('leaveGame', gameStore.gameCode, (result) => {
+          if (result.error) return;
+
+          gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
+          gameStore.setHasJoinedLobby(false);
+          gameStore.setHasGameStarted(false);
+        });
+      }
+    });
 
     const scrollChatToBottom = () =>
       chatViewport.current?.scrollTo({

@@ -35,6 +35,7 @@ export class GameStore implements IStore {
     });
 
     socket.on('left', (players) => {
+      console.log('test');
       this.setConnectedPlayersAndUpdateSelfPlayer(players);
     });
 
