@@ -134,6 +134,8 @@ io.on('connection', (socket) => {
   socket.on('requestRound', (gameCode, cb) => {
     const term = getRandomTerm();
 
+    // TODO: use server to client emit instead of callback in order to send same term to everyone
+
     cb({ gameCode, term: term });
   });
 });
