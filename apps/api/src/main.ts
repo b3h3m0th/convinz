@@ -55,18 +55,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinLobby', async (gameCode, nickname, gameAccessionType) => {
-    // const alreadyConnectedClients = getPlayersInRoom(gameCode);
-
-    // if (alreadyConnectedClients.length < 1) {
-    //   io.to(gameCode).emit('joined', {
-    //     gameCode: gameCode,
-    //     player: null,
-    //     players: alreadyConnectedClients,
-    //     error: false,
-    //   });
-    //   return;
-    // }
-
     await socket.join(gameCode);
     const newPlayer = new Player(socket.id, nickname, gameCode, Role.MEMBER);
     addPlayer(newPlayer);
