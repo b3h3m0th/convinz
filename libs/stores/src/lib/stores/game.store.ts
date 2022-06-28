@@ -1,13 +1,12 @@
-import { Player, Role } from '@convinz/shared/types';
-import type { GameCode } from '@convinz/shared/types';
+import { defaultPlayer, Player, Role } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IStore } from '../interfaces';
 
 export class GameStore implements IStore {
   storeKey = 'gameStore' as const;
-  @observable gameCode: GameCode = null;
-  @observable player: Player = new Player('', '', '', Role.MEMBER);
+  protected initialPlayer = defaultPlayer;
+  @observable player: Player = this.initialPlayer;
   @observable isConnected = false;
   @observable hasJoinedLobby = false;
   @observable hasGameStarted = false;
@@ -15,7 +14,6 @@ export class GameStore implements IStore {
 
   constructor() {
     makeAutoObservable(this);
-
     this.onSocketListeners();
   }
 
@@ -35,7 +33,6 @@ export class GameStore implements IStore {
 
       this.setPlayer(result.player);
       this.setHasJoinedLobby(true);
-      this.setGameCode(result.gameCode);
       this.setConnectedPlayersAndUpdateSelfPlayer(result.players);
       console.log(`joined lobby: ${result.gameCode}`);
     });
@@ -43,10 +40,13 @@ export class GameStore implements IStore {
     socket.on('leftLobby', (result) => {
       if (result.error) return;
 
-      gameStore.setHasJoinedLobby(false);
-      gameStore.setHasGameStarted(false);
       this.setPlayer(result.player);
       gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
+
+      if (result.player) {
+        gameStore.setHasJoinedLobby(false);
+        gameStore.setHasGameStarted(false);
+      }
     });
 
     socket.on('startedGame', (gameCode) => {
@@ -54,11 +54,7 @@ export class GameStore implements IStore {
     });
   }
 
-  @action setGameCode(code: GameCode) {
-    this.gameCode = code;
-  }
-
-  @action setPlayer(player: Player) {
+  @action setPlayer(player: Player | undefined) {
     this.player = player ?? this.player;
   }
 
@@ -75,7 +71,7 @@ export class GameStore implements IStore {
   }
 
   @action startGame() {
-    socket.emit('startGame', this.gameCode);
+    socket.emit('startGame', this.player.room);
   }
 
   @action setConnectedPlayersAndUpdateSelfPlayer(players: Player[]) {

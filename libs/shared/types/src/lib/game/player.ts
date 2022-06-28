@@ -9,3 +9,5 @@ export class Player {
     public role: Role
   ) {}
 }
+
+export const defaultPlayer = new Player('', '', '', Role.MEMBER);

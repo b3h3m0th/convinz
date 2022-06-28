@@ -19,10 +19,10 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     const navigate = useNavigate();
 
     const onJoinGame = () => {
-      if (gameStore.gameCode)
+      if (gameStore.player.room)
         socket.emit(
           'joinLobby',
-          gameStore.gameCode,
+          gameStore.player.room,
           gameStore.player.nickname,
           GameAccessionType.GAME_CODE
         );
@@ -33,9 +33,9 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     };
 
     useEffect(() => {
-      if (gameStore.hasJoinedLobby && gameStore.gameCode)
-        navigate(`${ROUTES.game}/${gameStore.gameCode}`);
-    }, [gameStore.hasJoinedLobby, gameStore.gameCode]);
+      if (gameStore.hasJoinedLobby && gameStore.player.room)
+        navigate(`${ROUTES.game}/${gameStore.player.room}`);
+    }, [gameStore.hasJoinedLobby, gameStore.player.room]);
 
     return (
       <div className="home">
@@ -53,14 +53,15 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
             placeholder={'X'.repeat(gameCodeLength)}
             maxLength={gameCodeLength}
             value={`${
-              (gameStore.gameCode as string)
-                ? (gameStore.gameCode as string)
+              (gameStore.player.room as string)
+                ? (gameStore.player.room as string)
                 : ''
             }`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              gameStore.setGameCode(
-                e.currentTarget.value.toUpperCase() as GameCode
-              )
+              gameStore.setPlayer({
+                ...gameStore.player,
+                room: e.currentTarget.value.toUpperCase() as GameCode,
+              })
             }
           />
           <TextInput
@@ -79,7 +80,8 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           <Button
             disabled={
               !(
-                ((gameStore.gameCode as string) ?? '').length === gameCodeLength
+                ((gameStore.player.room as string) ?? '').length ===
+                gameCodeLength
               ) || !gameStore.player?.nickname
             }
             onClick={() => onJoinGame()}

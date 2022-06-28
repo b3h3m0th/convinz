@@ -66,13 +66,13 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
     }, []);
 
     useEffect(() => {
-      if (!gameStore.hasJoinedLobby || !gameStore.gameCode)
+      if (!gameStore.hasJoinedLobby || !gameStore.player.room)
         navigate(`${ROUTES.home}`);
-    }, [gameStore.hasJoinedLobby, gameStore.gameCode]);
+    }, [gameStore.hasJoinedLobby, gameStore.player.room]);
 
     useBeforeUnload(() => {
       if (gameStore.hasJoinedLobby)
-        socket.emit('leaveLobby', gameStore.gameCode);
+        socket.emit('leaveLobby', gameStore.player.room);
     });
 
     const scrollChatToBottom = () =>
@@ -89,7 +89,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
       socket.emit('sendChatMessage', {
         sender: gameStore.player.nickname,
         message: message,
-        lobby: gameStore.gameCode,
+        lobby: gameStore.player.room,
       });
       scrollChatToBottom();
       clearChatInput();
@@ -111,15 +111,15 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                   <Title
                     style={{ cursor: 'pointer' }}
                     order={3}
-                    onClick={() => clipboard.copy(gameStore.gameCode)}
+                    onClick={() => clipboard.copy(gameStore.player.room)}
                   >
-                    Lobby #{gameStore.gameCode}
+                    Lobby #{gameStore.player.room}
                   </Title>
                 </Tooltip>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Button
                     onClick={() =>
-                      socket.emit('leaveLobby', gameStore.gameCode)
+                      socket.emit('leaveLobby', gameStore.player.room)
                     }
                     leftIcon={<ArrowLeft size={18} />}
                   >

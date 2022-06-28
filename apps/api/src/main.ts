@@ -4,6 +4,7 @@ import * as http from 'http';
 import * as socketio from 'socket.io';
 import {
   ClientToServerEvents,
+  defaultPlayer,
   InterServerEvents,
   Player,
   Role,
@@ -72,7 +73,7 @@ io.on('connection', (socket) => {
 
     const connectedClientsAfterSelfJoin = getPlayersInRoom(gameCode);
 
-    // answer for new players
+    // answer for new player
     socket.emit('joinedLobby', {
       gameCode: gameCode,
       error: false,
@@ -85,7 +86,6 @@ io.on('connection', (socket) => {
       gameCode: gameCode,
       error: false,
       players: connectedClientsAfterSelfJoin,
-      player: null,
     });
   });
 
@@ -97,10 +97,17 @@ io.on('connection', (socket) => {
       connectedClients[0].role = Role.CAPTAIN;
     }
 
-    io.to(gameCode).emit('leftLobby', {
-      player: null,
-      players: connectedClients,
+    // answer for left player
+    socket.emit('leftLobby', {
       error: false,
+      players: connectedClients,
+      player: defaultPlayer,
+    });
+
+    // broadcast for already connected players
+    socket.to(gameCode).emit('leftLobby', {
+      error: false,
+      players: connectedClients,
     });
 
     socket.leave(gameCode);
