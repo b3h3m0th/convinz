@@ -1,4 +1,4 @@
-import { defaultPlayer, Player, Role } from '@convinz/shared/types';
+import { defaultPlayer, Player } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IStore } from '../interfaces';

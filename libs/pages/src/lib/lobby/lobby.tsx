@@ -3,7 +3,7 @@
 /* eslint-disable no-empty-pattern */
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import './lobby.scss';
-import { gameStore } from '@convinz/stores';
+import { chatStore, gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
 import { Role } from '@convinz/shared/types';
@@ -35,7 +35,10 @@ import { useBeforeUnload } from '@convinz/shared/hooks';
 
 export interface LobbyProps {}
 
-export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
+export const Lobby: React.FC<LobbyProps> = inject(
+  gameStore.storeKey,
+  chatStore.storeKey
+)(
   observer(({}: LobbyProps) => {
     const navigate = useNavigate();
     const notifications = useNotifications();
@@ -43,7 +46,6 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
     const chatViewport = useRef<HTMLDivElement>(null);
 
     const [message, setMessage] = useState<string>('');
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
 
     useEffect(() => {
       if (!gameStore.hasJoinedLobby) {
@@ -60,7 +62,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
       }
 
       socket.on('receiveChatMessage', (message) => {
-        setMessages((prevMessages) => [...prevMessages, message]);
+        chatStore.addMessage(message);
         scrollChatToBottom();
       });
     }, []);
@@ -171,7 +173,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
               >
                 <ScrollArea viewportRef={chatViewport}>
                   <ul className="lobby__chat">
-                    {messages.map((m, i) => (
+                    {chatStore.messages.map((m, i) => (
                       <li
                         className="lobby__chat__message"
                         key={`${JSON.stringify(m)}-${i}`}

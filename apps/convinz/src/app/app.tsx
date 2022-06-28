@@ -2,11 +2,11 @@ import React from 'react';
 import './app.scss';
 import { Provider as StoreProvider } from 'mobx-react';
 import * as fromRouter from '@convinz/router';
-import { gameStore } from '@convinz/stores';
+import { chatStore, gameStore } from '@convinz/stores';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 
-const stores = { gameStore };
+const stores = { gameStore, chatStore };
 
 export const App: React.FC = () => {
   return (
