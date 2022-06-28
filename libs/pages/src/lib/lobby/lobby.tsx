@@ -62,30 +62,11 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
       socket.on('receiveMessage', (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
-
-      return () => {
-        if (gameStore.hasJoinedLobby) {
-          socket.emit('leaveGame', gameStore.gameCode, (result) => {
-            if (result.error) return;
-
-            gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
-            gameStore.setHasJoinedLobby(false);
-            gameStore.setHasGameStarted(false);
-          });
-        }
-      };
     }, []);
 
     useBeforeUnload(() => {
-      if (gameStore.hasJoinedLobby) {
-        socket.emit('leaveGame', gameStore.gameCode, (result) => {
-          if (result.error) return;
-
-          gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
-          gameStore.setHasJoinedLobby(false);
-          gameStore.setHasGameStarted(false);
-        });
-      }
+      if (gameStore.hasJoinedLobby)
+        socket.emit('leaveGame', gameStore.gameCode);
     });
 
     const scrollChatToBottom = () =>
@@ -120,17 +101,8 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Button
                     onClick={() => {
-                      socket.emit('leaveGame', gameStore.gameCode, (result) => {
-                        console.log('leave');
-                        if (!result.error) {
-                          gameStore.setHasJoinedLobby(false);
-                          gameStore.setGameCode(null);
-                          gameStore.setConnectedPlayersAndUpdateSelfPlayer(
-                            result.players
-                          );
-                          navigate(`${ROUTES.home}`);
-                        }
-                      });
+                      socket.emit('leaveGame', gameStore.gameCode);
+                      navigate(`${ROUTES.home}`);
                     }}
                     leftIcon={<ArrowLeft size={18} />}
                   >

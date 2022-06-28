@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     console.log('disconnect', reason);
   });
 
-  socket.on('createGame', async (nickname, cb) => {
+  socket.on('createGame', async (nickname) => {
     const gameCode = generateGameCode();
     await socket.join(gameCode);
 
@@ -45,45 +45,42 @@ io.on('connection', (socket) => {
     addPlayer(newPlayer);
     const connectedClients = getPlayersInRoom(gameCode);
 
-    cb({
+    socket.emit('joined', {
       gameCode: gameCode,
       error: false,
       players: connectedClients,
       player: newPlayer,
     });
-    await io.to(gameCode).emit('joined', connectedClients, gameCode);
   });
 
-  socket.on('joinGame', async (code, nickname, gameAccessionType, cb) => {
-    const alreadyConnectedClients = getPlayersInRoom(code);
+  socket.on('joinGame', async (gameCode, nickname, gameAccessionType) => {
+    const alreadyConnectedClients = getPlayersInRoom(gameCode);
 
-    if (alreadyConnectedClients.length < 1) {
-      cb({
-        gameCode: code,
-        error: true,
-        players: alreadyConnectedClients,
-        player: null,
-      });
-      io.to(code).emit('joined', alreadyConnectedClients, code);
-      return;
-    }
+    // if (alreadyConnectedClients.length < 1) {
+    //   io.to(gameCode).emit('joined', {
+    //     gameCode: gameCode,
+    //     player: null,
+    //     players: alreadyConnectedClients,
+    //     error: false,
+    //   });
+    //   return;
+    // }
 
-    await socket.join(code);
-    const newPlayer = new Player(socket.id, nickname, code, Role.MEMBER);
+    await socket.join(gameCode);
+    const newPlayer = new Player(socket.id, nickname, gameCode, Role.MEMBER);
     addPlayer(newPlayer);
 
-    const connectedClientsAfterSelfJoin = getPlayersInRoom(code);
+    const connectedClientsAfterSelfJoin = getPlayersInRoom(gameCode);
 
-    cb({
-      gameCode: code,
+    io.to(gameCode).emit('joined', {
+      gameCode: gameCode,
       error: false,
       players: connectedClientsAfterSelfJoin,
       player: newPlayer,
     });
-    io.to(code).emit('joined', connectedClientsAfterSelfJoin, code);
   });
 
-  socket.on('leaveGame', async (code, cb) => {
+  socket.on('leaveGame', async (code) => {
     const leftPlayer = removePlayer(socket.id);
     const connectedClients = getPlayersInRoom(code);
 
@@ -92,18 +89,15 @@ io.on('connection', (socket) => {
     }
     socket.leave(code);
 
-    io.to(code).emit('left', connectedClients, code);
-
-    cb({ error: false, players: connectedClients });
+    io.to(code).emit('left', { players: connectedClients, error: false });
   });
 
   socket.on('sendMessage', (message) => {
     io.to(message.lobby).emit('receiveMessage', message);
   });
 
-  socket.on('start', (gameCode, cb) => {
-    cb({ error: false });
-    io.to(gameCode).emit('started', gameCode);
+  socket.on('start', (gameCode) => {
+    io.to(gameCode).emit('started', { gameCode: gameCode, error: false });
   });
 });
 
