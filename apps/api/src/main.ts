@@ -132,7 +132,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('requestRound', (gameCode, cb) => {
-    cb({ gameCode, term: getRandomTerm() });
+    const term = getRandomTerm();
+
+    cb({ gameCode, term: term });
   });
 });
 
