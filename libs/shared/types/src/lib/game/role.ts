@@ -1,5 +1,5 @@
 export enum Role {
-  SYSTEM,
-  CAPTAIN,
-  MEMBER,
+  SYSTEM = '[Convinz]',
+  CAPTAIN = 'Captain',
+  MEMBER = 'Member',
 }

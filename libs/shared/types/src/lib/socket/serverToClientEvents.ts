@@ -15,6 +15,10 @@ export interface ServerToClientEvents {
     leftPlayer?: Player;
     error: boolean;
   }) => void;
-  startedGame: (result: { gameCode: GameCode; error: boolean }) => void;
+  startedGame: (result: {
+    starterPlayer: Player;
+    gameCode: GameCode;
+    error: boolean;
+  }) => void;
   receiveChatMessage: (message: ChatMessage) => void;
 }

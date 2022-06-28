@@ -67,8 +67,14 @@ export class GameStore implements IStore {
       });
     });
 
-    socket.on('startedGame', (gameCode) => {
-      this.hasGameStarted = true;
+    socket.on('startedGame', (result) => {
+      this.setHasGameStarted(true);
+
+      chatStore.addMessage({
+        lobby: this.player.room,
+        sender: Role.SYSTEM,
+        message: `${result.starterPlayer.nickname} started the game`,
+      });
     });
   }
 

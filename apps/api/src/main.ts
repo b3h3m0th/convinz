@@ -12,7 +12,7 @@ import {
   SocketData,
 } from '@convinz/shared/types';
 import { generateGameCode } from '@convinz/shared/util';
-import { addPlayer, getPlayersInRoom, removePlayer } from './app/player';
+import { players } from './app/player';
 
 const app = express();
 const server = http.createServer(app);
@@ -43,8 +43,8 @@ io.on('connection', (socket) => {
     await socket.join(gameCode);
 
     const newPlayer = new Player(socket.id, nickname, gameCode, Role.CAPTAIN);
-    addPlayer(newPlayer);
-    const connectedClients = getPlayersInRoom(gameCode);
+    players.add(newPlayer);
+    const connectedClients = players.getPlayersInRoom(gameCode);
 
     socket.emit('joinedLobby', {
       gameCode: gameCode,
@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinLobby', async (gameCode, nickname, gameAccessionType) => {
-    const alreadyConnectedClients = getPlayersInRoom(gameCode);
+    const alreadyConnectedClients = players.getPlayersInRoom(gameCode);
 
     if (alreadyConnectedClients.length < 1) {
       io.to(gameCode).emit('joinedLobby', {
@@ -69,9 +69,9 @@ io.on('connection', (socket) => {
 
     await socket.join(gameCode);
     const newPlayer = new Player(socket.id, nickname, gameCode, Role.MEMBER);
-    addPlayer(newPlayer);
+    players.add(newPlayer);
 
-    const connectedClientsAfterSelfJoin = getPlayersInRoom(gameCode);
+    const connectedClientsAfterSelfJoin = players.getPlayersInRoom(gameCode);
 
     // answer for new player
     socket.emit('joinedLobby', {
@@ -92,8 +92,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leaveLobby', async (gameCode) => {
-    const leftPlayer = removePlayer(socket.id);
-    const connectedClients = getPlayersInRoom(gameCode);
+    const leftPlayer = players.remove(socket.id);
+    const connectedClients = players.getPlayersInRoom(gameCode);
 
     if (leftPlayer.role === Role.CAPTAIN && connectedClients.length > 0) {
       connectedClients[0].role = Role.CAPTAIN;
@@ -122,7 +122,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('startGame', (gameCode) => {
-    io.to(gameCode).emit('startedGame', { gameCode: gameCode, error: false });
+    const starterPlayer = players.getCaptainInRoom(gameCode);
+
+    io.to(gameCode).emit('startedGame', {
+      starterPlayer,
+      gameCode: gameCode,
+      error: false,
+    });
   });
 });
 

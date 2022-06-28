@@ -178,8 +178,9 @@ export const Lobby: React.FC<LobbyProps> = inject(
                         className="lobby__chat__message"
                         key={`${JSON.stringify(m)}-${i}`}
                       >
-                        {m.sender === Role.SYSTEM ? '[Convinz]' : m.sender}:{' '}
-                        {m.message}
+                        <Text color={m.sender === Role.SYSTEM ? 'blue' : ''}>
+                          {m.sender}: {m.message}
+                        </Text>
                       </li>
                     ))}
                   </ul>
