@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinLobby', async (gameCode, nickname, gameAccessionType) => {
-    const alreadyConnectedClients = getPlayersInRoom(gameCode);
+    // const alreadyConnectedClients = getPlayersInRoom(gameCode);
 
     // if (alreadyConnectedClients.length < 1) {
     //   io.to(gameCode).emit('joined', {
