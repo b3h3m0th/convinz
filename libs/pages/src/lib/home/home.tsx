@@ -21,7 +21,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     const onJoinGame = () => {
       if (gameStore.gameCode)
         socket.emit(
-          'joinGame',
+          'joinLobby',
           gameStore.gameCode,
           gameStore.player.nickname,
           GameAccessionType.GAME_CODE
@@ -29,7 +29,7 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     };
 
     const onCreateGame = () => {
-      socket.emit('createGame', gameStore.player.nickname);
+      socket.emit('createLobby', gameStore.player.nickname);
     };
 
     useEffect(() => {

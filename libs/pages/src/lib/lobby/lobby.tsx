@@ -59,14 +59,15 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
         });
       }
 
-      socket.on('receiveMessage', (message) => {
+      socket.on('receiveChatMessage', (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
+        scrollChatToBottom();
       });
     }, []);
 
     useBeforeUnload(() => {
       if (gameStore.hasJoinedLobby)
-        socket.emit('leaveGame', gameStore.gameCode);
+        socket.emit('leaveLobby', gameStore.gameCode);
     });
 
     const scrollChatToBottom = () =>
@@ -76,6 +77,18 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
       });
 
     const clearChatInput = () => setMessage('');
+
+    const sendChatMessage = () => {
+      if (message.length < 1) return;
+
+      socket.emit('sendChatMessage', {
+        sender: gameStore.player.nickname,
+        message: message,
+        lobby: gameStore.gameCode,
+      });
+      scrollChatToBottom();
+      clearChatInput();
+    };
 
     return (
       <div className="lobby">
@@ -101,7 +114,7 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Button
                     onClick={() => {
-                      socket.emit('leaveGame', gameStore.gameCode);
+                      socket.emit('leaveLobby', gameStore.gameCode);
                       navigate(`${ROUTES.home}`);
                     }}
                     leftIcon={<ArrowLeft size={18} />}
@@ -153,9 +166,12 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 }}
               >
                 <ScrollArea viewportRef={chatViewport}>
-                  <ul>
+                  <ul className="lobby__chat">
                     {messages.map((m, i) => (
-                      <li key={`${JSON.stringify(m)}-${i}`}>
+                      <li
+                        className="lobby__chat__message"
+                        key={`${JSON.stringify(m)}-${i}`}
+                      >
                         {m.sender}: {m.message}
                       </li>
                     ))}
@@ -163,21 +179,14 @@ export const Lobby: React.FC<LobbyProps> = inject(gameStore.storeKey)(
                 </ScrollArea>
                 <TextInput
                   size="md"
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') sendChatMessage();
+                  }}
                   rightSection={
                     <ActionIcon
                       size={32}
                       radius="sm"
-                      onClick={() => {
-                        if (message.length < 1) return;
-
-                        socket.emit('sendMessage', {
-                          sender: gameStore.player.nickname,
-                          message: message,
-                          lobby: gameStore.gameCode,
-                        });
-                        scrollChatToBottom();
-                        clearChatInput();
-                      }}
+                      onClick={() => sendChatMessage()}
                     >
                       <ArrowRight size={18} />
                     </ActionIcon>

@@ -30,7 +30,7 @@ export class GameStore implements IStore {
       console.log(`disconnected`);
     });
 
-    socket.on('joined', (result) => {
+    socket.on('joinedLobby', (result) => {
       if (result.error) return;
 
       this.setPlayer(result.player);
@@ -40,7 +40,7 @@ export class GameStore implements IStore {
       console.log(`joined lobby: ${result.gameCode}`);
     });
 
-    socket.on('left', (result) => {
+    socket.on('leftLobby', (result) => {
       if (result.error) return;
 
       gameStore.setHasJoinedLobby(false);
@@ -48,7 +48,7 @@ export class GameStore implements IStore {
       gameStore.setConnectedPlayersAndUpdateSelfPlayer(result.players);
     });
 
-    socket.on('started', (gameCode) => {
+    socket.on('startedGame', (gameCode) => {
       this.hasGameStarted = true;
     });
   }
@@ -74,7 +74,7 @@ export class GameStore implements IStore {
   }
 
   @action startGame() {
-    socket.emit('start', this.gameCode);
+    socket.emit('startGame', this.gameCode);
   }
 
   @action setConnectedPlayersAndUpdateSelfPlayer(players: Player[]) {

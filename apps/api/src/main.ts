@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     console.log('disconnect', reason);
   });
 
-  socket.on('createGame', async (nickname) => {
+  socket.on('createLobby', async (nickname) => {
     const gameCode = generateGameCode();
     await socket.join(gameCode);
 
@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
     addPlayer(newPlayer);
     const connectedClients = getPlayersInRoom(gameCode);
 
-    socket.emit('joined', {
+    socket.emit('joinedLobby', {
       gameCode: gameCode,
       error: false,
       players: connectedClients,
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('joinGame', async (gameCode, nickname, gameAccessionType) => {
+  socket.on('joinLobby', async (gameCode, nickname, gameAccessionType) => {
     const alreadyConnectedClients = getPlayersInRoom(gameCode);
 
     // if (alreadyConnectedClients.length < 1) {
@@ -72,14 +72,16 @@ io.on('connection', (socket) => {
 
     const connectedClientsAfterSelfJoin = getPlayersInRoom(gameCode);
 
-    io.to(gameCode).emit('joined', {
+    // broadcast for already connected players
+    socket.to(gameCode).emit('joinedLobby', {
       gameCode: gameCode,
       error: false,
       players: connectedClientsAfterSelfJoin,
       player: null,
     });
 
-    socket.emit('joined', {
+    // answer for new players
+    socket.emit('joinedLobby', {
       gameCode: gameCode,
       error: false,
       players: connectedClientsAfterSelfJoin,
@@ -87,7 +89,7 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('leaveGame', async (code) => {
+  socket.on('leaveLobby', async (code) => {
     const leftPlayer = removePlayer(socket.id);
     const connectedClients = getPlayersInRoom(code);
 
@@ -96,15 +98,15 @@ io.on('connection', (socket) => {
     }
     socket.leave(code);
 
-    io.to(code).emit('left', { players: connectedClients, error: false });
+    io.to(code).emit('leftLobby', { players: connectedClients, error: false });
   });
 
-  socket.on('sendMessage', (message) => {
-    io.to(message.lobby).emit('receiveMessage', message);
+  socket.on('sendChatMessage', (message) => {
+    io.to(message.lobby).emit('receiveChatMessage', message);
   });
 
-  socket.on('start', (gameCode) => {
-    io.to(gameCode).emit('started', { gameCode: gameCode, error: false });
+  socket.on('startGame', (gameCode) => {
+    io.to(gameCode).emit('startedGame', { gameCode: gameCode, error: false });
   });
 });
 
