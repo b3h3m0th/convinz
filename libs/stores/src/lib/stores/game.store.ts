@@ -33,6 +33,7 @@ export class GameStore implements IStore {
     socket.on('joined', (result) => {
       if (result.error) return;
 
+      this.setPlayer(result.player);
       this.setHasJoinedLobby(true);
       this.setGameCode(result.gameCode);
       this.setConnectedPlayersAndUpdateSelfPlayer(result.players);
@@ -57,7 +58,7 @@ export class GameStore implements IStore {
   }
 
   @action setPlayer(player: Player) {
-    this.player = player;
+    this.player = player ?? this.player;
   }
 
   @action setIsConnected(value: boolean) {

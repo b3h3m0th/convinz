@@ -35,13 +35,18 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
     useEffect(() => {
       if (gameStore.hasJoinedLobby && gameStore.gameCode)
         navigate(`${ROUTES.game}/${gameStore.gameCode}`);
-    });
+    }, [gameStore.hasJoinedLobby, gameStore.gameCode]);
 
     return (
       <div className="home">
         <div className="home__content">
           <Title mb="xs">Convinz</Title>
-          <Text mb="md">Win by inventing shit</Text>
+          <Text mb="md">
+            Win by inventing{' '}
+            <span role="img" aria-label="shit">
+              💩
+            </span>
+          </Text>
           <TextInput
             icon={<Hash size={14} />}
             label="Game Code"

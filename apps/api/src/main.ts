@@ -76,6 +76,13 @@ io.on('connection', (socket) => {
       gameCode: gameCode,
       error: false,
       players: connectedClientsAfterSelfJoin,
+      player: null,
+    });
+
+    socket.emit('joined', {
+      gameCode: gameCode,
+      error: false,
+      players: connectedClientsAfterSelfJoin,
       player: newPlayer,
     });
   });
