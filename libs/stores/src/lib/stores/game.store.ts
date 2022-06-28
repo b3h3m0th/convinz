@@ -44,7 +44,7 @@ export class GameStore implements IStore {
           this.player.id === result?.joinedPlayer?.id
             ? 'You'
             : result?.joinedPlayer?.nickname || 'Somebody'
-        } joined the lobby.`,
+        } joined the lobby`,
       });
     });
 
@@ -57,14 +57,13 @@ export class GameStore implements IStore {
       if (result.player) {
         gameStore.setHasJoinedLobby(false);
         gameStore.setHasGameStarted(false);
+        chatStore.resetMessages();
       }
 
       chatStore.addMessage({
         lobby: this.player.room,
         sender: Role.SYSTEM,
-        message: `${
-          result?.leftPlayer?.nickname || 'Somebody'
-        } left the lobby.`,
+        message: `${result?.leftPlayer?.nickname || 'Somebody'} left the lobby`,
       });
     });
 
