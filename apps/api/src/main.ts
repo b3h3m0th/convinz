@@ -130,6 +130,10 @@ io.on('connection', (socket) => {
       error: false,
     });
   });
+
+  socket.on('requestRound', (gameCode, cb) => {
+    cb({ gameCode, term: 'döner' });
+  });
 });
 
 const port = process.env.port || 3333;

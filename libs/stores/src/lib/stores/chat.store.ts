@@ -1,4 +1,4 @@
-import { ChatMessage } from '@convinz/shared/types';
+import type { ChatMessage } from '@convinz/shared/types';
 import { action, makeAutoObservable, observable } from 'mobx';
 import { IStore } from '../interfaces';
 

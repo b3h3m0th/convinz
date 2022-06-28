@@ -2,3 +2,4 @@ export * from './game';
 export * from './message';
 export * from './player';
 export * from './role';
+export * from './term';

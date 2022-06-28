@@ -20,5 +20,6 @@ export interface ServerToClientEvents {
     gameCode: GameCode;
     error: boolean;
   }) => void;
+  receiveRound: (result: { gameCode: GameCode }) => void;
   receiveChatMessage: (message: ChatMessage) => void;
 }

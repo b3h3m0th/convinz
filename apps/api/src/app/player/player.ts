@@ -33,9 +33,13 @@ export class Players extends Array<Player> {
   }
 
   getCaptainInRoom(room: GameCode): Player {
-    return this.filter((r) => r.room === room).filter(
+    return this.filter((p) => p.room === room).filter(
       (p) => p.role === Role.CAPTAIN
     )[0];
+  }
+
+  getPlayerCountInRoom(room: GameCode): number {
+    return this.filter((p) => p.room === room).length;
   }
 }
 

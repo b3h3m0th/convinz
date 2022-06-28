@@ -1,4 +1,4 @@
-import type { GameAccessionType, GameCode, Player } from '../game';
+import type { GameAccessionType, GameCode, Term } from '../game';
 import { ChatMessage } from '../game';
 
 export interface ClientToServerEvents {
@@ -10,5 +10,9 @@ export interface ClientToServerEvents {
   ) => void;
   leaveLobby: (gameCode: GameCode) => void;
   startGame: (gameCode: GameCode) => void;
+  requestRound: (
+    gameCode: GameCode,
+    cb: (result: { gameCode: GameCode; term: Term }) => void
+  ) => void;
   sendChatMessage: (message: ChatMessage) => void;
 }
