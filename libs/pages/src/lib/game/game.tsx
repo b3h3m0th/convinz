@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
-import { Button, TextInput } from '@mantine/core';
+import { Button, Textarea } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
 import { QuestionMark } from 'tabler-icons-react';
@@ -30,7 +30,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
             <p>What is a...</p>
             <h3>{currentTerm}?</h3>
 
-            <TextInput
+            <Textarea
               icon={<QuestionMark size={14} />}
               value={`${explanation}`}
               onChange={(e) => setExplanation(e.target.value)}

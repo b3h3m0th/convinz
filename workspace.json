@@ -7,6 +7,7 @@
     "pages": "libs/pages",
     "router": "libs/router",
     "shared-config": "libs/shared/config",
+    "shared-data": "libs/shared/data",
     "shared-hooks": "libs/shared/hooks",
     "shared-types": "libs/shared/types",
     "shared-util": "libs/shared/util",

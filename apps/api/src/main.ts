@@ -11,7 +11,7 @@ import {
   ServerToClientEvents,
   SocketData,
 } from '@convinz/shared/types';
-import { generateGameCode } from '@convinz/shared/util';
+import { generateGameCode, getRandomTerm } from '@convinz/shared/util';
 import { players } from './app/player';
 
 const app = express();
@@ -132,7 +132,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('requestRound', (gameCode, cb) => {
-    cb({ gameCode, term: 'döner' });
+    cb({ gameCode, term: getRandomTerm() });
   });
 });
 

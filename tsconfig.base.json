@@ -18,6 +18,7 @@
       "@convinz/pages": ["libs/pages/src/index.ts"],
       "@convinz/router": ["libs/router/src/index.ts"],
       "@convinz/shared/config": ["libs/shared/config/src/index.ts"],
+      "@convinz/shared/data": ["libs/shared/data/src/index.ts"],
       "@convinz/shared/hooks": ["libs/shared/hooks/src/index.ts"],
       "@convinz/shared/types": ["libs/shared/types/src/index.ts"],
       "@convinz/shared/util": ["libs/shared/util/src/index.ts"],
