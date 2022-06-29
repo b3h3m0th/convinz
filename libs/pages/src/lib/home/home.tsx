@@ -11,6 +11,7 @@ import { ActionIcon, Button, Text, TextInput, Title } from '@mantine/core';
 import { Hash, Settings } from 'tabler-icons-react';
 import { gameCodeLength } from '@convinz/shared/util';
 import { SettingsModal } from '@convinz/components';
+import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
 export interface HomeProps {}
@@ -21,6 +22,7 @@ export const Home: React.FC<HomeProps> = inject(
 )(
   observer((props: HomeProps) => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const onJoinGame = () => {
       if (gameStore.player.room)
@@ -45,12 +47,7 @@ export const Home: React.FC<HomeProps> = inject(
       <div className="home">
         <div className="home__content">
           <Title mb="xs">Convinz</Title>
-          <Text mb="md">
-            Win by inventing{' '}
-            <span role="img" aria-label="shit">
-              💩
-            </span>
-          </Text>
+          <Text mb="md">{t('home.subheading')} </Text>
           <TextInput
             icon={<Hash size={14} />}
             label="Game Code"
@@ -91,14 +88,14 @@ export const Home: React.FC<HomeProps> = inject(
             onClick={() => onJoinGame()}
             mr="xs"
           >
-            Join Game
+            {t('home.joinGame')}
           </Button>
           <Button
             disabled={!gameStore.player?.nickname}
             onClick={() => onCreateGame()}
             ml="xs"
           >
-            Create Game
+            {t('home.createGame')}
           </Button>
           <ActionIcon size={'lg'} mt="xs">
             <Settings

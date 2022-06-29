@@ -28,7 +28,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = inject(
       <Modal
         opened={opened}
         onClose={() => onClose()}
-        title={t('settings.language')}
+        title={t('settings.title')}
         className="settings"
       >
         <NativeSelect
@@ -36,13 +36,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = inject(
             { label: 'English', value: 'en' },
             { label: 'Deutsch', value: 'de' },
           ]}
-          label="Language"
+          label={t('settings.language')}
           value={language}
           onChange={(e) => setLanguage(e.target.value as Language)}
         />
 
         <Button onClick={() => onSave()} mt="xs">
-          Save
+          {t('settings.save')}
         </Button>
       </Modal>
     );

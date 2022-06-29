@@ -1,6 +1,8 @@
 export interface ISet {
   home: {
     subheading: string;
+    joinGame: string;
+    createGame: string;
   };
   lobby: {
     connectedPlayers: string;
@@ -11,6 +13,7 @@ export interface ISet {
     submitExplanation: string;
   };
   settings: {
+    title: string;
     language: string;
     save: string;
   };

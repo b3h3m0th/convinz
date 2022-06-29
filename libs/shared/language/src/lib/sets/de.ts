@@ -3,6 +3,8 @@ import { ISet } from '../interfaces';
 export const de: ISet = {
   home: {
     subheading: 'Gewinne, durch das Erfinden von 💩',
+    joinGame: 'Spiel beitreten',
+    createGame: 'Spiel erstellen',
   },
   lobby: {
     connectedPlayers: 'Verbundene Spieler',
@@ -13,6 +15,7 @@ export const de: ISet = {
     submitExplanation: 'Antwort absenden',
   },
   settings: {
+    title: 'Einstellungen',
     language: 'Sprache',
     save: 'Speichern',
   },
