@@ -235,7 +235,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
           <div>{gameStore.hasGameStarted && <Game />}</div>
         </AppShell>
         <Modal
-          opened={settingsStore.isSettingsModalOpened}
+          opened={isInstructionsOpened}
           onClose={() => setIsInstructionsOpened(false)}
           title="Instructions"
         >
@@ -254,7 +254,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
           </ActionIcon>
           <ActionIcon
             size="lg"
-            onClick={() => settingsStore.setIsSettingsModalOpened(false)}
+            onClick={() => settingsStore.setIsSettingsModalOpened(true)}
           >
             <Settings size={18} />
           </ActionIcon>
