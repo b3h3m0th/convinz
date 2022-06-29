@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
+      "@convinz/components": ["libs/components/src/index.ts"],
       "@convinz/pages": ["libs/pages/src/index.ts"],
       "@convinz/router": ["libs/router/src/index.ts"],
       "@convinz/shared/config": ["libs/shared/config/src/index.ts"],

@@ -3,7 +3,7 @@
 /* eslint-disable no-empty-pattern */
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import './lobby.scss';
-import { chatStore, gameStore } from '@convinz/stores';
+import { chatStore, gameStore, settingsStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
 import { Role } from '@convinz/shared/types';
@@ -32,15 +32,18 @@ import {
   PlayCard,
   Message,
   QuestionMark,
+  Settings,
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
+import { SettingsModal } from '@convinz/components';
 
 export interface LobbyProps {}
 
 export const Lobby: React.FC<LobbyProps> = inject(
   gameStore.storeKey,
-  chatStore.storeKey
+  chatStore.storeKey,
+  settingsStore.storeKey
 )(
   observer(({}: LobbyProps) => {
     const navigate = useNavigate();
@@ -59,7 +62,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
           message: 'Please join via game code only!',
           color: 'orange',
           icon: (
-            <ActionIcon size={32}>
+            <ActionIcon size={'lg'}>
               <AlertTriangle size={16} color="white" />
             </ActionIcon>
           ),
@@ -238,11 +241,23 @@ export const Lobby: React.FC<LobbyProps> = inject(
         >
           {/* Modal content */}
         </Modal>
-        <Affix
-          position={{ bottom: 20, right: 20 }}
-          onClick={() => setIsInstructionsOpened((prev) => !prev)}
-        >
-          <Button leftIcon={<QuestionMark size={18} />}>Instructions</Button>
+        <SettingsModal
+          opened={settingsStore.isSettingsModalOpened}
+          onClose={() => settingsStore.setIsSettingsModalOpened(false)}
+        />
+        <Affix position={{ bottom: 20, right: 20 }}>
+          <ActionIcon
+            size="lg"
+            onClick={() => setIsInstructionsOpened((prev) => !prev)}
+          >
+            <QuestionMark size={18} />
+          </ActionIcon>
+          <ActionIcon
+            size="lg"
+            onClick={() => setIsInstructionsOpened((prev) => !prev)}
+          >
+            <Settings size={18} />
+          </ActionIcon>
         </Affix>
       </div>
     );

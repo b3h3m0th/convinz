@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "components": "libs/components",
     "convinz": "apps/convinz",
     "convinz-e2e": "apps/convinz-e2e",
     "pages": "libs/pages",

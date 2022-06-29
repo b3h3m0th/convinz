@@ -1,20 +1,24 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import './home.scss';
 import { GameAccessionType, GameCode } from '@convinz/shared/types';
-import { gameStore } from '@convinz/stores';
+import { gameStore, settingsStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import { socket } from '@convinz/socket';
-import { Button, Text, TextInput, Title } from '@mantine/core';
-import { Hash } from 'tabler-icons-react';
+import { ActionIcon, Button, Text, TextInput, Title } from '@mantine/core';
+import { Hash, Settings } from 'tabler-icons-react';
 import { gameCodeLength } from '@convinz/shared/util';
+import { SettingsModal } from '@convinz/components';
 
 /* eslint-disable-next-line */
 export interface HomeProps {}
 
-export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
+export const Home: React.FC<HomeProps> = inject(
+  gameStore.storeKey,
+  settingsStore.storeKey
+)(
   observer((props: HomeProps) => {
     const navigate = useNavigate();
 
@@ -96,6 +100,15 @@ export const Home: React.FC<HomeProps> = inject(gameStore.storeKey)(
           >
             Create Game
           </Button>
+          <ActionIcon size={'lg'} mt="xs">
+            <Settings
+              onClick={() => settingsStore.setIsSettingsModalOpened(true)}
+            />
+          </ActionIcon>
+          <SettingsModal
+            opened={settingsStore.isSettingsModalOpened}
+            onClose={() => settingsStore.setIsSettingsModalOpened(false)}
+          />
         </div>
       </div>
     );
