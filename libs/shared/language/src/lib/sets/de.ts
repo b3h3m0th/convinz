@@ -10,11 +10,13 @@ export const de: ISet = {
   },
   lobby: {
     connectedPlayers: 'Verbundene Spieler',
+    gameCodeCopied: 'Kopiert',
     leaveLobby: 'Lobby verlassen',
     startGame: 'Spiel starten',
   },
   game: {
     submitExplanation: 'Antwort absenden',
+    instructions: 'Spielanleitung',
   },
   settings: {
     title: 'Einstellungen',

@@ -10,11 +10,13 @@ export const en: ISet = {
   },
   lobby: {
     connectedPlayers: 'Connected Players',
+    gameCodeCopied: 'Copied',
     leaveLobby: 'Leave Lobby',
     startGame: 'Start Game',
   },
   game: {
     submitExplanation: 'Submit Explanation',
+    instructions: 'Instructions',
   },
   settings: {
     title: 'Instructions',

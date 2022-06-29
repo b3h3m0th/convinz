@@ -8,11 +8,13 @@ export interface ISet {
   };
   lobby: {
     connectedPlayers: string;
+    gameCodeCopied: string;
     leaveLobby: string;
     startGame: string;
   };
   game: {
     submitExplanation: string;
+    instructions: string;
   };
   settings: {
     title: string;

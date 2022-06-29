@@ -37,6 +37,7 @@ import {
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
 import { SettingsModal } from '@convinz/components';
+import { useTranslation } from 'react-i18next';
 
 export interface LobbyProps {}
 
@@ -47,6 +48,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
 )(
   observer(({}: LobbyProps) => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const notifications = useNotifications();
     const clipboard = useClipboard({ timeout: 500 });
     const chatViewport = useRef<HTMLDivElement>(null);
@@ -118,7 +120,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                 <Tooltip
                   position="bottom"
                   withArrow
-                  label="Copied"
+                  label={t('lobbdy.gameCodeCopied')}
                   opened={clipboard.copied}
                   mb={'sm'}
                 >
@@ -137,7 +139,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                     }
                     leftIcon={<ArrowLeft size={18} />}
                   >
-                    Leave Lobby
+                    {t('lobby.leaveLobby')}
                   </Button>
                   <Button
                     disabled={
@@ -149,14 +151,16 @@ export const Lobby: React.FC<LobbyProps> = inject(
                     rightIcon={<PlayCard size={18} />}
                     ml={'xs'}
                   >
-                    Start Game
+                    {t('lobby.startGame')}
                   </Button>
                 </div>
 
                 <Table mt={'md'} mb={'md'}>
                   <thead>
                     <tr>
-                      <th style={{ paddingLeft: 0 }}>Connected Users</th>
+                      <th style={{ paddingLeft: 0 }}>
+                        {t('lobby.connectedPlayers')}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -237,7 +241,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
         <Modal
           opened={isInstructionsOpened}
           onClose={() => setIsInstructionsOpened(false)}
-          title="Instructions"
+          title={t('game.instructions')}
         >
           {/* Modal content */}
         </Modal>
