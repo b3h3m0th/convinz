@@ -1,8 +1,9 @@
 import type { GameCode } from './game';
+import { Player } from './player';
 import type { Role } from './role';
 
 export type ChatMessage = {
-  sender: string | Role.SYSTEM;
+  sender: Player | Role.SYSTEM;
   message: string;
   lobby: GameCode;
 };

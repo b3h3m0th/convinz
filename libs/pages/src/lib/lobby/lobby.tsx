@@ -98,7 +98,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
       if (message.length < 1) return;
 
       socket.emit('sendChatMessage', {
-        sender: gameStore.player.nickname,
+        sender: gameStore.player,
         message: message,
         lobby: gameStore.player.room,
       });
@@ -193,7 +193,12 @@ export const Lobby: React.FC<LobbyProps> = inject(
                         key={`${JSON.stringify(m)}-${i}`}
                       >
                         <Text color={m.sender === Role.SYSTEM ? 'orange' : ''}>
-                          {m.sender}: {m.message}
+                          {m.sender !== Role.SYSTEM
+                            ? m.sender.id === gameStore.player.id
+                              ? 'You'
+                              : m.sender.nickname
+                            : m.sender}
+                          : {m.message}
                         </Text>
                       </li>
                     ))}
