@@ -50,7 +50,7 @@ export const Home: React.FC<HomeProps> = inject(
           <Text mb="md">{t('home.subheading')} </Text>
           <TextInput
             icon={<Hash size={14} />}
-            label="Game Code"
+            label={t('home.gameCode')}
             placeholder={'X'.repeat(gameCodeLength)}
             maxLength={gameCodeLength}
             value={`${
@@ -66,7 +66,7 @@ export const Home: React.FC<HomeProps> = inject(
             }
           />
           <TextInput
-            label="Nickname"
+            label={t('home.nickname')}
             type="text"
             className="home__content__nickname-input"
             value={gameStore.player.nickname}

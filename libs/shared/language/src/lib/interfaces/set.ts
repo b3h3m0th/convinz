@@ -1,6 +1,8 @@
 export interface ISet {
   home: {
     subheading: string;
+    gameCode: string;
+    nickname: string;
     joinGame: string;
     createGame: string;
   };

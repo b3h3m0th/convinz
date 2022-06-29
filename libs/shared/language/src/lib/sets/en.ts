@@ -3,6 +3,8 @@ import { ISet } from '../interfaces';
 export const en: ISet = {
   home: {
     subheading: 'Win by inventing 💩',
+    gameCode: 'Game Code',
+    nickname: 'Nickname',
     joinGame: 'Join Game',
     createGame: 'Create Game',
   },
