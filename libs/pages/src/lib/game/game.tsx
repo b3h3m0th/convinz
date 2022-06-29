@@ -39,6 +39,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
               value={`${explanation}`}
               onChange={(e) => setExplanation(e.target.value)}
               mb="xs"
+              autosize
             />
             <Button onClick={() => console.log(explanation)} mr="xs">
               Submit Explanation
