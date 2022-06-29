@@ -7,7 +7,6 @@ import { chatStore, gameStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
 import { Role } from '@convinz/shared/types';
-import { ChatMessage } from 'libs/shared/types/src/lib/game/message';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import Game from '../game/game';
@@ -27,10 +26,9 @@ import { useNotifications } from '@mantine/notifications';
 import {
   AlertTriangle,
   ArrowLeft,
-  ArrowRight,
   Crown,
-  Dice,
   PlayCard,
+  Message,
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
@@ -67,6 +65,10 @@ export const Lobby: React.FC<LobbyProps> = inject(
         chatStore.addMessage(message);
         scrollChatToBottom();
       });
+
+      return () => {
+        socket.off('receiveChatMessage');
+      };
     }, []);
 
     useEffect(() => {
@@ -203,7 +205,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                       radius="sm"
                       onClick={() => sendChatMessage()}
                     >
-                      <ArrowRight size={18} />
+                      <Message size={18} />
                     </ActionIcon>
                   }
                   placeholder="Chat"

@@ -18,6 +18,10 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       socket.emit('requestRound', gameStore.player.room);
 
       socket.on('receiveRound', (result) => setCurrentTerm(result.term));
+
+      return () => {
+        socket.off('receiveRound');
+      };
     }, []);
 
     return (
