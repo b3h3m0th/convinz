@@ -12,8 +12,10 @@ import { ROUTES } from '@convinz/router';
 import Game from '../game/game';
 import {
   ActionIcon,
+  Affix,
   AppShell,
   Button,
+  Modal,
   Navbar,
   ScrollArea,
   Table,
@@ -29,6 +31,7 @@ import {
   Crown,
   PlayCard,
   Message,
+  QuestionMark,
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
@@ -46,6 +49,8 @@ export const Lobby: React.FC<LobbyProps> = inject(
     const chatViewport = useRef<HTMLDivElement>(null);
 
     const [message, setMessage] = useState<string>('');
+    const [isInstructionsOpened, setIsInstructionsOpened] =
+      useState<boolean>(false);
 
     useEffect(() => {
       if (!gameStore.hasJoinedLobby) {
@@ -187,7 +192,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                         className="lobby__chat__message"
                         key={`${JSON.stringify(m)}-${i}`}
                       >
-                        <Text color={m.sender === Role.SYSTEM ? 'blue' : ''}>
+                        <Text color={m.sender === Role.SYSTEM ? 'orange' : ''}>
                           {m.sender}: {m.message}
                         </Text>
                       </li>
@@ -221,6 +226,19 @@ export const Lobby: React.FC<LobbyProps> = inject(
         >
           <div>{gameStore.hasGameStarted && <Game />}</div>
         </AppShell>
+        <Modal
+          opened={isInstructionsOpened}
+          onClose={() => setIsInstructionsOpened(false)}
+          title="Instructions"
+        >
+          {/* Modal content */}
+        </Modal>
+        <Affix
+          position={{ bottom: 20, right: 20 }}
+          onClick={() => setIsInstructionsOpened((prev) => !prev)}
+        >
+          <Button leftIcon={<QuestionMark size={18} />}>Instructions</Button>
+        </Affix>
       </div>
     );
   })
