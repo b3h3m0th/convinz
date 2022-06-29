@@ -1,3 +1,3 @@
-import * as t from './terms.json';
+import * as q from './questions.json';
 
-export const terms = t;
+export const questions = q;

@@ -1,2 +1,2 @@
 export * from './createGameCode';
-export * from './getRandomTerm';
+export * from './getRandomQuestion';

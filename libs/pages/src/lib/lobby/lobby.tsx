@@ -161,7 +161,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                       <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
                         <td style={{ paddingLeft: 0 }}>
                           <Text
-                            color={p.id === gameStore.player.id ? 'blue' : ''}
+                            color={p.id === gameStore.player.id ? 'orange' : ''}
                             style={{ display: 'flex', alignItems: 'center' }}
                           >
                             {p.nickname}{' '}
