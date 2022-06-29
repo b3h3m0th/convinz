@@ -10,9 +10,6 @@ export interface ClientToServerEvents {
   ) => void;
   leaveLobby: (gameCode: GameCode) => void;
   startGame: (gameCode: GameCode) => void;
-  requestRound: (
-    gameCode: GameCode,
-    cb: (result: { gameCode: GameCode; term: Term }) => void
-  ) => void;
+  requestRound: (gameCode: GameCode) => void;
   sendChatMessage: (message: ChatMessage) => void;
 }

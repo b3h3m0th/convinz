@@ -29,6 +29,8 @@ import {
   ArrowLeft,
   ArrowRight,
   Crown,
+  Dice,
+  PlayCard,
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
@@ -127,13 +129,18 @@ export const Lobby: React.FC<LobbyProps> = inject(
                   >
                     Leave Lobby
                   </Button>
-                  {gameStore.player.role === Role.CAPTAIN &&
-                  gameStore.connectedPlayers.length > 1 &&
-                  !gameStore.hasGameStarted ? (
-                    <Button onClick={() => gameStore.startGame()} ml={'xs'}>
-                      Start Game
-                    </Button>
-                  ) : null}
+                  <Button
+                    disabled={
+                      gameStore.player.role !== Role.CAPTAIN ||
+                      gameStore.connectedPlayers.length < 2 ||
+                      gameStore.hasGameStarted
+                    }
+                    onClick={() => gameStore.startGame()}
+                    rightIcon={<PlayCard size={18} />}
+                    ml={'xs'}
+                  >
+                    Start Game
+                  </Button>
                 </div>
 
                 <Table mt={'md'} mb={'md'}>

@@ -15,9 +15,9 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     const [explanation, setExplanation] = useState<string>('');
 
     useEffect(() => {
-      socket.emit('requestRound', gameStore.player.room, (result) => {
-        setCurrentTerm(result.term);
-      });
+      socket.emit('requestRound', gameStore.player.room);
+
+      socket.on('receiveRound', (result) => setCurrentTerm(result.term));
     }, []);
 
     return (
