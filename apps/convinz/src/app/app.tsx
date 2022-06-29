@@ -5,6 +5,7 @@ import * as fromRouter from '@convinz/router';
 import { chatStore, gameStore, settingsStore } from '@convinz/stores';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
+import '@convinz/shared/language';
 
 const stores = { gameStore, chatStore, settingsStore };
 

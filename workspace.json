@@ -10,6 +10,7 @@
     "shared-config": "libs/shared/config",
     "shared-data": "libs/shared/data",
     "shared-hooks": "libs/shared/hooks",
+    "shared-language": "libs/shared/language",
     "shared-types": "libs/shared/types",
     "shared-util": "libs/shared/util",
     "socket": "libs/socket",
