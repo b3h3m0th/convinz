@@ -4,6 +4,7 @@ import { Button, Modal, NativeSelect } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Language as LanguageIcon } from 'tabler-icons-react';
 import './settings-modal.scss';
 
 /* eslint-disable-next-line */
@@ -39,6 +40,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = inject(
           label={t('settings.language')}
           value={language}
           onChange={(e) => setLanguage(e.target.value as Language)}
+          icon={<LanguageIcon size={18} />}
         />
 
         <Button onClick={() => onSave()} mt="xs">
