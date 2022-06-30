@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import type { Language } from '@convinz/shared/language';
 import { i18n } from '@convinz/shared/language';
 import { action, makeAutoObservable, observable } from 'mobx';
