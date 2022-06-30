@@ -1,26 +1,34 @@
 import type { Language } from '@convinz/shared/language';
-import i18n from 'libs/shared/language/src/lib';
+import { i18n } from '@convinz/shared/language';
 import { action, makeAutoObservable, observable } from 'mobx';
 import { IStore } from '../interfaces';
+import { create, persist } from 'mobx-persist';
 
 export class SettingsStore implements IStore {
   storeKey = 'settingsStore' as const;
 
-  @observable language: Language = 'en';
+  @persist @observable language: Language = 'en';
   @observable isSettingsModalOpened = false;
 
   constructor() {
     makeAutoObservable(this);
+
+    setTimeout(() => {
+      this.setLanguage(this.language);
+    }, 1);
   }
 
   @action setIsSettingsModalOpened(value: boolean) {
     this.isSettingsModalOpened = value;
   }
 
-  @action setLanguage(value: Language) {
+  @action async setLanguage(value: Language) {
     this.language = value;
-    i18n.changeLanguage(value);
+    await i18n.changeLanguage(value);
   }
 }
 
 export const settingsStore = new SettingsStore();
+const hydrate = create({ storage: localStorage, jsonify: true });
+
+hydrate(settingsStore.storeKey, settingsStore);

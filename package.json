@@ -18,6 +18,7 @@
     "cors": "^2.8.5",
     "express": "4.17.2",
     "i18next": "^21.8.11",
+    "localforage": "^1.10.0",
     "mobx": "^6.5.0",
     "mobx-persist": "^0.4.1",
     "mobx-react": "^7.3.0",
