@@ -1,14 +1,6 @@
 import { Language } from '@convinz/shared/language';
 import { settingsStore } from '@convinz/stores';
-import {
-  Avatar,
-  Button,
-  Group,
-  Modal,
-  NativeSelect,
-  Select,
-  Text,
-} from '@mantine/core';
+import { Avatar, Button, Group, Modal, Select, Text } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import { forwardRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
