@@ -17,14 +17,20 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     useEffect(() => {
       socket.emit('requestRound', gameStore.player.room);
 
-      socket.on('receivedRound', (result) =>
-        setCurrentQuestion(result.question)
-      );
+      socket.on('receivedRound', (result) => {
+        setCurrentQuestion(result.question);
+        gameStore.setHasSubmitted(false);
+      });
 
       return () => {
         socket.off('receivedRound');
       };
     }, []);
+
+    const submitExplanation = () => {
+      socket.emit('submitExplanation', gameStore.player.room, explanation);
+      setExplanation('');
+    };
 
     return (
       <div className="game">
@@ -45,16 +51,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
               mb="xs"
               size="lg"
             />
-            <Button
-              onClick={() =>
-                socket.emit(
-                  'submitExplanation',
-                  gameStore.player.room,
-                  explanation
-                )
-              }
-              mr="xs"
-            >
+            <Button onClick={() => submitExplanation()} mr="xs">
               Submit Explanation
             </Button>
           </div>

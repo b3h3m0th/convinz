@@ -162,8 +162,16 @@ io.on('connection', (socket) => {
 
     socket.emit('receivedSubmission', {
       gameCode,
-      submissions: lobby.currentRound.submissions,
     });
+
+    if (lobby.currentRound.submissions.length === lobby.players.length) {
+      const question = getRandomQuestion();
+
+      io.to(gameCode).emit('receivedRound', {
+        gameCode: gameCode,
+        question,
+      });
+    }
   });
 });
 
