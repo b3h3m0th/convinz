@@ -19,7 +19,7 @@ export const en: ISet = {
     instructions: 'Instructions',
   },
   settings: {
-    title: 'Instructions',
+    title: 'Settings',
     language: 'Language',
     save: 'Save',
   },
