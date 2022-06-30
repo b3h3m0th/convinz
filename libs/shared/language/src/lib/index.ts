@@ -2,7 +2,12 @@ import { default as i18next } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { en, de } from './sets';
 
-export type Language = 'en' | 'de';
+export enum Language {
+  en = 'en',
+  de = 'de',
+}
+
+// export type Language = 'en' | 'de';
 
 const settingsStore = localStorage.getItem('settingsStore');
 console.log(settingsStore);

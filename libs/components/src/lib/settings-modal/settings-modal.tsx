@@ -1,11 +1,37 @@
 import { Language } from '@convinz/shared/language';
 import { settingsStore } from '@convinz/stores';
-import { Button, Modal, NativeSelect } from '@mantine/core';
+import {
+  Avatar,
+  Button,
+  Group,
+  Modal,
+  NativeSelect,
+  Select,
+  Text,
+} from '@mantine/core';
 import { inject, observer } from 'mobx-react';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Language as LanguageIcon } from 'tabler-icons-react';
 import './settings-modal.scss';
+
+interface LanguageItemProps extends React.ComponentPropsWithoutRef<'div'> {
+  image: string;
+  label: string;
+}
+
+const SelectItem = forwardRef<HTMLDivElement, LanguageItemProps>(
+  ({ image, label, ...rest }: LanguageItemProps, ref) => (
+    <div ref={ref} {...rest}>
+      <Group noWrap>
+        <Avatar src={image} />
+        <div>
+          <Text size="sm">{label}</Text>
+        </div>
+      </Group>
+    </div>
+  )
+);
 
 /* eslint-disable-next-line */
 export interface SettingsModalProps {
@@ -32,16 +58,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = inject(
         title={t('settings.title')}
         className="settings"
       >
-        <NativeSelect
+        <Select
           data={[
-            { label: 'English', value: 'en' },
-            { label: 'Deutsch', value: 'de' },
+            {
+              label: 'English',
+              value: 'en',
+              image: 'https://img.icons8.com/color/96/000000/usa.png',
+            },
+            {
+              label: 'Deutsch',
+              value: 'de',
+              image: 'https://img.icons8.com/color/96/000000/germany.png',
+            },
           ]}
           label={t('settings.language')}
           value={language}
-          onChange={(e) => setLanguage(e.target.value as Language)}
+          onChange={(v) => setLanguage(v as Language)}
           icon={<LanguageIcon size={18} />}
-        />
+          itemComponent={SelectItem}
+        ></Select>
 
         <Button onClick={() => onSave()} mt="xs">
           {t('settings.save')}

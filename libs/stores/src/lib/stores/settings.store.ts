@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import type { Language } from '@convinz/shared/language';
+import { Language } from '@convinz/shared/language';
 import { i18n } from '@convinz/shared/language';
 import { action, makeAutoObservable, observable } from 'mobx';
 import { IStore } from '../interfaces';
@@ -8,7 +8,7 @@ import { create, persist } from 'mobx-persist';
 export class SettingsStore implements IStore {
   storeKey = 'settingsStore' as const;
 
-  @persist @observable language: Language = 'en';
+  @persist @observable language: Language = Language.en;
   @observable isSettingsModalOpened = false;
 
   constructor() {
