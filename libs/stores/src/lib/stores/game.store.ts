@@ -79,7 +79,7 @@ export class GameStore implements IStore {
       });
     });
 
-    socket.on('receivedSubmission', (result) => {
+    socket.on('receivedSubmission', () => {
       this.setHasSubmitted(true);
     });
   }

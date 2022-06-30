@@ -4,17 +4,10 @@ import * as http from 'http';
 import * as socketio from 'socket.io';
 import {
   ClientToServerEvents,
-  defaultPlayer,
-  defaultRoundsAmount,
   InterServerEvents,
-  Player,
-  Role,
-  Round,
   ServerToClientEvents,
   SocketData,
 } from '@convinz/shared/types';
-import { generateGameCode, getRandomQuestion } from '@convinz/shared/util';
-import { lobbies } from './app/game';
 import {
   onCreateLobby,
   onDisconnecting,

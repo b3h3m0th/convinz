@@ -1,4 +1,4 @@
-import type { GameCode, Player, Question, Submission } from '../game';
+import type { GameCode, Player, Question } from '../game';
 import { ChatMessage } from '../game/message';
 
 export interface ServerToClientEvents {
