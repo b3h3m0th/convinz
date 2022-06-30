@@ -12,7 +12,7 @@ i18next.use(initReactI18next).init({
     en: { translation: en },
     de: { translation: de },
   },
-  lng: settingsStore,
+  lng: settingsStore || 'en',
   fallbackLng: 'en',
   interpolation: {
     escapeValue: false,

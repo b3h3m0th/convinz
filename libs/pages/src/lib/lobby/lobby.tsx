@@ -120,7 +120,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                 <Tooltip
                   position="bottom"
                   withArrow
-                  label={t('lobbdy.gameCodeCopied')}
+                  label={t('lobby.gameCodeCopied')}
                   opened={clipboard.copied}
                   mb={'sm'}
                 >
