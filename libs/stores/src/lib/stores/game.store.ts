@@ -58,6 +58,7 @@ export class GameStore implements IStore {
       if (result.player) {
         gameStore.setHasJoinedLobby(false);
         gameStore.setHasGameStarted(false);
+        gameStore.setHasSubmitted(false);
         chatStore.resetMessages();
       }
 
@@ -79,7 +80,7 @@ export class GameStore implements IStore {
     });
 
     socket.on('receivedSubmission', (result) => {
-      console.log(result.submissions);
+      this.setHasSubmitted(true);
     });
   }
 

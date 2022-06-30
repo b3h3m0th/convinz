@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
     const connectedClientsAfterSelfJoin =
       lobbies.findByGameCode(gameCode).players;
 
-    // answer for new player
+    // answer to new player
     socket.emit('joinedLobby', {
       gameCode: gameCode,
       error: false,
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
       joinedPlayer: newPlayer,
     });
 
-    // broadcast for already connected players
+    // broadcast to already connected players
     socket.to(gameCode).emit('joinedLobby', {
       gameCode: gameCode,
       error: false,
@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
       connectedClients[0].role = Role.CAPTAIN;
     }
 
-    // answer for left player
+    // answer to left player
     socket.emit('leftLobby', {
       error: false,
       players: connectedClients,
@@ -114,7 +114,7 @@ io.on('connection', (socket) => {
       leftPlayer: leftPlayer,
     });
 
-    // broadcast for already connected players
+    // broadcast to already connected players
     socket.to(gameCode).emit('leftLobby', {
       error: false,
       players: connectedClients,
@@ -149,7 +149,7 @@ io.on('connection', (socket) => {
       lobby.roundHistory.push(new Round(question));
     }
 
-    io.to(gameCode).emit('receiveRound', {
+    io.to(gameCode).emit('receivedRound', {
       gameCode: gameCode,
       question,
     });
@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
 
     lobby.currentRound.submissions.push({ [socket.id]: submission });
 
-    io.to(gameCode).emit('receivedSubmission', {
+    socket.emit('receivedSubmission', {
       gameCode,
       submissions: lobby.currentRound.submissions,
     });

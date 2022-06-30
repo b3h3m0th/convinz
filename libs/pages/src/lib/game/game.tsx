@@ -17,12 +17,12 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     useEffect(() => {
       socket.emit('requestRound', gameStore.player.room);
 
-      socket.on('receiveRound', (result) =>
+      socket.on('receivedRound', (result) =>
         setCurrentQuestion(result.question)
       );
 
       return () => {
-        socket.off('receiveRound');
+        socket.off('receivedRound');
       };
     }, []);
 
@@ -31,6 +31,8 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         <h1>Convinz</h1>
         {!currentQuestion ? (
           <div>Wating for a Question</div>
+        ) : gameStore.hasSubmitted ? (
+          <div>Wait for the other players to submit their explanation</div>
         ) : (
           <div>
             <h3>{currentQuestion}?</h3>
