@@ -24,6 +24,7 @@ import {
   onSendChatMessage,
   onStartGame,
   onSubmitExplanation,
+  registerListeners,
 } from './app/socket';
 
 const app = express();
@@ -46,14 +47,17 @@ app.get('/api', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  onDisconnecting(socket);
-  onCreateLobby(socket);
-  onJoinLobby(socket);
-  onLeaveLobby(socket);
-  onSendChatMessage(socket);
-  onStartGame(socket);
-  onRequestRound(socket);
-  onSubmitExplanation(socket);
+  registerListeners(
+    socket,
+    onDisconnecting,
+    onCreateLobby,
+    onJoinLobby,
+    onLeaveLobby,
+    onSendChatMessage,
+    onStartGame,
+    onRequestRound,
+    onSubmitExplanation
+  );
 });
 
 const port = process.env.port || 3333;
