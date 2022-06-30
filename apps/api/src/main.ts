@@ -5,14 +5,16 @@ import * as socketio from 'socket.io';
 import {
   ClientToServerEvents,
   defaultPlayer,
+  defaultRoundsAmount,
   InterServerEvents,
   Player,
   Role,
+  Round,
   ServerToClientEvents,
   SocketData,
 } from '@convinz/shared/types';
 import { generateGameCode, getRandomQuestion } from '@convinz/shared/util';
-import { players } from './app/player';
+import { lobbies } from './app/game';
 
 const app = express();
 const server = http.createServer(app);
@@ -43,20 +45,21 @@ io.on('connection', (socket) => {
     await socket.join(gameCode);
 
     const newPlayer = new Player(socket.id, nickname, gameCode, Role.CAPTAIN);
-    players.add(newPlayer);
-    const connectedClients = players.getPlayersInRoom(gameCode);
+    lobbies.create(gameCode, defaultRoundsAmount, [newPlayer]);
+
+    const lobby = lobbies.findByGameCode(gameCode);
 
     socket.emit('joinedLobby', {
       gameCode: gameCode,
       error: false,
-      players: connectedClients,
+      players: lobby.players,
       player: newPlayer,
       joinedPlayer: newPlayer,
     });
   });
 
   socket.on('joinLobby', async (gameCode, nickname, gameAccessionType) => {
-    const alreadyConnectedClients = players.getPlayersInRoom(gameCode);
+    const alreadyConnectedClients = lobbies.findByGameCode(gameCode).players;
 
     if (alreadyConnectedClients.length < 1) {
       io.to(gameCode).emit('joinedLobby', {
@@ -69,9 +72,11 @@ io.on('connection', (socket) => {
 
     await socket.join(gameCode);
     const newPlayer = new Player(socket.id, nickname, gameCode, Role.MEMBER);
-    players.add(newPlayer);
 
-    const connectedClientsAfterSelfJoin = players.getPlayersInRoom(gameCode);
+    lobbies.findByGameCode(gameCode).players.push(newPlayer);
+
+    const connectedClientsAfterSelfJoin =
+      lobbies.findByGameCode(gameCode).players;
 
     // answer for new player
     socket.emit('joinedLobby', {
@@ -92,8 +97,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leaveLobby', async (gameCode) => {
-    const leftPlayer = players.remove(socket.id);
-    const connectedClients = players.getPlayersInRoom(gameCode);
+    const leftPlayer = lobbies
+      .findByGameCode(gameCode)
+      .players.remove(socket.id);
+    const connectedClients = lobbies.findByGameCode(gameCode).players;
 
     if (leftPlayer.role === Role.CAPTAIN && connectedClients.length > 0) {
       connectedClients[0].role = Role.CAPTAIN;
@@ -122,10 +129,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('startGame', (gameCode) => {
-    const starterPlayer = players.getCaptainInRoom(gameCode);
+    const captain = lobbies.findByGameCode(gameCode).players.captain;
 
     io.to(gameCode).emit('startedGame', {
-      starterPlayer,
+      starterPlayer: captain,
       gameCode: gameCode,
       error: false,
     });
@@ -133,10 +140,29 @@ io.on('connection', (socket) => {
 
   socket.on('requestRound', (gameCode) => {
     const question = getRandomQuestion();
+    const lobby = lobbies.findByGameCode(gameCode);
+
+    if (
+      !lobby.currentRound ||
+      lobby.currentRound.submissions.length === lobby.players.length
+    ) {
+      lobby.roundHistory.push(new Round(question));
+    }
 
     io.to(gameCode).emit('receiveRound', {
       gameCode: gameCode,
       question,
+    });
+  });
+
+  socket.on('submitExplanation', (gameCode, submission) => {
+    const lobby = lobbies.findByGameCode(gameCode);
+
+    lobby.currentRound.submissions.push({ [socket.id]: submission });
+
+    io.to(gameCode).emit('receivedSubmission', {
+      gameCode,
+      submissions: lobby.currentRound.submissions,
     });
   });
 });

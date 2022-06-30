@@ -1,4 +1,4 @@
-import type { GameCode, Player, Question } from '../game';
+import type { GameCode, Player, Question, Submission } from '../game';
 import { ChatMessage } from '../game/message';
 
 export interface ServerToClientEvents {
@@ -9,6 +9,7 @@ export interface ServerToClientEvents {
     player?: Player;
     error: boolean;
   }) => void;
+  receiveChatMessage: (message: ChatMessage) => void;
   leftLobby: (result: {
     player?: Player;
     players: Player[];
@@ -21,5 +22,8 @@ export interface ServerToClientEvents {
     error: boolean;
   }) => void;
   receiveRound: (result: { gameCode: GameCode; question: Question }) => void;
-  receiveChatMessage: (message: ChatMessage) => void;
+  receivedSubmission: (result: {
+    gameCode: GameCode;
+    submissions: Submission[];
+  }) => void;
 }

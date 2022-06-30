@@ -37,13 +37,22 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
             <TextInput
               maxLength={200}
-              icon={<QuestionMark size={14} />}
+              icon={<QuestionMark size={18} />}
               value={`${explanation}`}
               onChange={(e) => setExplanation(e.target.value)}
               mb="xs"
               size="lg"
             />
-            <Button onClick={() => console.log(explanation)} mr="xs">
+            <Button
+              onClick={() =>
+                socket.emit(
+                  'submitExplanation',
+                  gameStore.player.room,
+                  explanation
+                )
+              }
+              mr="xs"
+            >
               Submit Explanation
             </Button>
           </div>

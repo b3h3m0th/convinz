@@ -12,6 +12,7 @@ export class GameStore implements IStore {
   @observable hasJoinedLobby = false;
   @observable hasGameStarted = false;
   @observable connectedPlayers: Player[] = [];
+  @observable hasSubmitted = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -76,6 +77,10 @@ export class GameStore implements IStore {
         message: `${result.starterPlayer.nickname} started the game`,
       });
     });
+
+    socket.on('receivedSubmission', (result) => {
+      console.log(result.submissions);
+    });
   }
 
   @action setPlayer(player: Player | undefined) {
@@ -96,6 +101,10 @@ export class GameStore implements IStore {
 
   @action startGame() {
     socket.emit('startGame', this.player.room);
+  }
+
+  @action setHasSubmitted(value: boolean) {
+    this.hasSubmitted = value;
   }
 
   @action setConnectedPlayersAndUpdateSelfPlayer(players: Player[]) {
