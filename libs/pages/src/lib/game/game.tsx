@@ -4,7 +4,17 @@ import './game.scss';
 import { PlayerActionStatus, Submission } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
-import { Button, Loader, Text, TextInput } from '@mantine/core';
+import {
+  Button,
+  Loader,
+  RadioGroup,
+  Text,
+  TextInput,
+  Radio,
+  Blockquote,
+  Group,
+  Divider,
+} from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
 import { QuestionMark } from 'tabler-icons-react';
@@ -58,11 +68,18 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           <div>
             <h1>What explanation is most convinzing?</h1>
             <h3>{currentQuestion}</h3>
+
             {votingSubmissions?.map((s) => {
               return (
-                <div>
-                  {s.player.nickname}: {s.explanation}
-                </div>
+                <>
+                  <Divider my="xs" />
+                  <Group key={`-${s}`}>
+                    <Button>Vote</Button>
+                    <Blockquote cite={`-${s.player.nickname}`}>
+                      {s.explanation}
+                    </Blockquote>
+                  </Group>
+                </>
               );
             })}
           </div>
