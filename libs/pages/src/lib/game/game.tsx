@@ -14,6 +14,7 @@ import {
   Blockquote,
   Group,
   Divider,
+  Avatar,
 } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
@@ -77,7 +78,10 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
                   <Divider my="xs" />
                   <Group>
                     <Button>Vote</Button>
-                    <Blockquote cite={`-${s.player.nickname}`}>
+                    <Blockquote
+                      icon={<Avatar src={s.player.avatar} />}
+                      cite={`-${s.player.nickname}`}
+                    >
                       {s.explanation}
                     </Blockquote>
                   </Group>
