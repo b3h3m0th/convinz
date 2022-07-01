@@ -4,11 +4,17 @@ import { lobbies } from '../../game';
 import { Listener } from '../types/listener';
 
 export const onCreateLobby: Listener = (socket) => {
-  return socket.on('createLobby', async (nickname) => {
+  return socket.on('createLobby', async (nickname, avatar) => {
     const gameCode = generateGameCode();
     await socket.join(gameCode);
 
-    const newPlayer = new Player(socket.id, nickname, gameCode, Role.CAPTAIN);
+    const newPlayer = new Player(
+      socket.id,
+      nickname,
+      gameCode,
+      Role.CAPTAIN,
+      avatar
+    );
     lobbies.create(gameCode, defaultRoundsAmount, [newPlayer]);
 
     const lobby = lobbies.findByGameCode(gameCode);

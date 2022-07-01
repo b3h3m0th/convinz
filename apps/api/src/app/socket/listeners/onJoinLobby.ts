@@ -6,7 +6,7 @@ import { Listener } from '../types';
 export const onJoinLobby: Listener = (socket) => {
   return socket.on(
     'joinLobby',
-    async (gameCode, nickname, gameAccessionType) => {
+    async (gameCode, nickname, avatar, gameAccessionType) => {
       const alreadyConnectedClients = lobbies.findByGameCode(gameCode).players;
 
       if (alreadyConnectedClients.length < 1) {
@@ -19,7 +19,13 @@ export const onJoinLobby: Listener = (socket) => {
       }
 
       await socket.join(gameCode);
-      const newPlayer = new Player(socket.id, nickname, gameCode, Role.MEMBER);
+      const newPlayer = new Player(
+        socket.id,
+        nickname,
+        gameCode,
+        Role.MEMBER,
+        avatar
+      );
 
       lobbies.findByGameCode(gameCode).players.push(newPlayer);
 

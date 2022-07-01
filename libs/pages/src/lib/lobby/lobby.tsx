@@ -14,7 +14,9 @@ import {
   ActionIcon,
   Affix,
   AppShell,
+  Avatar,
   Button,
+  Group,
   Modal,
   Navbar,
   ScrollArea,
@@ -167,15 +169,20 @@ export const Lobby: React.FC<LobbyProps> = inject(
                     {gameStore.connectedPlayers.map((p) => (
                       <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
                         <td style={{ paddingLeft: 0 }}>
-                          <Text
-                            color={p.id === gameStore.player.id ? 'orange' : ''}
-                            style={{ display: 'flex', alignItems: 'center' }}
-                          >
-                            {p.nickname}{' '}
-                            {p.role === Role.CAPTAIN && (
-                              <Crown style={{ paddingLeft: '4px' }} />
-                            )}
-                          </Text>
+                          <Group>
+                            <Avatar src={p.avatar} size="md" />
+                            <Text
+                              color={
+                                p.id === gameStore.player.id ? 'orange' : ''
+                              }
+                              style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                              {p.nickname}{' '}
+                              {p.role === Role.CAPTAIN && (
+                                <Crown style={{ paddingLeft: '4px' }} />
+                              )}
+                            </Text>
+                          </Group>
                         </td>
                       </tr>
                     ))}

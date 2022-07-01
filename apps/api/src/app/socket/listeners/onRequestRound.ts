@@ -19,9 +19,6 @@ export const onRequestRound: Listener = (socket) => {
     if (lobby.currentRound.submissions.length >= 1) return;
 
     const playerWithSolution = lobby.players.getRandom();
-    lobby.currentRound.submissions.push(
-      new Submission(question.solution, playerWithSolution)
-    );
 
     // answer to player with solution
     io.to(playerWithSolution.id).emit('receivedRound', {

@@ -13,8 +13,9 @@ export class Player {
     public id: string,
     public nickname: string,
     public room: GameCode,
-    public role: Role
+    public role: Role,
+    public avatar: string
   ) {}
 }
 
-export const defaultPlayer = new Player('', '', '', Role.MEMBER);
+export const defaultPlayer = new Player('', '', '', Role.MEMBER, '');

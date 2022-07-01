@@ -7,9 +7,17 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import { socket } from '@convinz/socket';
-import { ActionIcon, Button, Text, TextInput, Title } from '@mantine/core';
-import { Hash, Settings } from 'tabler-icons-react';
-import { gameCodeLength } from '@convinz/shared/util';
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  Center,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
+import { Hash, Rotate, Settings } from 'tabler-icons-react';
+import { gameCodeLength, getAvatar } from '@convinz/shared/util';
 import { SettingsModal } from '@convinz/components';
 import { useTranslation } from 'react-i18next';
 
@@ -23,6 +31,12 @@ export const Home: React.FC<HomeProps> = inject(
   observer((props: HomeProps) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const [avatarSeed, setAvatarSeed] = useState<number>(0);
+
+    useEffect(() => {
+      if (gameStore.hasJoinedLobby && gameStore.player.room)
+        navigate(`${ROUTES.game}/${gameStore.player.room}`);
+    }, [gameStore.hasJoinedLobby, gameStore.player.room]);
 
     const onJoinGame = () => {
       if (gameStore.player.room)
@@ -30,24 +44,43 @@ export const Home: React.FC<HomeProps> = inject(
           'joinLobby',
           gameStore.player.room,
           gameStore.player.nickname,
+          getAvatar(avatarSeed),
           GameAccessionType.GAME_CODE
         );
     };
 
     const onCreateGame = () => {
-      socket.emit('createLobby', gameStore.player.nickname);
+      socket.emit(
+        'createLobby',
+        gameStore.player.nickname,
+        getAvatar(avatarSeed)
+      );
     };
-
-    useEffect(() => {
-      if (gameStore.hasJoinedLobby && gameStore.player.room)
-        navigate(`${ROUTES.game}/${gameStore.player.room}`);
-    }, [gameStore.hasJoinedLobby, gameStore.player.room]);
 
     return (
       <div className="home">
         <div className="home__content">
-          <Title mb="xs">Convinz</Title>
-          <Text mb="md">{t('home.subheading')} </Text>
+          <Title align="center" mb="xs">
+            Convinz
+          </Title>
+          <Text align="center" mb="lg">
+            {t('home.subheading')}
+          </Text>
+          <Center inline={false} sx={{ flexDirection: 'column' }}>
+            <Avatar
+              size="lg"
+              radius="lg"
+              mb="xs"
+              src={getAvatar(avatarSeed)}
+              sx={{ border: '2px solid #ced4da' }}
+            />
+            <ActionIcon
+              size="sm"
+              onClick={() => setAvatarSeed((prev) => prev + 1)}
+            >
+              <Rotate />
+            </ActionIcon>
+          </Center>
           <TextInput
             icon={<Hash size={14} />}
             label={t('home.gameCode')}
@@ -97,7 +130,7 @@ export const Home: React.FC<HomeProps> = inject(
           >
             {t('home.createGame')}
           </Button>
-          <ActionIcon size={'lg'} mt="xs">
+          <ActionIcon size="lg" mt="xs">
             <Settings
               onClick={() => settingsStore.setIsSettingsModalOpened(true)}
             />

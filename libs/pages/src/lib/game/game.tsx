@@ -50,6 +50,8 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     }, []);
 
     const submitExplanation = () => {
+      if (explanation.length < 1) return;
+
       socket.emit('submitExplanation', gameStore.player.room, explanation);
       setExplanation('');
     };
@@ -66,20 +68,20 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           </div>
         ) : gameStore.playerActionStatus === PlayerActionStatus.voting ? (
           <div>
-            <h1>What explanation is most convinzing?</h1>
+            <h1>Which explanation is the most convinzing?</h1>
             <h3>{currentQuestion}</h3>
 
             {votingSubmissions?.map((s) => {
               return (
-                <>
+                <div key={`-${s.player.id}-${s.explanation}`}>
                   <Divider my="xs" />
-                  <Group key={`-${s}`}>
+                  <Group>
                     <Button>Vote</Button>
                     <Blockquote cite={`-${s.player.nickname}`}>
                       {s.explanation}
                     </Blockquote>
                   </Group>
-                </>
+                </div>
               );
             })}
           </div>
@@ -87,28 +89,30 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           <div>
             <h1>Convinz your friends!</h1>
             <h3>{currentQuestion}</h3>
-
+            {solution && (
+              <>
+                <Text>Here's the correct solution:</Text>
+                <Text size="xl" color="orange">
+                  {solution}
+                </Text>
+                <Text mb="xs">
+                  Please rephrase the solution below for the other players so
+                  that it appears as if it was originally written by you.
+                </Text>
+              </>
+            )}
             <TextInput
               maxLength={200}
               icon={<QuestionMark size={18} />}
-              value={solution ?? `${explanation}`}
+              value={explanation}
               onChange={(e) => setExplanation(e.target.value)}
               mb="xs"
               size="lg"
-              disabled={solution !== null}
+              placeholder={solution ?? undefined}
             />
-            <Button
-              disabled={solution !== null}
-              onClick={() => submitExplanation()}
-              mr="xs"
-            >
+            <Button onClick={() => submitExplanation()} mr="xs">
               Submit Explanation
             </Button>
-            {solution && (
-              <Text mt="sm" color="orange">
-                You have the solution. Don't let the other players know!
-              </Text>
-            )}
           </div>
         )}
       </div>
