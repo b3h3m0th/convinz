@@ -4,10 +4,10 @@ import { lobbies } from '../../game';
 import { Listener } from '../types';
 
 export const onSubmitVote: Listener = (socket) => {
-  return socket.on('submitVote', (gameCode, vote) => {
+  return socket.on('submitVote', (gameCode) => {
     const lobby = lobbies.findByGameCode(gameCode);
 
-    if (lobby.currentRound.getTotalVotesCount() === lobby.players.length) {
+    if (lobby.currentRound.getTotalVotesCount() >= lobby.players.length - 1) {
       const newQuestion = getRandomQuestion();
 
       lobby.roundHistory.push(new Round(newQuestion));

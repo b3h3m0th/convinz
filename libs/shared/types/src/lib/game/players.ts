@@ -24,4 +24,8 @@ export class Players extends Array<Player> {
   get captain(): Player {
     return this.filter((p) => p.role === Role.CAPTAIN)[0];
   }
+
+  getRandom() {
+    return this[(Math.random() * this.length) | 0];
+  }
 }

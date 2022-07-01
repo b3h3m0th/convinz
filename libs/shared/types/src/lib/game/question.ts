@@ -1,1 +1,4 @@
-export type Question = string;
+export interface Question {
+  question: string;
+  solution: string;
+}

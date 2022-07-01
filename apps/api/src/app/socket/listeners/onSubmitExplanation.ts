@@ -1,5 +1,4 @@
-import { Round, Submission } from '@convinz/shared/types';
-import { getRandomQuestion } from '@convinz/shared/util';
+import { Submission } from '@convinz/shared/types';
 import { io } from '../../../main';
 import { lobbies } from '../../game';
 import { Listener } from '../types';
@@ -16,7 +15,7 @@ export const onSubmitExplanation: Listener = (socket) => {
       gameCode,
     });
 
-    if (lobby.currentRound.submissions.length === lobby.players.length) {
+    if (lobby.currentRound.submissions.length >= lobby.players.length) {
       io.to(gameCode).emit('startedVoting', {
         gameCode,
         submissions: lobby.currentRound.submissions,

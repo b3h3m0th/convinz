@@ -4,15 +4,7 @@ import './game.scss';
 import { PlayerActionStatus, Submission } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
-import {
-  Button,
-  Center,
-  Box,
-  Loader,
-  Text,
-  TextInput,
-  Grid,
-} from '@mantine/core';
+import { Button, Loader, Text, TextInput } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
 import { QuestionMark } from 'tabler-icons-react';
@@ -22,6 +14,7 @@ export interface GameProps {}
 const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
   observer(({}: GameProps) => {
     const [currentQuestion, setCurrentQuestion] = useState<string>();
+    const [solution, setSolution] = useState<string | null>();
     const [votingSubmissions, setVotingSubmissions] = useState<Submission[]>();
     const [explanation, setExplanation] = useState<string>('');
 
@@ -29,6 +22,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       socket.emit('requestRound', gameStore.player.room);
 
       socket.on('receivedRound', (result) => {
+        setSolution(result.solution);
         setCurrentQuestion(result.question);
         gameStore.setPlayerActionStatus(PlayerActionStatus.explaining);
       });
@@ -75,19 +69,29 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         ) : (
           <div>
             <h1>Convinz your friends!</h1>
-            <h3>{currentQuestion}?</h3>
+            <h3>{currentQuestion}</h3>
 
             <TextInput
               maxLength={200}
               icon={<QuestionMark size={18} />}
-              value={`${explanation}`}
+              value={solution ?? `${explanation}`}
               onChange={(e) => setExplanation(e.target.value)}
               mb="xs"
               size="lg"
+              disabled={solution !== null}
             />
-            <Button onClick={() => submitExplanation()} mr="xs">
+            <Button
+              disabled={solution !== null}
+              onClick={() => submitExplanation()}
+              mr="xs"
+            >
               Submit Explanation
             </Button>
+            {solution && (
+              <Text mt="sm" color="orange">
+                You have the solution. Don't let the other players know!
+              </Text>
+            )}
           </div>
         )}
       </div>

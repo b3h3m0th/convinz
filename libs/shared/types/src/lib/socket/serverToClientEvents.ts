@@ -21,7 +21,11 @@ export interface ServerToClientEvents {
     gameCode: GameCode;
     error: boolean;
   }) => void;
-  receivedRound: (result: { gameCode: GameCode; question: Question }) => void;
+  receivedRound: (result: {
+    gameCode: GameCode;
+    question: string;
+    solution: string;
+  }) => void;
   receivedSubmission: (result: { gameCode: GameCode }) => void;
   startedVoting: (result: {
     gameCode: GameCode;
