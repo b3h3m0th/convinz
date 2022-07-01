@@ -13,4 +13,5 @@ export interface ClientToServerEvents {
   startGame: (gameCode: GameCode) => void;
   requestRound: (gameCode: GameCode) => void;
   submitExplanation: (gameCode: GameCode, submission: string) => void;
+  submitVote: (gameCode: GameCode, vote: string) => void;
 }

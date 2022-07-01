@@ -236,7 +236,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
             </Navbar>
           }
         >
-          <div>{gameStore.hasGameStarted && <Game />}</div>
+          {gameStore.hasGameStarted && <Game />}
         </AppShell>
         <Modal
           opened={isInstructionsOpened}

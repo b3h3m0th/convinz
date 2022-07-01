@@ -9,4 +9,10 @@ export class Round {
     public question: Question,
     public submissions: Submission[] = []
   ) {}
+
+  getTotalVotesCount() {
+    return this.submissions.reduce((acc, curr) => {
+      return acc + curr.votes.length;
+    }, 0);
+  }
 }
