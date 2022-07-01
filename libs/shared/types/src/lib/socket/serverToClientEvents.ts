@@ -23,4 +23,5 @@ export interface ServerToClientEvents {
   }) => void;
   receivedRound: (result: { gameCode: GameCode; question: Question }) => void;
   receivedSubmission: (result: { gameCode: GameCode }) => void;
+  startVoting: (result: { gameCode: GameCode }) => void;
 }

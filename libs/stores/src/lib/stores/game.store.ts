@@ -1,4 +1,9 @@
-import { defaultPlayer, Player, Role } from '@convinz/shared/types';
+import {
+  defaultPlayer,
+  Player,
+  PlayerActionStatus,
+  Role,
+} from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { IStore } from '../interfaces';
@@ -12,7 +17,8 @@ export class GameStore implements IStore {
   @observable hasJoinedLobby = false;
   @observable hasGameStarted = false;
   @observable connectedPlayers: Player[] = [];
-  @observable hasSubmitted = false;
+  @observable playerActionStatus: PlayerActionStatus =
+    PlayerActionStatus.loadingQuestion;
 
   constructor() {
     makeAutoObservable(this);
@@ -58,7 +64,7 @@ export class GameStore implements IStore {
       if (result.player) {
         gameStore.setHasJoinedLobby(false);
         gameStore.setHasGameStarted(false);
-        gameStore.setHasSubmitted(false);
+        gameStore.setPlayerActionStatus(PlayerActionStatus.loadingQuestion);
         chatStore.resetMessages();
       }
 
@@ -80,7 +86,7 @@ export class GameStore implements IStore {
     });
 
     socket.on('receivedSubmission', () => {
-      this.setHasSubmitted(true);
+      this.setPlayerActionStatus(PlayerActionStatus.waitingForOtherPlayers);
     });
   }
 
@@ -104,10 +110,6 @@ export class GameStore implements IStore {
     socket.emit('startGame', this.player.room);
   }
 
-  @action setHasSubmitted(value: boolean) {
-    this.hasSubmitted = value;
-  }
-
   @action setConnectedPlayersAndUpdateSelfPlayer(players: Player[]) {
     this.connectedPlayers = players;
 
@@ -120,6 +122,10 @@ export class GameStore implements IStore {
 
   @action addConnectedPlayer(player: Player) {
     this.connectedPlayers.push(player);
+  }
+
+  @action setPlayerActionStatus(status: PlayerActionStatus) {
+    this.playerActionStatus = status;
   }
 }
 

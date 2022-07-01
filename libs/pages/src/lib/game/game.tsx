@@ -1,5 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable @typescript-eslint/no-empty-interface */
+import { PlayerActionStatus } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
 import { Button, TextInput } from '@mantine/core';
@@ -19,7 +20,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
       socket.on('receivedRound', (result) => {
         setCurrentQuestion(result.question);
-        gameStore.setHasSubmitted(false);
+        gameStore.setPlayerActionStatus(PlayerActionStatus.explaining);
       });
 
       return () => {
@@ -35,10 +36,14 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     return (
       <div className="game">
         <h1>Convinz</h1>
-        {!currentQuestion ? (
+
+        {gameStore.playerActionStatus === PlayerActionStatus.loadingQuestion ? (
           <div>Wating for a Question</div>
-        ) : gameStore.hasSubmitted ? (
+        ) : gameStore.playerActionStatus ===
+          PlayerActionStatus.waitingForOtherPlayers ? (
           <div>Wait for the other players to submit their explanation</div>
+        ) : gameStore.playerActionStatus === PlayerActionStatus.voting ? (
+          <div>Voting</div>
         ) : (
           <div>
             <h3>{currentQuestion}?</h3>

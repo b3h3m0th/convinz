@@ -1,6 +1,6 @@
 import { Round } from '@convinz/shared/types';
 import { getRandomQuestion } from '@convinz/shared/util';
-import { io } from 'apps/api/src/main';
+import { io } from '../../../main';
 import { lobbies } from '../../game';
 import { Listener } from '../types';
 
