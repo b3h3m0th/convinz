@@ -8,6 +8,8 @@ export const onSubmitVote: Listener = (socket) => {
   return socket.on('submitVote', (gameCode, voteForPlayer) => {
     const lobby = lobbies.findByGameCode(gameCode);
 
+    // TODO: Secure that a single player cannot vote multiple times
+
     lobby.currentRound.submissions
       .find((s) => s.player.id === voteForPlayer.id)
       .addVote(lobby.players.findById(socket.id));
