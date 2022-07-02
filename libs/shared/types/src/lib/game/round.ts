@@ -1,8 +1,11 @@
+import { Player } from './player';
 import { Question } from './question';
 import { Submission } from './submission';
 
 export type RoundsAmount = 3 | 5 | 10;
 export const defaultRoundsAmount: RoundsAmount = 3;
+
+export type VoteResult = { player: Player; totalVotes: number }[];
 
 export class Round {
   constructor(
@@ -20,5 +23,12 @@ export class Round {
     return this.submissions.reduce((acc, curr) => {
       return curr.player.id === playerId ? acc + curr.votes.length : acc;
     }, 0);
+  }
+
+  getTotalReceivedVotesPerPlayer(): VoteResult {
+    return this.submissions.map((s) => ({
+      player: s.player,
+      totalVotes: s.votes.length,
+    }));
   }
 }

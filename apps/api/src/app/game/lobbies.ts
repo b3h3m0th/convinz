@@ -3,7 +3,6 @@ import {
   Lobby,
   Player,
   Players,
-  Round,
   RoundsAmount,
 } from '@convinz/shared/types';
 
@@ -43,14 +42,6 @@ export class Lobbies extends Array<Lobby> {
 
   findByGameCode(gameCode: GameCode) {
     return this.find((l) => l.gameCode === gameCode);
-  }
-
-  getTotalReceivedVotesOfPlayer(gameCode: GameCode, playerId: string) {
-    const lobby = this.findByGameCode(gameCode);
-
-    return lobby.roundHistory.reduce((acc, curr) => {
-      return curr.getTotalReceivedVotesOfPlayer(playerId) + acc;
-    }, 0);
   }
 }
 

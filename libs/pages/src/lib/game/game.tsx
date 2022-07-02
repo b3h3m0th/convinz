@@ -1,7 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import './game.scss';
-import { Player, PlayerActionStatus, Submission } from '@convinz/shared/types';
+import {
+  Player,
+  PlayerActionStatus,
+  Round,
+  Submission,
+} from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
 import {
@@ -26,6 +31,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     const [currentQuestion, setCurrentQuestion] = useState<string>();
     const [solution, setSolution] = useState<string | null>();
     const [votingSubmissions, setVotingSubmissions] = useState<Submission[]>();
+    const [gameResults, setGameResults] = useState<Round[]>();
     const [explanation, setExplanation] = useState<string>('');
 
     useEffect(() => {
@@ -43,11 +49,11 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       });
 
       socket.on('updatedVoting', (result) => {
-        console.log(result);
         setVotingSubmissions(result.submissions);
       });
 
       socket.on('gameEnded', (result) => {
+        setGameResults(result.roundHistory);
         gameStore.setPlayerActionStatus(PlayerActionStatus.viewingResults);
       });
 
@@ -123,7 +129,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           PlayerActionStatus.viewingResults ? (
           <div>
             <h1>Results</h1>
-            Results
+            {JSON.stringify(gameResults)}
           </div>
         ) : (
           <div>

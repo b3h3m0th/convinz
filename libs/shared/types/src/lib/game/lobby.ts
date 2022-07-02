@@ -1,6 +1,6 @@
 import { GameCode } from './game';
 import { Players } from './players';
-import { defaultRoundsAmount, Round, RoundsAmount } from './round';
+import { defaultRoundsAmount, Round, RoundsAmount, VoteResult } from './round';
 
 export class Lobby {
   constructor(
@@ -12,5 +12,16 @@ export class Lobby {
 
   get currentRound() {
     return this.roundHistory[this.roundHistory.length - 1];
+  }
+
+  getTotalReceivedVotesPerPlayer() {
+    const resultsMatrix = this.roundHistory.reduce((acc, curr) => {
+      const votesPerPlayerInRound: VoteResult =
+        curr.getTotalReceivedVotesPerPlayer();
+
+      return [...acc, votesPerPlayerInRound];
+    }, [] as VoteResult);
+
+    console.log(resultsMatrix);
   }
 }
