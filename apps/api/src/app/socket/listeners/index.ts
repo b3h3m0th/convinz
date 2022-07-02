@@ -6,6 +6,7 @@ export * from './onSendChatMessage';
 export * from './onStartGame';
 export * from './onRequestRound';
 export * from './onSubmitExplanation';
+export * from './onSubmitVote';
 
 import {
   ClientToServerEvents,

@@ -4,10 +4,10 @@ export class Submission {
   constructor(
     public explanation: string,
     public player: Player,
-    public votes: string[] = []
+    public votes: Player[] = []
   ) {}
 
-  addVote(playerId: string) {
-    this.votes.push(playerId);
+  addVote(player: Player) {
+    this.votes.push(player);
   }
 }

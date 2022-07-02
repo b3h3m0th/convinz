@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import './game.scss';
-import { PlayerActionStatus, Submission } from '@convinz/shared/types';
+import { Player, PlayerActionStatus, Submission } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
 import {
@@ -16,6 +16,7 @@ import {
   Divider,
   Avatar,
   Tooltip,
+  AvatarsGroup,
 } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
@@ -41,8 +42,12 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
       socket.on('startedVoting', (result) => {
         setVotingSubmissions(result.submissions);
-        console.log(result.submissions);
         gameStore.setPlayerActionStatus(PlayerActionStatus.voting);
+      });
+
+      socket.on('updatedVoting', (result) => {
+        console.log(result);
+        setVotingSubmissions(result.submissions);
       });
 
       return () => {
@@ -56,6 +61,10 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
       socket.emit('submitExplanation', gameStore.player.room, explanation);
       setExplanation('');
+    };
+
+    const submitVote = (voteForPlayer: Player) => {
+      socket.emit('submitVote', gameStore.player.room, voteForPlayer);
     };
 
     return (
@@ -78,24 +87,31 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
                 <div key={`-${s.player.id}-${s.explanation}`}>
                   <Divider my="xs" />
                   <Group>
-                    {s.player.id === gameStore.player.id ? (
-                      <Tooltip
-                        withArrow
-                        label={'You cannot vote for yourself'}
-                        transition="fade"
-                        transitionDuration={200}
-                      >
-                        <Button disabled>Vote</Button>
-                      </Tooltip>
-                    ) : (
-                      <Button>Vote</Button>
-                    )}
                     <Blockquote
                       icon={<Avatar src={s.player.avatar} />}
                       cite={`-${s.player.nickname}`}
+                      sx={{ width: '50%' }}
                     >
                       {s.explanation}
                     </Blockquote>
+                    <Group>
+                      <Button
+                        disabled={s.player.id === gameStore.player.id}
+                        title={
+                          s.player.id === gameStore.player.id
+                            ? 'You cannot vote for yourself'
+                            : ''
+                        }
+                        onClick={() => submitVote(s.player)}
+                      >
+                        Vote
+                      </Button>
+                      <AvatarsGroup limit={votingSubmissions.length}>
+                        {s.votes.map((v) => (
+                          <Avatar key={v.id} size="sm" src={v.avatar} />
+                        ))}
+                      </AvatarsGroup>
+                    </Group>
                   </Group>
                 </div>
               );

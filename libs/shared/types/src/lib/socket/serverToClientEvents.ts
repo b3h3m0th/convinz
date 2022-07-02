@@ -31,4 +31,8 @@ export interface ServerToClientEvents {
     gameCode: GameCode;
     submissions: Submission[];
   }) => void;
+  updatedVoting: (result: {
+    gameCode: GameCode;
+    submissions: Submission[];
+  }) => void;
 }

@@ -19,6 +19,7 @@ import {
   onSubmitExplanation,
   registerListeners,
 } from './app/socket';
+import { onSubmitVote } from './app/socket/listeners/onSubmitVote';
 
 const app = express();
 const server = http.createServer(app);
@@ -49,7 +50,8 @@ io.on('connection', (socket) => {
     onSendChatMessage,
     onStartGame,
     onRequestRound,
-    onSubmitExplanation
+    onSubmitExplanation,
+    onSubmitVote
   );
 });
 
