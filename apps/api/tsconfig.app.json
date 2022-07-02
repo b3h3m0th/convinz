@@ -6,5 +6,5 @@
     "types": ["node", "express"]
   },
   "exclude": ["**/*.spec.ts", "**/*.test.ts"],
-  "include": ["**/*.ts", "../../libs/shared/types/src/lib/game/players.ts"]
+  "include": ["**/*.ts", "../../libs/shared/types/src/lib/game/players.ts", "src/app/game/lobbies.ts"]
 }

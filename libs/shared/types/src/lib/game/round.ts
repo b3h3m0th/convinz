@@ -15,4 +15,10 @@ export class Round {
       return acc + curr.votes.length;
     }, 0);
   }
+
+  getTotalReceivedVotesOfPlayer(playerId: string) {
+    return this.submissions.reduce((acc, curr) => {
+      return curr.player.id === playerId ? acc + curr.votes.length : acc;
+    }, 0);
+  }
 }
