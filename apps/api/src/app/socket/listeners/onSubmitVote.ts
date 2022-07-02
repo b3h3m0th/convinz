@@ -1,4 +1,4 @@
-import { Round } from '@convinz/shared/types';
+import { defaultRoundsAmount, Round } from '@convinz/shared/types';
 import { getRandomQuestion } from '@convinz/shared/util';
 import { io } from '../../../main';
 import { lobbies } from '../../game';
@@ -18,9 +18,33 @@ export const onSubmitVote: Listener = (socket) => {
     });
 
     if (lobby.currentRound.getTotalVotesCount() >= lobby.players.length) {
+      if (lobby.roundHistory.length >= defaultRoundsAmount) {
+        io.to(gameCode).emit('gameEnded', {
+          gameCode,
+          roundHistory: lobby.roundHistory,
+        });
+        return;
+      }
+
       const newQuestion = getRandomQuestion();
 
       lobby.roundHistory.push(new Round(newQuestion));
+
+      const playerWithSolution = lobby.players.getRandom();
+
+      // answer to player with solution
+      io.to(playerWithSolution.id).emit('receivedRound', {
+        gameCode,
+        question: newQuestion.question,
+        solution: newQuestion.solution,
+      });
+
+      // answer to all other players
+      io.to(gameCode).except(playerWithSolution.id).emit('receivedRound', {
+        gameCode,
+        question: newQuestion.question,
+        solution: null,
+      });
     }
   });
 };

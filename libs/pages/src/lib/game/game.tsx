@@ -7,15 +7,12 @@ import { gameStore } from '@convinz/stores';
 import {
   Button,
   Loader,
-  RadioGroup,
   Text,
   TextInput,
-  Radio,
   Blockquote,
   Group,
   Divider,
   Avatar,
-  Tooltip,
   AvatarsGroup,
 } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
@@ -50,9 +47,14 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         setVotingSubmissions(result.submissions);
       });
 
+      socket.on('gameEnded', (result) => {
+        gameStore.setPlayerActionStatus(PlayerActionStatus.viewingResults);
+      });
+
       return () => {
         socket.off('receivedRound');
         socket.off('startedVoting');
+        socket.off('updatedVoting');
       };
     }, []);
 
@@ -116,6 +118,12 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
                 </div>
               );
             })}
+          </div>
+        ) : gameStore.playerActionStatus ===
+          PlayerActionStatus.viewingResults ? (
+          <div>
+            <h1>Results</h1>
+            Results
           </div>
         ) : (
           <div>

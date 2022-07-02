@@ -1,4 +1,4 @@
-import type { GameCode, Player, Question, Submission } from '../game';
+import type { GameCode, Player, Question, Round, Submission } from '../game';
 import { ChatMessage } from '../game/message';
 
 export interface ServerToClientEvents {
@@ -35,4 +35,5 @@ export interface ServerToClientEvents {
     gameCode: GameCode;
     submissions: Submission[];
   }) => void;
+  gameEnded: (result: { gameCode: GameCode; roundHistory: Round[] }) => void;
 }

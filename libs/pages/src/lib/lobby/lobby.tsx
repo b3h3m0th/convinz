@@ -6,7 +6,7 @@ import './lobby.scss';
 import { chatStore, gameStore, settingsStore } from '@convinz/stores';
 import { inject, observer } from 'mobx-react';
 import { socket } from '@convinz/socket';
-import { Role } from '@convinz/shared/types';
+import { minPlayerAmount, Role } from '@convinz/shared/types';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@convinz/router';
 import Game from '../game/game';
@@ -146,8 +146,15 @@ export const Lobby: React.FC<LobbyProps> = inject(
                   <Button
                     disabled={
                       gameStore.player.role !== Role.CAPTAIN ||
-                      gameStore.connectedPlayers.length < 2 ||
+                      gameStore.connectedPlayers.length < minPlayerAmount ||
                       gameStore.hasGameStarted
+                    }
+                    title={
+                      gameStore.player.role !== Role.CAPTAIN
+                        ? 'Only the lobby captain can start the game'
+                        : gameStore.connectedPlayers.length < minPlayerAmount
+                        ? `You need at least ${minPlayerAmount} players in a lobby to start the game`
+                        : undefined
                     }
                     onClick={() => gameStore.startGame()}
                     rightIcon={<PlayCard size={18} />}

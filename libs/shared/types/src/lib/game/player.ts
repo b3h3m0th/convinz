@@ -1,11 +1,14 @@
 import { GameCode } from './game';
 import { Role } from './role';
 
+export const minPlayerAmount = 3 as const;
+
 export enum PlayerActionStatus {
   loadingQuestion = 'loadingQuestion',
   explaining = 'explaining',
   waitingForOtherPlayers = 'waitingForOtherPlayers',
   voting = 'voting',
+  viewingResults = 'viewingResults',
 }
 
 export class Player {
