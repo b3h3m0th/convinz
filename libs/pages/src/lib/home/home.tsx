@@ -31,7 +31,7 @@ export const Home: React.FC<HomeProps> = inject(
   observer((props: HomeProps) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const [avatarSeed, setAvatarSeed] = useState<number>(0);
+    const [avatarSeed, setAvatarSeed] = useState<number>(Math.random());
 
     useEffect(() => {
       if (gameStore.hasJoinedLobby && gameStore.player.room)
@@ -76,7 +76,7 @@ export const Home: React.FC<HomeProps> = inject(
             />
             <ActionIcon
               size="sm"
-              onClick={() => setAvatarSeed((prev) => prev + 1)}
+              onClick={() => setAvatarSeed((prev) => Math.random())}
             >
               <Rotate />
             </ActionIcon>

@@ -15,6 +15,7 @@ import {
   Group,
   Divider,
   Avatar,
+  Tooltip,
 } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
@@ -77,7 +78,18 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
                 <div key={`-${s.player.id}-${s.explanation}`}>
                   <Divider my="xs" />
                   <Group>
-                    <Button>Vote</Button>
+                    {s.player.id === gameStore.player.id ? (
+                      <Tooltip
+                        withArrow
+                        label={'You cannot vote for yourself'}
+                        transition="fade"
+                        transitionDuration={200}
+                      >
+                        <Button disabled>Vote</Button>
+                      </Tooltip>
+                    ) : (
+                      <Button>Vote</Button>
+                    )}
                     <Blockquote
                       icon={<Avatar src={s.player.avatar} />}
                       cite={`-${s.player.nickname}`}
