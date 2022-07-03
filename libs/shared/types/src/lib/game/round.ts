@@ -19,12 +19,6 @@ export class Round {
     }, 0);
   }
 
-  getTotalReceivedVotesOfPlayer(playerId: string) {
-    return this.submissions.reduce((acc, curr) => {
-      return curr.player.id === playerId ? acc + curr.votes.length : acc;
-    }, 0);
-  }
-
   getTotalReceivedVotesPerPlayer(): VoteResult {
     return this.submissions.map((s) => ({
       player: s.player,

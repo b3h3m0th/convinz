@@ -14,14 +14,17 @@ export class Lobby {
     return this.roundHistory[this.roundHistory.length - 1];
   }
 
-  getTotalReceivedVotesPerPlayer() {
-    const resultsMatrix = this.roundHistory.reduce((acc, curr) => {
-      const votesPerPlayerInRound: VoteResult =
-        curr.getTotalReceivedVotesPerPlayer();
-
-      return [...acc, votesPerPlayerInRound];
-    }, [] as VoteResult);
-
-    console.log(resultsMatrix);
+  getTotalVotesPerPlayer(): VoteResult {
+    return Object.values(
+      this.roundHistory.reduce((acc, curr) => {
+        curr
+          .getTotalReceivedVotesPerPlayer()
+          ?.forEach(({ player, totalVotes }) => {
+            acc[player.id] ??= { player, totalVotes: 0 };
+            acc[player.id].totalVotes += totalVotes;
+          });
+        return acc;
+      }, {})
+    );
   }
 }

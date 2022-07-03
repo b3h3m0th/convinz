@@ -129,7 +129,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           PlayerActionStatus.viewingResults ? (
           <div>
             <h1>Results</h1>
-            {JSON.stringify(gameResults)}
+            {JSON.stringify(gameResults[0].)}
           </div>
         ) : (
           <div>
