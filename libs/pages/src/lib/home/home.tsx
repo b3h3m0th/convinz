@@ -18,7 +18,7 @@ import {
 } from '@mantine/core';
 import { Hash, QuestionMark, Rotate, Settings } from 'tabler-icons-react';
 import { gameCodeLength, getAvatar } from '@convinz/shared/util';
-import { SettingsModal } from '@convinz/components';
+import { InstructionsModal, SettingsModal } from '@convinz/components';
 import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
@@ -145,6 +145,10 @@ export const Home: React.FC<HomeProps> = inject(
           <SettingsModal
             opened={settingsStore.isSettingsModalOpened}
             onClose={() => settingsStore.setIsSettingsModalOpened(false)}
+          />
+          <InstructionsModal
+            opened={settingsStore.isInstructionsModalOpened}
+            onClose={() => settingsStore.setIsInstructionsModalOpened(false)}
           />
         </div>
       </div>
