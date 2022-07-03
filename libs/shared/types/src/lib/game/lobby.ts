@@ -1,13 +1,20 @@
 import { GameCode } from './game';
 import { Players } from './players';
-import { defaultRoundsAmount, Round, RoundsAmount, VoteResult } from './round';
+import {
+  defaultExplainTime,
+  defaultRoundsAmount,
+  Round,
+  RoundsAmount,
+  VoteResult,
+} from './round';
 
 export class Lobby {
   constructor(
     public gameCode: GameCode,
     public roundsAmount: RoundsAmount = defaultRoundsAmount,
     public roundHistory: Round[],
-    public players: Players
+    public players: Players,
+    public timeLeftForCurrentAction: number = defaultExplainTime
   ) {}
 
   get currentRound() {
@@ -26,5 +33,9 @@ export class Lobby {
         return acc;
       }, {} as any)
     );
+  }
+
+  decrementTimeLeftForCurrentAction() {
+    return this.timeLeftForCurrentAction--;
   }
 }

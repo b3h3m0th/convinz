@@ -1,4 +1,4 @@
-import { Round, Submission } from '@convinz/shared/types';
+import { defaultExplainTime, Round, Submission } from '@convinz/shared/types';
 import { getRandomQuestion } from '@convinz/shared/util';
 import { io } from '../../../main';
 import { lobbies } from '../../game';
@@ -25,6 +25,7 @@ export const onRequestRound: Listener = (socket) => {
       gameCode,
       question: question.question,
       solution: question.solution,
+      totalTime: defaultExplainTime,
     });
 
     // answer to all other players
@@ -32,6 +33,19 @@ export const onRequestRound: Listener = (socket) => {
       gameCode,
       question: question.question,
       solution: null,
+      totalTime: defaultExplainTime,
     });
+
+    const explainTimerInterval = setInterval(() => {
+      io.to(gameCode).emit('explainTimerTickExpired', {
+        totalTime: defaultExplainTime,
+        timeLeft: lobby.timeLeftForCurrentAction,
+      });
+      lobby.decrementTimeLeftForCurrentAction();
+      if (lobby.timeLeftForCurrentAction === 0) {
+        clearInterval(explainTimerInterval);
+        console.log('time over');
+      }
+    }, 1000);
   });
 };

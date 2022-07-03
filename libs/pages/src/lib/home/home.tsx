@@ -81,7 +81,7 @@ export const Home: React.FC<HomeProps> = inject(
                 mb="xs"
               />
               <ActionIcon
-                size="sm"
+                size="xs"
                 onClick={() => setAvatarSeed((prev) => Math.random())}
               >
                 <Rotate />

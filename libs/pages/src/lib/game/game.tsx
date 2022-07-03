@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import './game.scss';
 import {
+  defaultExplainTime,
+  ExplainTime,
   Player,
   PlayerActionStatus,
   Round,
@@ -20,6 +22,7 @@ import {
   Divider,
   Avatar,
   AvatarsGroup,
+  RingProgress,
 } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
@@ -34,6 +37,11 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     const [votingSubmissions, setVotingSubmissions] = useState<Submission[]>();
     const [gameResults, setGameResults] = useState<VoteResult[]>();
     const [explanation, setExplanation] = useState<string>('');
+    const [explainTimer, setExplainTimer] = useState<{
+      totalTime: ExplainTime;
+      timeLeft: number;
+    }>({ totalTime: defaultExplainTime, timeLeft: defaultExplainTime });
+    const [voteTimeLeft, setVoteTimeLeft] = useState<number>(0);
 
     useEffect(() => {
       socket.emit('requestRound', gameStore.player.room);
@@ -41,7 +49,18 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       socket.on('receivedRound', (result) => {
         setSolution(result.solution);
         setCurrentQuestion(result.question);
+        setExplainTimer({
+          totalTime: result.totalTime,
+          timeLeft: result.totalTime,
+        });
         gameStore.setPlayerActionStatus(PlayerActionStatus.explaining);
+      });
+
+      socket.on('explainTimerTickExpired', (result) => {
+        setExplainTimer({
+          totalTime: result.totalTime,
+          timeLeft: result.timeLeft,
+        });
       });
 
       socket.on('startedVoting', (result) => {
@@ -173,6 +192,18 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
             <Button onClick={() => submitExplanation()} mr="xs">
               Submit Explanation
             </Button>
+            <RingProgress
+              sections={[
+                {
+                  value: (explainTimer.timeLeft / explainTimer.totalTime) * 100,
+                  color: 'orange',
+                },
+              ]}
+            >
+              <Text color="orange" weight={700} align="center" size="xl">
+                {explainTimer.timeLeft}
+              </Text>
+            </RingProgress>
           </div>
         )}
       </div>

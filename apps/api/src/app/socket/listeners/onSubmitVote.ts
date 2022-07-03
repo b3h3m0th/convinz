@@ -1,4 +1,8 @@
-import { defaultRoundsAmount, Round } from '@convinz/shared/types';
+import {
+  defaultExplainTime,
+  defaultRoundsAmount,
+  Round,
+} from '@convinz/shared/types';
 import { getRandomQuestion } from '@convinz/shared/util';
 import { io } from '../../../main';
 import { lobbies } from '../../game';
@@ -47,6 +51,7 @@ export const onSubmitVote: Listener = (socket) => {
         gameCode,
         question: newQuestion.question,
         solution: newQuestion.solution,
+        totalTime: defaultExplainTime,
       });
 
       // answer to all other players
@@ -54,6 +59,7 @@ export const onSubmitVote: Listener = (socket) => {
         gameCode,
         question: newQuestion.question,
         solution: null,
+        totalTime: defaultExplainTime,
       });
     }
   });

@@ -1,4 +1,5 @@
 import type {
+  ExplainTime,
   GameCode,
   Player,
   Question,
@@ -32,6 +33,11 @@ export interface ServerToClientEvents {
     gameCode: GameCode;
     question: string;
     solution: string;
+    totalTime: ExplainTime;
+  }) => void;
+  explainTimerTickExpired: (result: {
+    totalTime: ExplainTime;
+    timeLeft: number;
   }) => void;
   receivedSubmission: (result: { gameCode: GameCode }) => void;
   startedVoting: (result: {
