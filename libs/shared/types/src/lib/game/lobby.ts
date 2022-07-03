@@ -50,6 +50,7 @@ export class Lobby {
   clearCurrentActionTimerInterval() {
     if (this.currentActionTimerInterval) {
       clearInterval(this.currentActionTimerInterval);
+      console.log(this.currentActionTimerInterval);
     }
   }
 }
