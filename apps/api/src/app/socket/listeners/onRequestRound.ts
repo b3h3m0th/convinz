@@ -1,4 +1,4 @@
-import { defaultExplainTime, Round, Submission } from '@convinz/shared/types';
+import { defaultExplainTime, Round } from '@convinz/shared/types';
 import { getRandomQuestion } from '@convinz/shared/util';
 import { io } from '../../../main';
 import { lobbies } from '../../game';
@@ -19,11 +19,10 @@ export const onRequestRound: Listener = (socket) => {
     if (!lobby.currentActionTimerInterval) {
       lobby.currentActionTimerInterval = setInterval(() => {
         io.to(gameCode).emit('explainTimerTickExpired', {
-          totalTime: defaultExplainTime,
-          timeLeft: lobby.timeLeftForCurrentAction,
+          ...lobby.explainTimer,
         });
-        lobby.decrementTimeLeftForCurrentAction();
-        if (lobby.timeLeftForCurrentAction === -1) {
+        lobby.decrementExplainTimeLeft();
+        if (lobby.explainTimer.timeLeft === -1) {
           lobby.clearCurrentActionTimerInterval();
           console.log('time over');
         }

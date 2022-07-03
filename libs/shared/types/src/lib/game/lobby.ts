@@ -1,22 +1,24 @@
 import { GameCode } from './game';
 import { Players } from './players';
-import {
-  defaultExplainTime,
-  defaultRoundsAmount,
-  Round,
-  RoundsAmount,
-  VoteResult,
-} from './round';
+import { defaultRoundsAmount, Round, RoundsAmount, VoteResult } from './round';
+import { ActionTimer, defaultExplainTime, defaultVoteTime } from './timer';
 
 export class Lobby {
   public currentActionTimerInterval?: NodeJS.Timer;
+  public explainTimer: ActionTimer = {
+    totalTime: defaultExplainTime,
+    timeLeft: defaultExplainTime,
+  };
+  public voteTimer: ActionTimer = {
+    totalTime: defaultVoteTime,
+    timeLeft: defaultVoteTime,
+  };
 
   constructor(
     public gameCode: GameCode,
     public roundsAmount: RoundsAmount = defaultRoundsAmount,
     public roundHistory: Round[],
-    public players: Players,
-    public timeLeftForCurrentAction: number = defaultExplainTime
+    public players: Players
   ) {}
 
   get currentRound() {
@@ -37,8 +39,12 @@ export class Lobby {
     );
   }
 
-  decrementTimeLeftForCurrentAction() {
-    return this.timeLeftForCurrentAction--;
+  decrementExplainTimeLeft() {
+    return this.explainTimer.timeLeft--;
+  }
+
+  decrementVoteTimeLeft() {
+    return this.voteTimer.timeLeft--;
   }
 
   clearCurrentActionTimerInterval() {

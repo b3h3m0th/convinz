@@ -38,7 +38,7 @@ import {
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
-import { SettingsModal } from '@convinz/components';
+import { InstructionsModal, SettingsModal } from '@convinz/components';
 import { useTranslation } from 'react-i18next';
 
 export interface LobbyProps {}
@@ -254,6 +254,10 @@ export const Lobby: React.FC<LobbyProps> = inject(
         </AppShell>
         <SettingsModal
           opened={settingsStore.isSettingsModalOpened}
+          onClose={() => settingsStore.setIsSettingsModalOpened(false)}
+        />
+        <InstructionsModal
+          opened={settingsStore.isInstructionsModalOpened}
           onClose={() => settingsStore.setIsSettingsModalOpened(false)}
         />
         <Affix position={{ bottom: 20, right: 20 }}>

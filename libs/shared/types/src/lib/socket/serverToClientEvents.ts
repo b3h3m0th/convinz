@@ -44,6 +44,10 @@ export interface ServerToClientEvents {
     gameCode: GameCode;
     submissions: Submission[];
   }) => void;
+  voteTimerTickExpired: (result: {
+    totalTime: ExplainTime;
+    timeLeft: number;
+  }) => void;
   updatedVoting: (result: {
     gameCode: GameCode;
     submissions: Submission[];

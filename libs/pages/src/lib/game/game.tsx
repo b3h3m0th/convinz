@@ -2,7 +2,9 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import './game.scss';
 import {
+  ActionTimer,
   defaultExplainTime,
+  defaultVoteTime,
   ExplainTime,
   Player,
   PlayerActionStatus,
@@ -37,11 +39,14 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     const [votingSubmissions, setVotingSubmissions] = useState<Submission[]>();
     const [gameResults, setGameResults] = useState<VoteResult[]>();
     const [explanation, setExplanation] = useState<string>('');
-    const [explainTimer, setExplainTimer] = useState<{
-      totalTime: ExplainTime;
-      timeLeft: number;
-    }>({ totalTime: defaultExplainTime, timeLeft: defaultExplainTime });
-    const [voteTimeLeft, setVoteTimeLeft] = useState<number>(0);
+    const [explainTimer, setExplainTimer] = useState<ActionTimer>({
+      totalTime: defaultExplainTime,
+      timeLeft: defaultExplainTime,
+    });
+    const [voteTimer, setVoteTimer] = useState<ActionTimer>({
+      totalTime: defaultVoteTime,
+      timeLeft: defaultVoteTime,
+    });
 
     useEffect(() => {
       socket.emit('requestRound', gameStore.player.room);
@@ -63,6 +68,13 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         });
       });
 
+      socket.on('voteTimerTickExpired', (result) => {
+        setVoteTimer({
+          totalTime: result.totalTime,
+          timeLeft: result.timeLeft,
+        });
+      });
+
       socket.on('startedVoting', (result) => {
         setVotingSubmissions(result.submissions);
         gameStore.setPlayerActionStatus(PlayerActionStatus.voting);
@@ -79,7 +91,9 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
       return () => {
         socket.off('receivedRound');
+        socket.off('explainTimerTickExpired');
         socket.off('startedVoting');
+        socket.off('voteTimerTickExpired');
         socket.off('updatedVoting');
       };
     }, []);
@@ -113,7 +127,24 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
             PlayerActionStatus.waitingForOtherPlayersToVote,
           ].includes(gameStore.playerActionStatus) ? (
           <div>
-            <h1>Which explanation is the most convinzing?</h1>
+            <Group sx={{ justifyContent: 'space-between' }}>
+              <h1>Which explanation is the most convinzing?</h1>
+              <RingProgress
+                size={75}
+                thickness={8}
+                sections={[
+                  {
+                    value: (voteTimer.timeLeft / explainTimer.totalTime) * 100,
+                    color: 'orange',
+                  },
+                ]}
+                label={
+                  <Text color="orange" weight={500} align="center">
+                    {explainTimer.timeLeft}
+                  </Text>
+                }
+              />
+            </Group>
             <h3>{currentQuestion}</h3>
 
             {votingSubmissions?.map((s) => {
@@ -166,20 +197,25 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           </div>
         ) : (
           <div>
-            <h1>Convinz your friends!</h1>
-            <RingProgress
-              sections={[
-                {
-                  value: (explainTimer.timeLeft / explainTimer.totalTime) * 100,
-                  color: 'orange',
-                },
-              ]}
-              label={
-                <Text color="orange" weight={700} align="center" size="xl">
-                  {explainTimer.timeLeft}
-                </Text>
-              }
-            />
+            <Group sx={{ justifyContent: 'space-between' }}>
+              <h1>Convinz your friends!</h1>
+              <RingProgress
+                size={75}
+                thickness={8}
+                sections={[
+                  {
+                    value:
+                      (explainTimer.timeLeft / explainTimer.totalTime) * 100,
+                    color: 'orange',
+                  },
+                ]}
+                label={
+                  <Text color="orange" weight={500} align="center">
+                    {explainTimer.timeLeft}
+                  </Text>
+                }
+              />
+            </Group>
             <h3>{currentQuestion}</h3>
             {solution && (
               <>

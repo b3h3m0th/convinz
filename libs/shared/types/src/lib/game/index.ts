@@ -7,3 +7,4 @@ export * from './lobby';
 export * from './round';
 export * from './players';
 export * from './submission';
+export * from './timer';
