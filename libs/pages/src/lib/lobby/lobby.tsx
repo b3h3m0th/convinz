@@ -17,7 +17,6 @@ import {
   Avatar,
   Button,
   Group,
-  Modal,
   Navbar,
   ScrollArea,
   Table,
@@ -54,10 +53,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
     const notifications = useNotifications();
     const clipboard = useClipboard({ timeout: 500 });
     const chatViewport = useRef<HTMLDivElement>(null);
-
     const [message, setMessage] = useState<string>('');
-    const [isInstructionsOpened, setIsInstructionsOpened] =
-      useState<boolean>(false);
 
     useEffect(() => {
       if (!gameStore.hasJoinedLobby) {

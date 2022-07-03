@@ -1,10 +1,15 @@
 import { GameCode } from './game';
 import { Players } from './players';
 import { defaultRoundsAmount, Round, RoundsAmount, VoteResult } from './round';
-import { ActionTimer, defaultExplainTime, defaultVoteTime } from './timer';
+import {
+  ActionTimer,
+  defaultExplainTime,
+  defaultVoteTime,
+  VoteTimerEmitter,
+} from './timer';
 
 export class Lobby {
-  public currentActionTimerInterval?: NodeJS.Timer;
+  public currentActionTimerInterval: NodeJS.Timer | null = null;
   public explainTimer: ActionTimer = {
     totalTime: defaultExplainTime,
     timeLeft: defaultExplainTime,
@@ -13,6 +18,7 @@ export class Lobby {
     totalTime: defaultVoteTime,
     timeLeft: defaultVoteTime,
   };
+  public voteTimerExpiringEmitter = new VoteTimerEmitter();
 
   constructor(
     public gameCode: GameCode,
@@ -40,17 +46,19 @@ export class Lobby {
   }
 
   decrementExplainTimeLeft() {
-    return this.explainTimer.timeLeft--;
+    this.explainTimer.timeLeft--;
   }
 
   decrementVoteTimeLeft() {
-    return this.voteTimer.timeLeft--;
+    this.voteTimer.timeLeft--;
+
+    if (this.voteTimer.timeLeft === 0) this.voteTimerExpiringEmitter.expired();
   }
 
   clearCurrentActionTimerInterval() {
     if (this.currentActionTimerInterval) {
       clearInterval(this.currentActionTimerInterval);
-      console.log(this.currentActionTimerInterval);
+      this.currentActionTimerInterval = null;
     }
   }
 }

@@ -5,10 +5,8 @@ import {
   ActionTimer,
   defaultExplainTime,
   defaultVoteTime,
-  ExplainTime,
   Player,
   PlayerActionStatus,
-  Round,
   Submission,
   VoteResult,
 } from '@convinz/shared/types';
@@ -16,7 +14,6 @@ import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
 import {
   Button,
-  Loader,
   Text,
   TextInput,
   Blockquote,
@@ -62,6 +59,13 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       });
 
       socket.on('explainTimerTickExpired', (result) => {
+        if (
+          result.timeLeft === 0 &&
+          gameStore.playerActionStatus === PlayerActionStatus.explaining
+        ) {
+          submitExplanation('Sorry I ran out of time');
+        }
+
         setExplainTimer({
           totalTime: result.totalTime,
           timeLeft: result.timeLeft,
@@ -69,6 +73,13 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       });
 
       socket.on('voteTimerTickExpired', (result) => {
+        if (
+          result.timeLeft === 0 &&
+          gameStore.playerActionStatus === PlayerActionStatus.voting
+        ) {
+          //
+        }
+
         setVoteTimer({
           totalTime: result.totalTime,
           timeLeft: result.timeLeft,
@@ -98,7 +109,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       };
     }, []);
 
-    const submitExplanation = () => {
+    const submitExplanation = (explanation: string) => {
       if (explanation.length < 1) return;
 
       socket.emit('submitExplanation', gameStore.player.room, explanation);
@@ -119,7 +130,22 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         ) : gameStore.playerActionStatus ===
           PlayerActionStatus.waitingForOtherPlayersToSubmitExplanation ? (
           <div className="game__waiting-for-other-players">
-            <Loader mb="sm" />
+            <RingProgress
+              size={75}
+              thickness={8}
+              sections={[
+                {
+                  value: (explainTimer.timeLeft / explainTimer.totalTime) * 100,
+                  color: 'orange',
+                },
+              ]}
+              label={
+                <Text color="orange" weight={500} align="center">
+                  {explainTimer.timeLeft}
+                </Text>
+              }
+              mb="xs"
+            />
             <Text>Wait for the other players to submit their explanation</Text>
           </div>
         ) : [
@@ -134,13 +160,13 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
                 thickness={8}
                 sections={[
                   {
-                    value: (voteTimer.timeLeft / explainTimer.totalTime) * 100,
+                    value: (voteTimer.timeLeft / voteTimer.totalTime) * 100,
                     color: 'orange',
                   },
                 ]}
                 label={
                   <Text color="orange" weight={500} align="center">
-                    {explainTimer.timeLeft}
+                    {voteTimer.timeLeft}
                   </Text>
                 }
               />
@@ -238,7 +264,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
               size="lg"
               placeholder={solution ?? undefined}
             />
-            <Button onClick={() => submitExplanation()} mr="xs">
+            <Button onClick={() => submitExplanation(explanation)} mr="xs">
               Submit Explanation
             </Button>
           </div>

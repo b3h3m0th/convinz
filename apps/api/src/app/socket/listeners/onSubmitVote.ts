@@ -31,49 +31,47 @@ export const onSubmitVote: Listener = (socket) => {
       submissions: lobby.currentRound.submissions,
     });
 
-    if (lobby.currentRound.getTotalVotesCount() >= lobby.players.length) {
-      if (lobby.roundHistory.length >= defaultRoundsAmount) {
-        io.to(gameCode).emit('gameEnded', {
-          gameCode,
-          gameResults: lobby.getTotalVotesPerPlayer(),
-        });
-        return;
-      }
-
-      if (!lobby.currentActionTimerInterval) {
-        lobby.currentActionTimerInterval = setInterval(() => {
-          io.to(gameCode).emit('explainTimerTickExpired', {
-            ...lobby.explainTimer,
-          });
-          lobby.decrementExplainTimeLeft();
-          if (lobby.explainTimer.timeLeft === -1) {
-            lobby.clearCurrentActionTimerInterval();
-            console.log('time over');
-          }
-        }, 1000);
-      }
-
-      const newQuestion = getRandomQuestion();
-
-      lobby.roundHistory.push(new Round(newQuestion));
-
-      const playerWithSolution = lobby.players.getRandom();
-
-      // answer to player with solution
-      io.to(playerWithSolution.id).emit('receivedRound', {
+    if (lobby.roundHistory.length >= defaultRoundsAmount) {
+      io.to(gameCode).emit('gameEnded', {
         gameCode,
-        question: newQuestion.question,
-        solution: newQuestion.solution,
-        totalTime: defaultExplainTime,
+        gameResults: lobby.getTotalVotesPerPlayer(),
       });
-
-      // answer to all other players
-      io.to(gameCode).except(playerWithSolution.id).emit('receivedRound', {
-        gameCode,
-        question: newQuestion.question,
-        solution: null,
-        totalTime: defaultExplainTime,
-      });
+      return;
     }
+
+    lobby.voteTimerExpiringEmitter.on('expired', () => {
+      lobby.currentActionTimerInterval = setInterval(() => {
+        io.to(gameCode).emit('explainTimerTickExpired', {
+          ...lobby.explainTimer,
+        });
+        lobby.decrementExplainTimeLeft();
+        if (lobby.explainTimer.timeLeft === -1) {
+          lobby.clearCurrentActionTimerInterval();
+          console.log('time over');
+
+          const newQuestion = getRandomQuestion();
+
+          lobby.roundHistory.push(new Round(newQuestion));
+
+          const playerWithSolution = lobby.players.getRandom();
+
+          // answer to player with solution
+          io.to(playerWithSolution.id).emit('receivedRound', {
+            gameCode,
+            question: newQuestion.question,
+            solution: newQuestion.solution,
+            totalTime: defaultExplainTime,
+          });
+
+          // answer to all other players
+          io.to(gameCode).except(playerWithSolution.id).emit('receivedRound', {
+            gameCode,
+            question: newQuestion.question,
+            solution: null,
+            totalTime: defaultExplainTime,
+          });
+        }
+      }, 1000);
+    });
   });
 };

@@ -2,8 +2,6 @@ import type {
   ExplainTime,
   GameCode,
   Player,
-  Question,
-  Round,
   Submission,
   VoteResult,
 } from '../game';
