@@ -167,6 +167,19 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         ) : (
           <div>
             <h1>Convinz your friends!</h1>
+            <RingProgress
+              sections={[
+                {
+                  value: (explainTimer.timeLeft / explainTimer.totalTime) * 100,
+                  color: 'orange',
+                },
+              ]}
+              label={
+                <Text color="orange" weight={700} align="center" size="xl">
+                  {explainTimer.timeLeft}
+                </Text>
+              }
+            />
             <h3>{currentQuestion}</h3>
             {solution && (
               <>
@@ -192,18 +205,6 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
             <Button onClick={() => submitExplanation()} mr="xs">
               Submit Explanation
             </Button>
-            <RingProgress
-              sections={[
-                {
-                  value: (explainTimer.timeLeft / explainTimer.totalTime) * 100,
-                  color: 'orange',
-                },
-              ]}
-            >
-              <Text color="orange" weight={700} align="center" size="xl">
-                {explainTimer.timeLeft}
-              </Text>
-            </RingProgress>
           </div>
         )}
       </div>

@@ -9,6 +9,8 @@ import {
 } from './round';
 
 export class Lobby {
+  public currentActionTimerInterval?: NodeJS.Timer;
+
   constructor(
     public gameCode: GameCode,
     public roundsAmount: RoundsAmount = defaultRoundsAmount,
@@ -37,5 +39,11 @@ export class Lobby {
 
   decrementTimeLeftForCurrentAction() {
     return this.timeLeftForCurrentAction--;
+  }
+
+  clearCurrentActionTimerInterval() {
+    if (this.currentActionTimerInterval) {
+      clearInterval(this.currentActionTimerInterval);
+    }
   }
 }

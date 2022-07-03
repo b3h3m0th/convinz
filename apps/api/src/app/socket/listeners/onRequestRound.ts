@@ -16,6 +16,20 @@ export const onRequestRound: Listener = (socket) => {
       lobby.roundHistory.push(new Round(question));
     }
 
+    if (!lobby.currentActionTimerInterval) {
+      lobby.currentActionTimerInterval = setInterval(() => {
+        io.to(gameCode).emit('explainTimerTickExpired', {
+          totalTime: defaultExplainTime,
+          timeLeft: lobby.timeLeftForCurrentAction,
+        });
+        lobby.decrementTimeLeftForCurrentAction();
+        if (lobby.timeLeftForCurrentAction === -1) {
+          lobby.clearCurrentActionTimerInterval();
+          console.log('time over');
+        }
+      }, 1000);
+    }
+
     if (lobby.currentRound.submissions.length >= 1) return;
 
     const playerWithSolution = lobby.players.getRandom();
@@ -35,17 +49,5 @@ export const onRequestRound: Listener = (socket) => {
       solution: null,
       totalTime: defaultExplainTime,
     });
-
-    const explainTimerInterval = setInterval(() => {
-      io.to(gameCode).emit('explainTimerTickExpired', {
-        totalTime: defaultExplainTime,
-        timeLeft: lobby.timeLeftForCurrentAction,
-      });
-      lobby.decrementTimeLeftForCurrentAction();
-      if (lobby.timeLeftForCurrentAction === 0) {
-        clearInterval(explainTimerInterval);
-        console.log('time over');
-      }
-    }, 1000);
   });
 };
