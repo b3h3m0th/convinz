@@ -86,7 +86,9 @@ export class GameStore implements IStore {
     });
 
     socket.on('receivedSubmission', () => {
-      this.setPlayerActionStatus(PlayerActionStatus.waitingForOtherPlayers);
+      this.setPlayerActionStatus(
+        PlayerActionStatus.waitingForOtherPlayersToSubmitExplanation
+      );
     });
   }
 

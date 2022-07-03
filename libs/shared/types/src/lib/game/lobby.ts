@@ -14,7 +14,7 @@ export class Lobby {
     return this.roundHistory[this.roundHistory.length - 1];
   }
 
-  getTotalVotesPerPlayer(): VoteResult {
+  getTotalVotesPerPlayer(): VoteResult[] {
     return Object.values(
       this.roundHistory.reduce((acc, curr) => {
         curr
@@ -24,7 +24,7 @@ export class Lobby {
             acc[player.id].totalVotes += totalVotes;
           });
         return acc;
-      }, {})
+      }, {} as any)
     );
   }
 }

@@ -4,11 +4,19 @@ import { io } from '../../../main';
 import { lobbies } from '../../game';
 import { Listener } from '../types';
 
+const hasPlayerAlreadyVoted = (playerId: string, round: Round) => {
+  let hasAlreadyVoted = false;
+  round.submissions.forEach((s) =>
+    s.votes.find((v) => v.id === playerId && (hasAlreadyVoted = true))
+  );
+  return hasAlreadyVoted;
+};
+
 export const onSubmitVote: Listener = (socket) => {
   return socket.on('submitVote', (gameCode, voteForPlayer) => {
     const lobby = lobbies.findByGameCode(gameCode);
 
-    // TODO: Secure that a single player cannot vote multiple times
+    if (hasPlayerAlreadyVoted(socket.id, lobby.currentRound)) return;
 
     lobby.currentRound.submissions
       .find((s) => s.player.id === voteForPlayer.id)
@@ -23,7 +31,7 @@ export const onSubmitVote: Listener = (socket) => {
       if (lobby.roundHistory.length >= defaultRoundsAmount) {
         io.to(gameCode).emit('gameEnded', {
           gameCode,
-          roundHistory: lobby.roundHistory,
+          gameResults: lobby.getTotalVotesPerPlayer(),
         });
         return;
       }

@@ -6,7 +6,8 @@ export const minPlayerAmount = 3 as const;
 export enum PlayerActionStatus {
   loadingQuestion = 'loadingQuestion',
   explaining = 'explaining',
-  waitingForOtherPlayers = 'waitingForOtherPlayers',
+  waitingForOtherPlayersToSubmitExplanation = 'waitingForOtherPlayersToSubmitExplanation',
+  waitingForOtherPlayersToVote = 'waitingForOtherPlayersToVote',
   voting = 'voting',
   viewingResults = 'viewingResults',
 }

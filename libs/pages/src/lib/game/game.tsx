@@ -6,6 +6,7 @@ import {
   PlayerActionStatus,
   Round,
   Submission,
+  VoteResult,
 } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
 import { gameStore } from '@convinz/stores';
@@ -31,7 +32,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     const [currentQuestion, setCurrentQuestion] = useState<string>();
     const [solution, setSolution] = useState<string | null>();
     const [votingSubmissions, setVotingSubmissions] = useState<Submission[]>();
-    const [gameResults, setGameResults] = useState<Round[]>();
+    const [gameResults, setGameResults] = useState<VoteResult[]>();
     const [explanation, setExplanation] = useState<string>('');
 
     useEffect(() => {
@@ -53,7 +54,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
       });
 
       socket.on('gameEnded', (result) => {
-        setGameResults(result.roundHistory);
+        setGameResults(result.gameResults);
         gameStore.setPlayerActionStatus(PlayerActionStatus.viewingResults);
       });
 
@@ -73,6 +74,9 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
 
     const submitVote = (voteForPlayer: Player) => {
       socket.emit('submitVote', gameStore.player.room, voteForPlayer);
+      gameStore.setPlayerActionStatus(
+        PlayerActionStatus.waitingForOtherPlayersToVote
+      );
     };
 
     return (
@@ -80,12 +84,15 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
         {gameStore.playerActionStatus === PlayerActionStatus.loadingQuestion ? (
           <div>Wating for a Question</div>
         ) : gameStore.playerActionStatus ===
-          PlayerActionStatus.waitingForOtherPlayers ? (
+          PlayerActionStatus.waitingForOtherPlayersToSubmitExplanation ? (
           <div className="game__waiting-for-other-players">
             <Loader mb="sm" />
             <Text>Wait for the other players to submit their explanation</Text>
           </div>
-        ) : gameStore.playerActionStatus === PlayerActionStatus.voting ? (
+        ) : [
+            PlayerActionStatus.voting,
+            PlayerActionStatus.waitingForOtherPlayersToVote,
+          ].includes(gameStore.playerActionStatus) ? (
           <div>
             <h1>Which explanation is the most convinzing?</h1>
             <h3>{currentQuestion}</h3>
@@ -104,10 +111,17 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
                     </Blockquote>
                     <Group>
                       <Button
-                        disabled={s.player.id === gameStore.player.id}
+                        disabled={
+                          s.player.id === gameStore.player.id ||
+                          gameStore.playerActionStatus ===
+                            PlayerActionStatus.waitingForOtherPlayersToVote
+                        }
                         title={
                           s.player.id === gameStore.player.id
                             ? 'You cannot vote for yourself'
+                            : gameStore.playerActionStatus ===
+                              PlayerActionStatus.waitingForOtherPlayersToVote
+                            ? 'You have already voted'
                             : ''
                         }
                         onClick={() => submitVote(s.player)}
@@ -129,7 +143,7 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
           PlayerActionStatus.viewingResults ? (
           <div>
             <h1>Results</h1>
-            {JSON.stringify(gameResults[0].)}
+            {JSON.stringify(gameResults)}
           </div>
         ) : (
           <div>
