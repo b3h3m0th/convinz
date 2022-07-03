@@ -16,7 +16,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { Hash, Rotate, Settings } from 'tabler-icons-react';
+import { Hash, QuestionMark, Rotate, Settings } from 'tabler-icons-react';
 import { gameCodeLength, getAvatar } from '@convinz/shared/util';
 import { SettingsModal } from '@convinz/components';
 import { useTranslation } from 'react-i18next';
@@ -66,19 +66,31 @@ export const Home: React.FC<HomeProps> = inject(
           <Text align="center" mb="lg">
             {t('home.subheading')}
           </Text>
-          <Center inline={false} sx={{ flexDirection: 'column' }}>
-            <Avatar
-              size="lg"
-              radius="lg"
-              mb="xs"
-              src={getAvatar(avatarSeed)}
-              sx={{ border: '2px solid #ced4da' }}
-            />
-            <ActionIcon
-              size="sm"
-              onClick={() => setAvatarSeed((prev) => Math.random())}
-            >
-              <Rotate />
+          <Center sx={{ justifyContent: 'space-evenly' }}>
+            <ActionIcon size="lg">
+              <Settings
+                onClick={() => settingsStore.setIsSettingsModalOpened(true)}
+              />
+            </ActionIcon>
+            <Center inline={false} sx={{ flexDirection: 'column' }}>
+              <Avatar
+                size="lg"
+                radius="lg"
+                src={getAvatar(avatarSeed)}
+                sx={{ border: '2px solid #ced4da' }}
+                mb="xs"
+              />
+              <ActionIcon
+                size="sm"
+                onClick={() => setAvatarSeed((prev) => Math.random())}
+              >
+                <Rotate />
+              </ActionIcon>
+            </Center>
+            <ActionIcon size="lg">
+              <QuestionMark
+                onClick={() => settingsStore.setIsInstructionsModalOpened(true)}
+              />
             </ActionIcon>
           </Center>
           <TextInput
@@ -130,11 +142,6 @@ export const Home: React.FC<HomeProps> = inject(
           >
             {t('home.createGame')}
           </Button>
-          <ActionIcon size="lg" mt="xs">
-            <Settings
-              onClick={() => settingsStore.setIsSettingsModalOpened(true)}
-            />
-          </ActionIcon>
           <SettingsModal
             opened={settingsStore.isSettingsModalOpened}
             onClose={() => settingsStore.setIsSettingsModalOpened(false)}

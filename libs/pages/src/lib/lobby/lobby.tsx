@@ -252,13 +252,6 @@ export const Lobby: React.FC<LobbyProps> = inject(
         >
           {gameStore.hasGameStarted && <Game />}
         </AppShell>
-        <Modal
-          opened={isInstructionsOpened}
-          onClose={() => setIsInstructionsOpened(false)}
-          title={t('game.instructions')}
-        >
-          {/* Modal content */}
-        </Modal>
         <SettingsModal
           opened={settingsStore.isSettingsModalOpened}
           onClose={() => settingsStore.setIsSettingsModalOpened(false)}
@@ -266,7 +259,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
         <Affix position={{ bottom: 20, right: 20 }}>
           <ActionIcon
             size="lg"
-            onClick={() => setIsInstructionsOpened((prev) => !prev)}
+            onClick={() => settingsStore.setIsInstructionsModalOpened(true)}
           >
             <QuestionMark size={18} />
           </ActionIcon>

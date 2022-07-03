@@ -10,6 +10,7 @@ export class SettingsStore implements IStore {
 
   @persist @observable language: Language = Language.en;
   @observable isSettingsModalOpened = false;
+  @observable isInstructionsModalOpened = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -21,6 +22,10 @@ export class SettingsStore implements IStore {
 
   @action setIsSettingsModalOpened(value: boolean) {
     this.isSettingsModalOpened = value;
+  }
+
+  @action setIsInstructionsModalOpened(value: boolean) {
+    this.isInstructionsModalOpened = value;
   }
 
   @action async setLanguage(value: Language) {
