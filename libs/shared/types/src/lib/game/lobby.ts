@@ -60,5 +60,14 @@ export class Lobby {
       clearInterval(this.currentActionTimerInterval);
       this.currentActionTimerInterval = null;
     }
+
+    this.explainTimer = {
+      totalTime: defaultExplainTime,
+      timeLeft: defaultExplainTime,
+    };
+    this.voteTimer = {
+      totalTime: defaultVoteTime,
+      timeLeft: defaultVoteTime,
+    };
   }
 }

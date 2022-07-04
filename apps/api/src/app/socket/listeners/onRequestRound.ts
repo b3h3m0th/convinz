@@ -16,6 +16,8 @@ export const onRequestRound: Listener = (socket) => {
       lobby.roundHistory.push(new Round(question));
     }
 
+    if (lobby.currentRound.submissions.length >= 1) return;
+
     if (!lobby.currentActionTimerInterval) {
       lobby.currentActionTimerInterval = setInterval(() => {
         io.to(gameCode).emit('explainTimerTickExpired', {
@@ -28,8 +30,6 @@ export const onRequestRound: Listener = (socket) => {
         }
       }, 1000);
     }
-
-    if (lobby.currentRound.submissions.length >= 1) return;
 
     const playerWithSolution = lobby.players.getRandom();
 

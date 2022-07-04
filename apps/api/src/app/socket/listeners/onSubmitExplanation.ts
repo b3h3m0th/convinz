@@ -21,18 +21,18 @@ export const onSubmitExplanation: Listener = (socket) => {
         submissions: lobby.currentRound.submissions,
       });
 
-      if (!lobby.currentActionTimerInterval) {
-        lobby.currentActionTimerInterval = setInterval(() => {
-          io.to(gameCode).emit('voteTimerTickExpired', {
-            ...lobby.voteTimer,
-          });
-          lobby.decrementVoteTimeLeft();
-          if (lobby.voteTimer.timeLeft === -1) {
-            lobby.clearCurrentActionTimerInterval();
-            console.log('time over');
-          }
-        }, 1000);
-      }
+      lobby.clearCurrentActionTimerInterval();
+
+      lobby.currentActionTimerInterval = setInterval(() => {
+        io.to(gameCode).emit('voteTimerTickExpired', {
+          ...lobby.voteTimer,
+        });
+        lobby.decrementVoteTimeLeft();
+        if (lobby.voteTimer.timeLeft === -1) {
+          lobby.clearCurrentActionTimerInterval();
+          console.log('time over');
+        }
+      }, 1000);
     }
   });
 };
