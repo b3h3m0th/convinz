@@ -254,7 +254,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
         />
         <InstructionsModal
           opened={settingsStore.isInstructionsModalOpened}
-          onClose={() => settingsStore.setIsSettingsModalOpened(false)}
+          onClose={() => settingsStore.setIsInstructionsModalOpened (false)}
         />
         <Affix position={{ bottom: 20, right: 20 }}>
           <ActionIcon

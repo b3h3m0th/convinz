@@ -11,7 +11,7 @@ export type ActionTimer = {
 };
 
 export declare interface VoteTimerEmitter {
-  on(event: 'expired', listener: (name: string) => void): this;
+  on(event: 'expired', listener: () => void): this;
   on(event: string, listener: () => any): this;
   emit(event: 'expired'): boolean;
 }

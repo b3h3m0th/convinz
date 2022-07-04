@@ -16,23 +16,24 @@ export const onSubmitExplanation: Listener = (socket) => {
     });
 
     if (lobby.currentRound.submissions.length >= lobby.players.length) {
+      lobby.clearCurrentActionTimerInterval();
+
+      if (!lobby.currentActionTimerInterval) {
+        lobby.currentActionTimerInterval = setInterval(() => {
+          io.to(gameCode).emit('voteTimerTickExpired', {
+            ...lobby.voteTimer,
+          });
+          lobby.decrementVoteTimeLeft();
+          if (lobby.voteTimer.timeLeft === -1) {
+            lobby.clearCurrentActionTimerInterval();
+          }
+        }, 1000);
+      }
+
       io.to(gameCode).emit('startedVoting', {
         gameCode,
         submissions: lobby.currentRound.submissions,
       });
-
-      lobby.clearCurrentActionTimerInterval();
-
-      lobby.currentActionTimerInterval = setInterval(() => {
-        io.to(gameCode).emit('voteTimerTickExpired', {
-          ...lobby.voteTimer,
-        });
-        lobby.decrementVoteTimeLeft();
-        if (lobby.voteTimer.timeLeft === -1) {
-          lobby.clearCurrentActionTimerInterval();
-          console.log('time over');
-        }
-      }, 1000);
     }
   });
 };

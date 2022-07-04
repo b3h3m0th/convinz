@@ -52,7 +52,7 @@ export class Lobby {
   decrementVoteTimeLeft() {
     this.voteTimer.timeLeft--;
 
-    if (this.voteTimer.timeLeft === 0) this.voteTimerExpiringEmitter.expired();
+    if (this.voteTimer.timeLeft === -1) this.voteTimerExpiringEmitter.expired();
   }
 
   clearCurrentActionTimerInterval() {

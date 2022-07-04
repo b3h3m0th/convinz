@@ -42,6 +42,17 @@ export const onSubmitVote: Listener = (socket) => {
     if (lobby.players.length === lobby.currentRound.getTotalVotesCount()) {
       lobby.clearCurrentActionTimerInterval();
 
+      lobby.currentActionTimerInterval = setInterval(() => {
+        io.to(gameCode).emit('explainTimerTickExpired', {
+          ...lobby.explainTimer,
+        });
+        lobby.decrementExplainTimeLeft();
+        if (lobby.explainTimer.timeLeft === -1) {
+          lobby.clearCurrentActionTimerInterval();
+          console.log('time over');
+        }
+      }, 1000);
+
       const newQuestion = getRandomQuestion();
       lobby.roundHistory.push(new Round(newQuestion));
 
@@ -62,17 +73,6 @@ export const onSubmitVote: Listener = (socket) => {
         solution: null,
         totalTime: defaultExplainTime,
       });
-
-      lobby.currentActionTimerInterval = setInterval(() => {
-        io.to(gameCode).emit('explainTimerTickExpired', {
-          ...lobby.explainTimer,
-        });
-        lobby.decrementExplainTimeLeft();
-        if (lobby.explainTimer.timeLeft === -1) {
-          lobby.clearCurrentActionTimerInterval();
-          console.log('time over');
-        }
-      }, 1000);
     }
   });
 };
