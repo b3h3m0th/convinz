@@ -21,6 +21,7 @@ export class SettingsStore implements IStore {
   @persist @observable voteTime: VoteTime = defaultVoteTime;
   @observable isSettingsModalOpened = false;
   @observable isInstructionsModalOpened = false;
+  @observable isGameConfigModalOpened = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -36,6 +37,10 @@ export class SettingsStore implements IStore {
 
   @action setIsInstructionsModalOpened(value: boolean) {
     this.isInstructionsModalOpened = value;
+  }
+
+  @action setIsGameConfigModalOpened(value: boolean) {
+    this.isGameConfigModalOpened = value;
   }
 
   @action async setLanguage(value: Language) {

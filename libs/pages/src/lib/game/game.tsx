@@ -205,11 +205,11 @@ const Game: React.FC<GameProps> = inject(
                       >
                         Vote
                       </Button>
-                      <AvatarsGroup limit={votingSubmissions.length}>
+                      <Group spacing="xs">
                         {s.votes.map((v) => (
-                          <Avatar key={v.id} size="sm" src={v.avatar} />
+                          <Avatar key={v.id} size="md" src={v.avatar} />
                         ))}
-                      </AvatarsGroup>
+                      </Group>
                     </Group>
                   </Group>
                 </div>

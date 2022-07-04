@@ -12,18 +12,24 @@ import {
   Avatar,
   Button,
   Center,
+  Group,
   Text,
   TextInput,
   Title,
 } from '@mantine/core';
 import {
+  Edit,
   Hash,
   QuestionMark,
   RotateClockwise,
   Settings,
 } from 'tabler-icons-react';
 import { gameCodeLength, getAvatar } from '@convinz/shared/util';
-import { InstructionsModal, SettingsModal } from '@convinz/components';
+import {
+  GameConfigModal,
+  InstructionsModal,
+  SettingsModal,
+} from '@convinz/components';
 import { useTranslation } from 'react-i18next';
 
 /* eslint-disable-next-line */
@@ -70,37 +76,25 @@ export const Home: React.FC<HomeProps> = inject(
     return (
       <div className="home">
         <div className="home__content">
-          <Title align="center" mb="xs">
+          <Title mb="xs" align="center">
             Convinz
           </Title>
-          <Text align="center" mb="lg">
+          <Text mb="lg" align="center">
             {t('home.subheading')}
           </Text>
-          <Center sx={{ justifyContent: 'space-evenly' }}>
-            <ActionIcon size="lg">
-              <Settings
-                onClick={() => settingsStore.setIsSettingsModalOpened(true)}
-              />
-            </ActionIcon>
-            <Center inline={false} sx={{ flexDirection: 'column' }}>
-              <Avatar
-                size="lg"
-                radius="lg"
-                src={getAvatar(avatarSeed)}
-                sx={{ border: '2px solid #ced4da' }}
-                mb="xs"
-              />
-              <ActionIcon
-                size="xs"
-                onClick={() => setAvatarSeed((prev) => Math.random())}
-              >
-                <RotateClockwise />
-              </ActionIcon>
-            </Center>
-            <ActionIcon size="lg">
-              <QuestionMark
-                onClick={() => settingsStore.setIsInstructionsModalOpened(true)}
-              />
+          <Center inline={false} sx={{ flexDirection: 'column' }}>
+            <Avatar
+              size={100}
+              radius="lg"
+              src={getAvatar(avatarSeed)}
+              sx={{ border: '2px solid #ced4da' }}
+              mb="xs"
+            />
+            <ActionIcon
+              size="xs"
+              onClick={() => setAvatarSeed((prev) => Math.random())}
+            >
+              <RotateClockwise />
             </ActionIcon>
           </Center>
           <TextInput
@@ -152,6 +146,23 @@ export const Home: React.FC<HomeProps> = inject(
           >
             {t('home.createGame')}
           </Button>
+          <Center mt="xs">
+            <ActionIcon size="lg">
+              <Edit
+                onClick={() => settingsStore.setIsGameConfigModalOpened(true)}
+              />
+            </ActionIcon>
+            <ActionIcon size="lg">
+              <Settings
+                onClick={() => settingsStore.setIsSettingsModalOpened(true)}
+              />
+            </ActionIcon>
+            <ActionIcon size="lg">
+              <QuestionMark
+                onClick={() => settingsStore.setIsInstructionsModalOpened(true)}
+              />
+            </ActionIcon>
+          </Center>
           <SettingsModal
             opened={settingsStore.isSettingsModalOpened}
             onClose={() => settingsStore.setIsSettingsModalOpened(false)}
@@ -159,6 +170,10 @@ export const Home: React.FC<HomeProps> = inject(
           <InstructionsModal
             opened={settingsStore.isInstructionsModalOpened}
             onClose={() => settingsStore.setIsInstructionsModalOpened(false)}
+          />
+          <GameConfigModal
+            opened={settingsStore.isGameConfigModalOpened}
+            onClose={() => settingsStore.setIsGameConfigModalOpened(false)}
           />
         </div>
       </div>

@@ -173,8 +173,9 @@ export const Lobby: React.FC<LobbyProps> = inject(
                       <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
                         <td style={{ paddingLeft: 0 }}>
                           <Group>
-                            <Avatar src={p.avatar} size="md" />
+                            <Avatar src={p.avatar} size="lg" />
                             <Text
+                              size="lg"
                               color={
                                 p.id === gameStore.player.id ? 'orange' : ''
                               }
@@ -254,7 +255,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
         />
         <InstructionsModal
           opened={settingsStore.isInstructionsModalOpened}
-          onClose={() => settingsStore.setIsInstructionsModalOpened (false)}
+          onClose={() => settingsStore.setIsInstructionsModalOpened(false)}
         />
         <Affix position={{ bottom: 20, right: 20 }}>
           <ActionIcon
