@@ -1,8 +1,11 @@
 import { EventEmitter } from 'events';
 
-export type ExplainTime = 30 | 45 | 60 | 120 | 150 | 180;
-export type VoteTime = 30 | 45 | 60 | 120 | 150 | 180;
+export const explainTimes = [30, 45, 60, 120, 150, 180] as const;
+export type ExplainTime = typeof explainTimes[number];
 export const defaultExplainTime: ExplainTime = 30;
+
+export const voteTimes = [30, 45, 60, 120, 150, 180] as const;
+export type VoteTime = typeof voteTimes[number];
 export const defaultVoteTime: ExplainTime = 30;
 
 export type ActionTimer = {

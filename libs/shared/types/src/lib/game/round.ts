@@ -2,8 +2,9 @@ import { Player } from './player';
 import { Question } from './question';
 import { Submission } from './submission';
 
-export type RoundsAmount = 3 | 5 | 10;
-export const defaultRoundsAmount = 3;
+export const roundAmounts = [2, 3, 5, 10] as const;
+export type RoundsAmount = typeof roundAmounts[number];
+export const defaultRoundsAmount = 2;
 
 export type VoteResult = { player: Player; totalVotes: number };
 

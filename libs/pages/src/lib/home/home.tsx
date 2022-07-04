@@ -16,7 +16,12 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { Hash, QuestionMark, Rotate, Settings } from 'tabler-icons-react';
+import {
+  Hash,
+  QuestionMark,
+  RotateClockwise,
+  Settings,
+} from 'tabler-icons-react';
 import { gameCodeLength, getAvatar } from '@convinz/shared/util';
 import { InstructionsModal, SettingsModal } from '@convinz/components';
 import { useTranslation } from 'react-i18next';
@@ -84,7 +89,7 @@ export const Home: React.FC<HomeProps> = inject(
                 size="xs"
                 onClick={() => setAvatarSeed((prev) => Math.random())}
               >
-                <Rotate />
+                <RotateClockwise />
               </ActionIcon>
             </Center>
             <ActionIcon size="lg">
