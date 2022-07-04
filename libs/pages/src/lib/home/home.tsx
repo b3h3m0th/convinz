@@ -58,7 +58,12 @@ export const Home: React.FC<HomeProps> = inject(
       socket.emit(
         'createLobby',
         gameStore.player.nickname,
-        getAvatar(avatarSeed)
+        getAvatar(avatarSeed),
+        {
+          roundsAmount: settingsStore.roundsAmount,
+          explainTime: settingsStore.explainTime,
+          voteTime: settingsStore.voteTime,
+        }
       );
     };
 

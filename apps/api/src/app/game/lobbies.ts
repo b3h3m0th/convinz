@@ -1,6 +1,7 @@
 import {
   GameCode,
   Lobby,
+  LobbyCreateConfig,
   Player,
   Players,
   RoundsAmount,
@@ -17,12 +18,12 @@ export class Lobbies extends Array<Lobby> {
     return this._instance || (this._instance = new this());
   }
 
-  create(gameCode: string, roundsAmount: RoundsAmount, players: Player[]) {
+  create(gameCode: string, players: Player[], config: LobbyCreateConfig) {
     const lobby = new Lobby(
       gameCode,
-      roundsAmount,
       [],
-      new Players(gameCode, players)
+      new Players(gameCode, players),
+      config
     );
 
     this.push(lobby);

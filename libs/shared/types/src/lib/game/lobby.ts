@@ -5,8 +5,16 @@ import {
   ActionTimer,
   defaultExplainTime,
   defaultVoteTime,
+  ExplainTime,
+  VoteTime,
   VoteTimerEmitter,
 } from './timer';
+
+export type LobbyCreateConfig = {
+  roundsAmount: RoundsAmount;
+  explainTime: ExplainTime;
+  voteTime: VoteTime;
+};
 
 export class Lobby {
   public currentActionTimerInterval: NodeJS.Timer | null = null;
@@ -22,9 +30,13 @@ export class Lobby {
 
   constructor(
     public gameCode: GameCode,
-    public roundsAmount: RoundsAmount = defaultRoundsAmount,
     public roundHistory: Round[],
-    public players: Players
+    public players: Players,
+    public config: LobbyCreateConfig = {
+      roundsAmount: defaultRoundsAmount,
+      explainTime: defaultExplainTime,
+      voteTime: defaultVoteTime,
+    }
   ) {}
 
   get currentRound() {

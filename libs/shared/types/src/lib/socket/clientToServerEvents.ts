@@ -1,8 +1,17 @@
-import type { GameAccessionType, GameCode, Player } from '../game';
+import type {
+  GameAccessionType,
+  GameCode,
+  LobbyCreateConfig,
+  Player,
+} from '../game';
 import { ChatMessage } from '../game';
 
 export interface ClientToServerEvents {
-  createLobby: (nickname: string, avatar: string) => void;
+  createLobby: (
+    nickname: string,
+    avatar: string,
+    config: LobbyCreateConfig
+  ) => void;
   joinLobby: (
     gameCode: string,
     nickname: string,
