@@ -43,7 +43,7 @@ export const GameConfigModal: React.FC<GameConfigModalProps> = inject(
 
     return (
       <Modal
-        title="Game Create Configuration"
+        title="Game Configuration"
         opened={opened}
         onClose={() => onClose()}
       >

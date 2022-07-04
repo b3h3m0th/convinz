@@ -146,7 +146,7 @@ export const Home: React.FC<HomeProps> = inject(
           >
             {t('home.createGame')}
           </Button>
-          <Center mt="xs">
+          <Group mt="xs" position="center" spacing="md">
             <ActionIcon size="lg">
               <Edit
                 onClick={() => settingsStore.setIsGameConfigModalOpened(true)}
@@ -162,7 +162,7 @@ export const Home: React.FC<HomeProps> = inject(
                 onClick={() => settingsStore.setIsInstructionsModalOpened(true)}
               />
             </ActionIcon>
-          </Center>
+          </Group>
           <SettingsModal
             opened={settingsStore.isSettingsModalOpened}
             onClose={() => settingsStore.setIsSettingsModalOpened(false)}
