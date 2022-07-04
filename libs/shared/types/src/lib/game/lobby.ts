@@ -19,12 +19,12 @@ export type LobbyCreateConfig = {
 export class Lobby {
   public currentActionTimerInterval: NodeJS.Timer | null = null;
   public explainTimer: ActionTimer = {
-    totalTime: defaultExplainTime,
-    timeLeft: defaultExplainTime,
+    totalTime: this.config.explainTime,
+    timeLeft: this.config.explainTime,
   };
   public voteTimer: ActionTimer = {
-    totalTime: defaultVoteTime,
-    timeLeft: defaultVoteTime,
+    totalTime: this.config.voteTime,
+    timeLeft: this.config.voteTime,
   };
   public voteTimerExpiringEmitter = new VoteTimerEmitter();
 
@@ -74,12 +74,12 @@ export class Lobby {
     }
 
     this.explainTimer = {
-      totalTime: defaultExplainTime,
-      timeLeft: defaultExplainTime,
+      totalTime: this.config.explainTime,
+      timeLeft: this.config.explainTime,
     };
     this.voteTimer = {
-      totalTime: defaultVoteTime,
-      timeLeft: defaultVoteTime,
+      totalTime: this.config.voteTime,
+      timeLeft: this.config.voteTime,
     };
   }
 }

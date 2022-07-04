@@ -3,15 +3,13 @@
 import './game.scss';
 import {
   ActionTimer,
-  defaultExplainTime,
-  defaultVoteTime,
   Player,
   PlayerActionStatus,
   Submission,
   VoteResult,
 } from '@convinz/shared/types';
 import { socket } from '@convinz/socket';
-import { gameStore } from '@convinz/stores';
+import { gameStore, settingsStore } from '@convinz/stores';
 import {
   Button,
   Text,
@@ -29,7 +27,10 @@ import { QuestionMark } from 'tabler-icons-react';
 
 export interface GameProps {}
 
-const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
+const Game: React.FC<GameProps> = inject(
+  gameStore.storeKey,
+  settingsStore.storeKey
+)(
   observer(({}: GameProps) => {
     const [currentQuestion, setCurrentQuestion] = useState<string>();
     const [solution, setSolution] = useState<string | null>();
@@ -37,12 +38,12 @@ const Game: React.FC<GameProps> = inject(gameStore.storeKey)(
     const [gameResults, setGameResults] = useState<VoteResult[]>();
     const [explanation, setExplanation] = useState<string>('');
     const [explainTimer, setExplainTimer] = useState<ActionTimer>({
-      totalTime: defaultExplainTime,
-      timeLeft: defaultExplainTime,
+      totalTime: settingsStore.explainTime,
+      timeLeft: settingsStore.explainTime,
     });
     const [voteTimer, setVoteTimer] = useState<ActionTimer>({
-      totalTime: defaultVoteTime,
-      timeLeft: defaultVoteTime,
+      totalTime: settingsStore.voteTime,
+      timeLeft: settingsStore.voteTime,
     });
 
     useEffect(() => {

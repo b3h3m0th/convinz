@@ -1,8 +1,4 @@
-import {
-  defaultExplainTime,
-  defaultRoundsAmount,
-  Round,
-} from '@convinz/shared/types';
+import { Round } from '@convinz/shared/types';
 import { getRandomQuestion } from '@convinz/shared/util';
 import { io } from '../../../main';
 import { lobbies } from '../../game';
@@ -31,7 +27,7 @@ export const onSubmitVote: Listener = (socket) => {
       submissions: lobby.currentRound.submissions,
     });
 
-    if (lobby.roundHistory.length >= defaultRoundsAmount) {
+    if (lobby.roundHistory.length >= lobby.config.roundsAmount) {
       io.to(gameCode).emit('gameEnded', {
         gameCode,
         gameResults: lobby.getTotalVotesPerPlayer(),
@@ -63,7 +59,7 @@ export const onSubmitVote: Listener = (socket) => {
         gameCode,
         question: newQuestion.question,
         solution: newQuestion.solution,
-        totalTime: defaultExplainTime,
+        totalTime: lobby.config.explainTime,
       });
 
       // answer to all other players
@@ -71,7 +67,7 @@ export const onSubmitVote: Listener = (socket) => {
         gameCode,
         question: newQuestion.question,
         solution: null,
-        totalTime: defaultExplainTime,
+        totalTime: lobby.config.explainTime,
       });
     }
   });
