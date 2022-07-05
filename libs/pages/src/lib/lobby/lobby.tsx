@@ -15,6 +15,7 @@ import {
   Affix,
   AppShell,
   Avatar,
+  Badge,
   Button,
   Divider,
   Group,
@@ -35,6 +36,7 @@ import {
   Message,
   QuestionMark,
   Settings,
+  Copy,
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
@@ -127,22 +129,28 @@ export const Lobby: React.FC<LobbyProps> = inject(
                 }}
                 pt="xs"
               >
-                <Tooltip
-                  position="bottom"
-                  withArrow
-                  label={t('lobby.gameCodeCopied')}
-                  opened={clipboard.copied}
-                  mb={'sm'}
-                >
-                  <Title
-                    style={{ cursor: 'pointer' }}
-                    order={3}
-                    onClick={() => clipboard.copy(gameStore.player.room)}
+                <Group style={{ alignItems: 'flex-start' }}>
+                  <Tooltip
+                    position="bottom"
+                    withArrow
+                    label={t('lobby.gameCodeCopied')}
+                    opened={clipboard.copied}
+                    mb={'sm'}
                   >
-                    Lobby #{gameStore.player.room}
-                  </Title>
-                </Tooltip>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Title
+                      style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                      order={3}
+                      onClick={() => clipboard.copy(gameStore.player.room)}
+                    >
+                      Lobby #{gameStore.player.room}
+                    </Title>
+                  </Tooltip>
+                </Group>
+                <Group position="apart">
                   <Button
                     onClick={() =>
                       socket.emit('leaveLobby', gameStore.player.room)
@@ -170,7 +178,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                   >
                     {t('lobby.startGame')}
                   </Button>
-                </div>
+                </Group>
 
                 <ScrollArea viewportRef={connectedPlayersViewport}>
                   <Table mt={'md'} mb={'md'}>
