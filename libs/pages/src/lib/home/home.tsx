@@ -82,7 +82,12 @@ export const Home: React.FC<HomeProps> = inject(
           <Text mb="lg" align="center">
             {t('home.subheading')}
           </Text>
-          <Center inline={false} sx={{ flexDirection: 'column' }}>
+          <Group mt="xs" position="center" spacing="md">
+            <ActionIcon size="lg">
+              <Settings
+                onClick={() => settingsStore.setIsSettingsModalOpened(true)}
+              />
+            </ActionIcon>
             <Avatar
               size={100}
               radius="lg"
@@ -90,6 +95,13 @@ export const Home: React.FC<HomeProps> = inject(
               sx={{ border: '2px solid #ced4da' }}
               mb="xs"
             />
+            <ActionIcon size="lg">
+              <QuestionMark
+                onClick={() => settingsStore.setIsInstructionsModalOpened(true)}
+              />
+            </ActionIcon>
+          </Group>
+          <Center>
             <ActionIcon
               size="xs"
               onClick={() => setAvatarSeed((prev) => Math.random())}
@@ -127,39 +139,27 @@ export const Home: React.FC<HomeProps> = inject(
             }}
           />
           <br />
-          <Button
-            disabled={
-              !(
-                ((gameStore.player.room as string) ?? '').length ===
-                gameCodeLength
-              ) || !gameStore.player?.nickname
-            }
-            onClick={() => onJoinGame()}
-            mr="xs"
-          >
-            {t('home.joinGame')}
-          </Button>
-          <Button
-            disabled={!gameStore.player?.nickname}
-            onClick={() => onCreateGame()}
-            ml="xs"
-          >
-            {t('home.createGame')}
-          </Button>
-          <Group mt="xs" position="center" spacing="md">
-            <ActionIcon size="lg">
+          <Group>
+            <Button
+              disabled={
+                !(
+                  ((gameStore.player.room as string) ?? '').length ===
+                  gameCodeLength
+                ) || !gameStore.player?.nickname
+              }
+              onClick={() => onJoinGame()}
+            >
+              {t('home.joinGame')}
+            </Button>
+            <Button
+              disabled={!gameStore.player?.nickname}
+              onClick={() => onCreateGame()}
+            >
+              {t('home.createGame')}
+            </Button>
+            <ActionIcon size="lg" variant="filled" color="orange">
               <Edit
                 onClick={() => settingsStore.setIsGameConfigModalOpened(true)}
-              />
-            </ActionIcon>
-            <ActionIcon size="lg">
-              <Settings
-                onClick={() => settingsStore.setIsSettingsModalOpened(true)}
-              />
-            </ActionIcon>
-            <ActionIcon size="lg">
-              <QuestionMark
-                onClick={() => settingsStore.setIsInstructionsModalOpened(true)}
               />
             </ActionIcon>
           </Group>

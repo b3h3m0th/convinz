@@ -114,7 +114,13 @@ export const Lobby: React.FC<LobbyProps> = inject(
         <AppShell
           navbar={
             <Navbar width={{ base: 'auto' }} p={'sm'}>
-              <Navbar.Section grow>
+              <Navbar.Section
+                grow
+                style={{
+                  maxHeight: '50%',
+                  height: '50%',
+                }}
+              >
                 <Tooltip
                   position="bottom"
                   withArrow
@@ -195,6 +201,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
               </Navbar.Section>
 
               <Navbar.Section
+                grow
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
