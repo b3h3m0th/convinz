@@ -37,6 +37,7 @@ import {
   QuestionMark,
   Settings,
   Copy,
+  InfoCircle,
 } from 'tabler-icons-react';
 import { useClipboard } from '@mantine/hooks';
 import { useBeforeUnload } from '@convinz/shared/hooks';
@@ -54,20 +55,23 @@ export const Lobby: React.FC<LobbyProps> = inject(
     const navigate = useNavigate();
     const { t } = useTranslation();
     const notifications = useNotifications();
-    const clipboard = useClipboard({ timeout: 500 });
+    const gameCodeClipboard = useClipboard({ timeout: 500 });
+    const inviteLinkClipboard = useClipboard({ timeout: 500 });
     const chatViewport = useRef<HTMLDivElement>(null);
     const connectedPlayersViewport = useRef<HTMLDivElement>(null);
     const [message, setMessage] = useState<string>('');
 
     useEffect(() => {
       if (!gameStore.hasJoinedLobby) {
+        const splits = window.location.href.split('/');
+        gameStore.player.room = splits[splits.length - 1];
         navigate(`${ROUTES.home}`);
         notifications.showNotification({
-          message: 'Please join via game code only!',
+          message: 'Please pick a nickname!',
           color: 'orange',
           icon: (
             <ActionIcon size={'lg'}>
-              <AlertTriangle size={16} color="white" />
+              <InfoCircle size={16} color="white" />
             </ActionIcon>
           ),
         });
@@ -129,13 +133,12 @@ export const Lobby: React.FC<LobbyProps> = inject(
                 }}
                 pt="xs"
               >
-                <Group style={{ alignItems: 'flex-start' }}>
+                <Group style={{ alignItems: 'flex-start' }} mb="xs">
                   <Tooltip
                     position="bottom"
                     withArrow
                     label={t('lobby.gameCodeCopied')}
-                    opened={clipboard.copied}
-                    mb={'sm'}
+                    opened={gameCodeClipboard.copied}
                   >
                     <Title
                       style={{
@@ -144,10 +147,29 @@ export const Lobby: React.FC<LobbyProps> = inject(
                         alignItems: 'center',
                       }}
                       order={3}
-                      onClick={() => clipboard.copy(gameStore.player.room)}
+                      onClick={() =>
+                        gameCodeClipboard.copy(gameStore.player.room)
+                      }
                     >
                       Lobby #{gameStore.player.room}
                     </Title>
+                  </Tooltip>
+                  <Tooltip
+                    position="bottom"
+                    withArrow
+                    label={t('lobby.gameCodeCopied')}
+                    opened={inviteLinkClipboard.copied}
+                  >
+                    <Badge
+                      style={{ cursor: 'pointer' }}
+                      ml="xs"
+                      mt={7}
+                      onClick={() =>
+                        inviteLinkClipboard.copy(`${window.location.href}`)
+                      }
+                    >
+                      Invite Link
+                    </Badge>
                   </Tooltip>
                 </Group>
                 <Group position="apart">
