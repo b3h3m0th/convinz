@@ -16,6 +16,7 @@ import {
   AppShell,
   Avatar,
   Button,
+  Divider,
   Group,
   Navbar,
   ScrollArea,
@@ -53,6 +54,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
     const notifications = useNotifications();
     const clipboard = useClipboard({ timeout: 500 });
     const chatViewport = useRef<HTMLDivElement>(null);
+    const connectedPlayersViewport = useRef<HTMLDivElement>(null);
     const [message, setMessage] = useState<string>('');
 
     useEffect(() => {
@@ -117,9 +119,13 @@ export const Lobby: React.FC<LobbyProps> = inject(
               <Navbar.Section
                 grow
                 style={{
-                  maxHeight: '50%',
-                  height: '50%',
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  flexDirection: 'column',
+                  maxHeight: '70%',
+                  height: '70%',
                 }}
+                pt="xs"
               >
                 <Tooltip
                   position="bottom"
@@ -166,49 +172,60 @@ export const Lobby: React.FC<LobbyProps> = inject(
                   </Button>
                 </div>
 
-                <Table mt={'md'} mb={'md'}>
-                  <thead>
-                    <tr>
-                      <th style={{ paddingLeft: 0 }}>
-                        {t('lobby.connectedPlayers')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {gameStore.connectedPlayers.map((p) => (
-                      <tr key={JSON.stringify(p)} style={{ textAlign: 'left' }}>
-                        <td style={{ paddingLeft: 0 }}>
-                          <Group>
-                            <Avatar src={p.avatar} size="lg" />
-                            <Text
-                              size="lg"
-                              color={
-                                p.id === gameStore.player.id ? 'orange' : ''
-                              }
-                              style={{ display: 'flex', alignItems: 'center' }}
-                            >
-                              {p.nickname}{' '}
-                              {p.role === Role.CAPTAIN && (
-                                <Crown style={{ paddingLeft: '4px' }} />
-                              )}
-                            </Text>
-                          </Group>
-                        </td>
+                <ScrollArea viewportRef={connectedPlayersViewport}>
+                  <Table mt={'md'} mb={'md'}>
+                    <thead>
+                      <tr>
+                        <th style={{ paddingLeft: 0 }}>
+                          {t('lobby.connectedPlayers')}
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {gameStore.connectedPlayers.map((p) => (
+                        <tr
+                          key={JSON.stringify(p)}
+                          style={{ textAlign: 'left' }}
+                        >
+                          <td style={{ paddingLeft: 0 }}>
+                            <Group>
+                              <Avatar src={p.avatar} size="lg" />
+                              <Text
+                                size="lg"
+                                color={
+                                  p.id === gameStore.player.id ? 'orange' : ''
+                                }
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                {p.nickname}{' '}
+                                {p.role === Role.CAPTAIN && (
+                                  <Crown style={{ paddingLeft: '4px' }} />
+                                )}
+                              </Text>
+                            </Group>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </ScrollArea>
               </Navbar.Section>
-
+              <Navbar.Section>
+                <Divider />
+              </Navbar.Section>
               <Navbar.Section
                 grow
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
                   flexDirection: 'column',
-                  maxHeight: '50%',
-                  height: '50%',
+                  maxHeight: '30%',
+                  height: '30%',
                 }}
+                pt="xs"
               >
                 <ScrollArea viewportRef={chatViewport}>
                   <ul className="lobby__chat">
