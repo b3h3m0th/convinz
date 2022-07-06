@@ -10,4 +10,32 @@
     align-items: center;
     flex-direction: column;
   }
+
+  &__winners-podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 50%;
+    height: 100%;
+
+    .rank-1 {
+      height: 150px;
+    }
+
+    .rank-2 {
+      height: 100px;
+    }
+    .rank-3 {
+      height: 50px;
+    }
+
+    &__rank {
+      background-color: orange;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+  }
 }

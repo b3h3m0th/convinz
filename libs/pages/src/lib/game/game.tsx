@@ -20,6 +20,7 @@ import {
   Avatar,
   AvatarsGroup,
   RingProgress,
+  Center,
 } from '@mantine/core';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
@@ -218,10 +219,41 @@ const Game: React.FC<GameProps> = inject(
           </div>
         ) : gameStore.playerActionStatus ===
           PlayerActionStatus.viewingResults ? (
-          <div>
-            <h1>Results</h1>
+          <Group direction="column" sx={{ height: '100%' }}>
+            <h1 style={{ alignSelf: 'start' }}>Results</h1>
+            <Group position="center" grow sx={{ width: '100%' }}>
+              <div className="game__winners-podium">
+                <div className="game__winners-podium__rank rank-2">
+                  <Avatar
+                    src={gameResults && gameResults[0].player.avatar}
+                    size="lg"
+                  />
+                  <Text size="xl" weight={700} color="white">
+                    2
+                  </Text>
+                </div>
+                <div className="game__winners-podium__rank rank-1">
+                  <Avatar
+                    src={gameResults && gameResults[0].player.avatar}
+                    size="lg"
+                  />
+                  <Text size="xl" weight={700} color="white">
+                    1
+                  </Text>
+                </div>
+                <div className="game__winners-podium__rank rank-3">
+                  <Avatar
+                    src={gameResults && gameResults[0].player.avatar}
+                    size="lg"
+                  />
+                  <Text size="xl" weight={700} color="white">
+                    3
+                  </Text>
+                </div>
+              </div>
+            </Group>
             {JSON.stringify(gameResults)}
-          </div>
+          </Group>
         ) : (
           <div>
             <Group sx={{ justifyContent: 'space-between' }}>
