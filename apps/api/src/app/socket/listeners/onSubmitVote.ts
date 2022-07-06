@@ -27,15 +27,15 @@ export const onSubmitVote: Listener = (socket) => {
       submissions: lobby.currentRound.submissions,
     });
 
-    if (lobby.roundHistory.length >= lobby.config.roundsAmount) {
-      io.to(gameCode).emit('gameEnded', {
-        gameCode,
-        gameResults: lobby.getTotalVotesPerPlayer(),
-      });
-      return;
-    }
-
     if (lobby.players.length === lobby.currentRound.getTotalVotesCount()) {
+      if (lobby.roundHistory.length >= lobby.config.roundsAmount) {
+        io.to(gameCode).emit('gameEnded', {
+          gameCode,
+          gameResults: lobby.getTotalVotesPerPlayer(),
+        });
+        return;
+      }
+
       lobby.clearCurrentActionTimerInterval();
 
       lobby.currentActionTimerInterval = setInterval(() => {
@@ -70,5 +70,7 @@ export const onSubmitVote: Listener = (socket) => {
         totalTime: lobby.config.explainTime,
       });
     }
+
+    console.log(lobby.roundHistory);
   });
 };
