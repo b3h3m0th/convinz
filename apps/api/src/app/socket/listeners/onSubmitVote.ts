@@ -45,7 +45,6 @@ export const onSubmitVote: Listener = (socket) => {
         lobby.decrementExplainTimeLeft();
         if (lobby.explainTimer.timeLeft === -1) {
           lobby.clearCurrentActionTimerInterval();
-          console.log('time over');
         }
       }, 1000);
 
@@ -70,7 +69,5 @@ export const onSubmitVote: Listener = (socket) => {
         totalTime: lobby.config.explainTime,
       });
     }
-
-    console.log(lobby.roundHistory);
   });
 };

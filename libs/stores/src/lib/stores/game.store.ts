@@ -42,7 +42,6 @@ export class GameStore implements IStore {
       this.setPlayer(result.player);
       this.setHasJoinedLobby(true);
       this.setConnectedPlayersAndUpdateSelfPlayer(result.players);
-      console.log(`joined lobby: ${result.gameCode}`);
 
       chatStore.addMessage({
         lobby: this.player.room,

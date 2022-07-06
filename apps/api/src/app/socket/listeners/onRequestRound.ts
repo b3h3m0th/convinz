@@ -22,7 +22,6 @@ export const onRequestRound: Listener = (socket) => {
           lobby.decrementExplainTimeLeft();
           if (lobby.explainTimer.timeLeft === -1) {
             lobby.clearCurrentActionTimerInterval();
-            console.log('time over');
           }
         }, 1000);
       }

@@ -44,5 +44,3 @@ export const ROUTES: ROUTES = Object.keys(pages).reduce(
       : { ...acc, [curr]: `${curr}` },
   {}
 ) as ROUTES;
-
-console.log(JSON.stringify(ROUTES));
