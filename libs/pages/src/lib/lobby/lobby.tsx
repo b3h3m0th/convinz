@@ -133,7 +133,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                 }}
                 pt="xs"
               >
-                <Group style={{ alignItems: 'flex-start' }} mb="xs">
+                <Group style={{ alignItems: 'flex-start' }} mb="xs" spacing={0}>
                   <Tooltip
                     position="bottom"
                     withArrow
@@ -172,7 +172,7 @@ export const Lobby: React.FC<LobbyProps> = inject(
                     </Badge>
                   </Tooltip>
                 </Group>
-                <Group position="apart">
+                <Group>
                   <Button
                     onClick={() =>
                       socket.emit('leaveLobby', gameStore.player.room)
@@ -196,7 +196,6 @@ export const Lobby: React.FC<LobbyProps> = inject(
                     }
                     onClick={() => gameStore.startGame()}
                     rightIcon={<PlayCard size={18} />}
-                    ml={'xs'}
                   >
                     {t('lobby.startGame')}
                   </Button>
